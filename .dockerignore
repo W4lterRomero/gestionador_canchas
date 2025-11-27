@@ -1,0 +1,53 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentación
+*.md
+README.md
+SOLUCION_PERMISOS_DOCKER.md
+
+# Archivos de entorno (se configuran en producción)
+.env
+.env.*
+!.env.example
+
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Composer
+vendor/
+
+# Laravel
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*
+!storage/framework/.gitkeep
+!storage/logs/.gitkeep
+!bootstrap/cache/.gitkeep
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+tests/
+phpunit.xml
+.phpunit.result.cache
+
+# Docker local
+docker-compose.override.yml
+docker-compose.local.yml
+.env.docker

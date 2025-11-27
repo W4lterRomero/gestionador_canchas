@@ -1,0 +1,64 @@
+# Configuración automática para Render.com
+# Este archivo permite que Render detecte y configure tu app automáticamente
+
+services:
+  # Servicio web (tu aplicación Laravel)
+  - type: web
+    name: gambeta-app
+    env: docker
+    dockerfilePath: ./Dockerfile.production
+    plan: free  # Cambiar a 'starter' para plan pago
+    healthCheckPath: /
+    envVars:
+      # Laravel
+      - key: APP_NAME
+        value: Gambeta
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://gambeta-app.onrender.com  # Cambiar por tu URL
+      - key: APP_KEY
+        generateValue: true  # Render genera una key automáticamente
+
+      # Base de datos
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: gambeta-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: gambeta-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: gambeta-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: gambeta-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: gambeta-db
+          property: password
+
+      # Configuraciones adicionales
+      - key: FILESYSTEM_DISK
+        value: public
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: SESSION_DRIVER
+        value: file
+      - key: LOG_CHANNEL
+        value: stack
+
+# Base de datos MySQL
+databases:
+  - name: gambeta-db
+    databaseName: gambeta
+    user: gambeta_user
+    plan: free  # Cambiar a 'starter' para plan pago

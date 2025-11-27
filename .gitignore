@@ -1,0 +1,27 @@
+# Archivos de entorno LOCAL (cada desarrollador tiene el suyo)
+.env.docker
+
+# Override de docker-compose (configuraciones locales)
+docker-compose.override.yml
+
+# Logs de Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Laravel (dentro de proyectos/)
+proyectos/vendor/
+proyectos/node_modules/
+proyectos/.env
+proyectos/storage/*.key
+proyectos/.phpunit.result.cache
+DESPLIEGUE_RENDER.md
