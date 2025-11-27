@@ -67,52 +67,50 @@ docker-compose ps
 
 Deberías ver 3 contenedores: `laravel_app`, `mysql80`, `phpmyadmin`
 
-### Paso 5: Crear el proyecto Laravel 12
+### Paso 5: Instalar dependencias de Laravel
 
 ```bash
-# Entrar al contenedor
-docker-compose exec app bash
+# Instalar dependencias de Composer
+docker-compose exec app bash -c "cd gambeta && composer install"
 
-# Dentro del contenedor, crear Laravel 12
-composer create-project laravel/laravel:^12.0 .
+# Configurar permisos (importante)
+docker-compose exec app chown -R www-data:www-data /var/www/html
 
-# Salir del contenedor
-exit
+# Generar key de Laravel
+docker-compose exec app bash -c "cd gambeta && php artisan key:generate"
 ```
 
-### Paso 6: Configurar Laravel
+**Nota:** El proyecto Laravel ya está en `proyectos/gambeta/` y Apache está configurado para apuntar automáticamente a `gambeta/public`.
 
-Editar el archivo `.env` de Laravel (está en `proyectos/.env`):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Paso 7: Ejecutar migraciones
 
 ```bash
-nano proyectos/.env
+docker-compose exec app bash -c "cd gambeta && php artisan migrate"
 ```
 
-Busca y actualiza estas líneas:
-
-```env
-APP_NAME=Gambeta
-APP_URL=http://localhost:8080
-
-DB_CONNECTION=mysql
-DB_HOST=db
-DB_PORT=3306
-DB_DATABASE=appdb
-DB_USERNAME=appuser
-DB_PASSWORD=apppass
-```
-
-### Paso 7: Instalar Livewire v3
-
-```bash
-docker-compose exec app composer require livewire/livewire
-```
-
-### Paso 8: Ejecutar migraciones
-
-```bash
-docker-compose exec app php artisan migrate
-```
+**Nota:** Si te pregunta si quieres crear la base de datos, responde `yes`.
 
 ### ✅ ¡Listo! Ahora accede a:
 
@@ -142,12 +140,13 @@ docker-compose logs -f app
 
 ```bash
 # Ejecutar comandos artisan (desde fuera del contenedor)
-docker-compose exec app php artisan make:model Cancha -m
-docker-compose exec app php artisan migrate
-docker-compose exec app php artisan route:list
+docker-compose exec app bash -c "cd gambeta && php artisan make:model Cancha -m"
+docker-compose exec app bash -c "cd gambeta && php artisan migrate"
+docker-compose exec app bash -c "cd gambeta && php artisan route:list"
 
 # O entrar al contenedor y trabajar dentro
 docker-compose exec app bash
+cd gambeta
 php artisan make:controller ReservaController
 php artisan make:livewire CalendarioReservas
 exit
@@ -157,22 +156,22 @@ exit
 
 ```bash
 # Instalar paquetes
-docker-compose exec app composer require paquete/nombre
+docker-compose exec app bash -c "cd gambeta && composer require paquete/nombre"
 
 # Actualizar dependencias
-docker-compose exec app composer update
+docker-compose exec app bash -c "cd gambeta && composer update"
 
 # Ver paquetes instalados
-docker-compose exec app composer show
+docker-compose exec app bash -c "cd gambeta && composer show"
 ```
 
 ### Limpiar caché de Laravel
 
 ```bash
-docker-compose exec app php artisan cache:clear
-docker-compose exec app php artisan config:clear
-docker-compose exec app php artisan view:clear
-docker-compose exec app php artisan route:clear
+docker-compose exec app bash -c "cd gambeta && php artisan cache:clear"
+docker-compose exec app bash -c "cd gambeta && php artisan config:clear"
+docker-compose exec app bash -c "cd gambeta && php artisan view:clear"
+docker-compose exec app bash -c "cd gambeta && php artisan route:clear"
 ```
 
 ---
@@ -217,9 +216,35 @@ Resultado: Los archivos te pertenecen en ambos lados ✅
 
 ## 🔧 Solución de Problemas Comunes
 
-### Problema 1: "Permission denied" al crear archivos
+### Problema 1: "Permission denied" al editar archivos en VSCode
 
-**Causa:** Tu `.env.docker` no tiene tu UID/GID correcto.
+**Causa:** Los archivos dentro de `proyectos/` pertenecen a `root` en lugar de a tu usuario.
+
+**Esto pasa si:** Creaste el proyecto Laravel ANTES de reconstruir el contenedor con `.env.docker`.
+
+**Solución:**
+
+```bash
+# Desde tu terminal, fuera del contenedor:
+# Cambiar dueño de todos los archivos
+docker-compose exec app chown -R www-data:www-data /var/www/html
+
+# Verificar que ahora pertenecen a tu usuario
+ls -la proyectos/gambeta/
+# Deberías ver tu usuario (ej: Walter) como dueño
+```
+
+**Prevención:** Siempre sigue este orden:
+1. Crear `.env.docker`
+2. Ejecutar `docker-compose build`
+3. Ejecutar `docker-compose up -d`
+4. **LUEGO** crear el proyecto Laravel
+
+---
+
+### Problema 2: ".env.docker con UID/GID incorrecto"
+
+**Síntoma:** Archivos nuevos no tienen el dueño correcto.
 
 **Solución:**
 
@@ -240,7 +265,7 @@ docker-compose build --no-cache
 docker-compose up -d
 ```
 
-### Problema 2: Puerto 8080 ya está en uso
+### Problema 3: Puerto 8080 ya está en uso
 
 **Síntoma:**
 
@@ -257,7 +282,7 @@ ports:
   - "8081:80"  # Cambiar 8080 por 8081
 ```
 
-### Problema 3: MySQL no conecta
+### Problema 4: MySQL no conecta
 
 **Síntoma:**
 
@@ -280,7 +305,7 @@ docker-compose down -v
 docker-compose up -d
 ```
 
-### Problema 4: Composer muy lento
+### Problema 5: Composer muy lento
 
 **Solución:**
 
@@ -289,7 +314,7 @@ docker-compose up -d
 docker-compose exec app composer global config cache-files-maxsize 2048MiB
 ```
 
-### Problema 5: No puedo editar archivos desde VSCode (Windows)
+### Problema 6: No puedo editar archivos desde VSCode (Windows)
 
 **Causa:** El proyecto está en el sistema de archivos de Windows, no de WSL.
 
@@ -457,8 +482,8 @@ Usa esto para verificar que todo está correcto:
 - [ ] `.env.docker` creado con MI UID/GID
 - [ ] `docker-compose build` ejecutado sin errores
 - [ ] `docker-compose up -d` levanta 3 contenedores
-- [ ] Laravel 12 instalado en `proyectos/`
-- [ ] `proyectos/.env` configurado con credenciales de DB
+- [ ] Laravel 12 instalado en `proyectos/gambeta/`
+- [ ] `proyectos/gambeta/.env` configurado con credenciales de DB
 - [ ] Livewire v3 instalado
 - [ ] Migraciones ejecutadas sin errores
 - [ ] http://localhost:8080 muestra Laravel

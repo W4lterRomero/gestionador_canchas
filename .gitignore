@@ -15,13 +15,18 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
-*.swo
+.*.swo
 *~
 
-# Laravel (dentro de proyectos/)
-proyectos/vendor/
-proyectos/node_modules/
-proyectos/.env
-proyectos/storage/*.key
-proyectos/.phpunit.result.cache
-DESPLIEGUE_RENDER.md
+# Laravel - NO subir dependencias ni archivos sensibles
+proyectos/gambeta/vendor/
+proyectos/gambeta/node_modules/
+proyectos/gambeta/.env
+proyectos/gambeta/storage/*.key
+proyectos/gambeta/.phpunit.result.cache
+
+# Mantener estructura de directorios de Laravel
+!proyectos/gambeta/storage/.gitkeep
+!proyectos/gambeta/storage/app/.gitkeep
+!proyectos/gambeta/storage/framework/.gitkeep
+!proyectos/gambeta/storage/logs/.gitkeep

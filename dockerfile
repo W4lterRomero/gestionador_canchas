@@ -16,8 +16,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Activar mod_rewrite
 RUN a2enmod rewrite
 
+# Cambiar DocumentRoot a gambeta/public
+RUN sed -i 's#/var/www/html#/var/www/html/gambeta/public#g' /etc/apache2/sites-available/000-default.conf
+
 # Configurar Apache para Laravel
-RUN printf "<Directory /var/www/html>\n\
+RUN printf "<Directory /var/www/html/gambeta/public>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
