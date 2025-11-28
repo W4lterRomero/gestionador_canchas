@@ -202,7 +202,7 @@
                                         <div class="flex items-center justify-end gap-3 text-lg">
                                             <button type="button"
                                                 class="hover:text-blue-400 transition-colors edit-toggle"
-                                                data-edit-target="edit-form-{{ $cancha->id }}"
+                                                data-edit-target="edit-modal-{{ $cancha->id }}"
                                                 title="Editar cancha">
                                                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                                                     <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
@@ -220,91 +220,6 @@
                                                 </button>
                                             </form>
                                         </div>
-                                    </td>
-                                </tr>
-                                <tr id="edit-form-{{ $cancha->id }}" class="{{ $rowIsEditing ? '' : 'hidden' }}">
-                                    <td colspan="7" class="px-6 py-4 bg-slate-950/40">
-                                        <form method="POST" action="{{ route('admin.canchas.update', $cancha) }}"
-                                            enctype="multipart/form-data"
-                                            class="grid gap-4 md:grid-cols-2 text-sm text-white">
-                                            @csrf
-                                            @method('PUT')
-                                            <div>
-                                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre</label>
-                                                <input type="text" name="nombre" value="{{ $editNombre }}"
-                                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
-                                                    required>
-                                                @if ($rowIsEditing && $errors->editarCancha->has('nombre'))
-                                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('nombre') }}</p>
-                                                @endif
-                                            </div>
-                                            <div>
-                                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Tipo</label>
-                                                <input type="text" name="tipo" value="{{ $editTipo }}"
-                                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
-                                                    required>
-                                                @if ($rowIsEditing && $errors->editarCancha->has('tipo'))
-                                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('tipo') }}</p>
-                                                @endif
-                                            </div>
-                                            <div class="md:col-span-2">
-                                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Descripción</label>
-                                                <textarea name="descripcion" rows="3"
-                                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500">{{ $editDescripcion }}</textarea>
-                                                @if ($rowIsEditing && $errors->editarCancha->has('descripcion'))
-                                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('descripcion') }}</p>
-                                                @endif
-                                            </div>
-                                            <div>
-                                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
-                                                <input type="number" min="0" step="0.01" name="precio_hora" value="{{ $editPrecio }}"
-                                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
-                                                    required>
-                                                @if ($rowIsEditing && $errors->editarCancha->has('precio_hora'))
-                                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('precio_hora') }}</p>
-                                                @endif
-                                            </div>
-                                            <div>
-                                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Imagen actual</label>
-                                                @if ($cancha->imagen_url)
-                                                    <img src="{{ asset(ltrim($cancha->imagen_url, '/')) }}"
-                                                        alt="Imagen de {{ $cancha->nombre }}"
-                                                        class="h-20 w-32 rounded-lg border border-slate-700 object-cover">
-                                                @else
-                                                    <p class="text-xs text-slate-400">Sin imagen cargada.</p>
-                                                @endif
-                                            </div>
-                                            <div>
-                                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Actualizar imagen</label>
-                                                <input type="file" name="imagen" accept="image/*"
-                                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm file:bg-slate-800 file:text-slate-200 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-blue-500">
-                                                @if ($rowIsEditing && $errors->editarCancha->has('imagen'))
-                                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('imagen') }}</p>
-                                                @endif
-                                            </div>
-                                            <div class="flex items-center gap-3">
-                                                <input type="hidden" name="activa" value="0">
-                                                <input type="checkbox" id="activa_{{ $cancha->id }}" name="activa" value="1"
-                                                    class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-blue-500 focus:ring-blue-500"
-                                                    {{ $editActiva ? 'checked' : '' }}>
-                                                <label for="activa_{{ $cancha->id }}" class="text-xs uppercase tracking-widest text-slate-400">Activa para reservas</label>
-                                            </div>
-                                            @if ($rowIsEditing && $errors->editarCancha->has('activa'))
-                                                <div class="md:col-span-2 text-xs text-red-300">
-                                                    {{ $errors->editarCancha->first('activa') }}
-                                                </div>
-                                            @endif
-                                            <div class="md:col-span-2 flex justify-end gap-3">
-                                                <button type="button" data-close-edit="edit-form-{{ $cancha->id }}"
-                                                    class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
-                                                    Cancelar
-                                                </button>
-                                                <button type="submit"
-                                                    class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
-                                                    Guardar cambios
-                                                </button>
-                                            </div>
-                                        </form>
                                     </td>
                                 </tr>
                             @empty
@@ -417,6 +332,116 @@
                 </div>
             </div>
         </div>
+
+        <!-- MODALES PARA EDITAR CANCHAS -->
+        @foreach ($canchas as $cancha)
+            @php
+                $rowIsEditing = (int) $editarCanchaId === $cancha->id;
+                $editNombre = $rowIsEditing ? old('nombre', $cancha->nombre) : $cancha->nombre;
+                $editTipo = $rowIsEditing ? old('tipo', $cancha->tipo) : $cancha->tipo;
+                $editDescripcion = $rowIsEditing ? old('descripcion', $cancha->descripcion) : $cancha->descripcion;
+                $editPrecio = $rowIsEditing ? old('precio_hora', $cancha->precio_hora) : $cancha->precio_hora;
+                $editActiva = $rowIsEditing ? (bool) old('activa', $cancha->activa) : (bool) $cancha->activa;
+            @endphp
+            <div id="edit-modal-{{ $cancha->id }}"
+                class="edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
+                data-edit-modal data-open-default="{{ $rowIsEditing ? 'true' : 'false' }}">
+                <div
+                    class="relative w-full max-w-5xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                    <button type="button" data-edit-modal-close
+                        class="absolute top-4 right-4 bg-blue-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
+                        ✕
+                    </button>
+
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-blue-300">Editar cancha</p>
+                            <h2 class="text-2xl font-semibold">Actualizar {{ $cancha->nombre }}</h2>
+                            <p class="text-slate-400 text-sm">Modifica la información y guarda los cambios.</p>
+                        </div>
+
+                        <form method="POST" action="{{ route('admin.canchas.update', $cancha) }}" enctype="multipart/form-data"
+                            class="grid gap-4 md:grid-cols-2 text-sm">
+                            @csrf
+                            @method('PUT')
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre</label>
+                                <input type="text" name="nombre" value="{{ $editNombre }}"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                    required>
+                                @if ($rowIsEditing && $errors->editarCancha->has('nombre'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('nombre') }}</p>
+                                @endif
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Tipo</label>
+                                <input type="text" name="tipo" value="{{ $editTipo }}"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                    required>
+                                @if ($rowIsEditing && $errors->editarCancha->has('tipo'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('tipo') }}</p>
+                                @endif
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Descripción</label>
+                                <textarea name="descripcion" rows="3"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500">{{ $editDescripcion }}</textarea>
+                                @if ($rowIsEditing && $errors->editarCancha->has('descripcion'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('descripcion') }}</p>
+                                @endif
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
+                                <input type="number" min="0" step="0.01" name="precio_hora" value="{{ $editPrecio }}"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                    required>
+                                @if ($rowIsEditing && $errors->editarCancha->has('precio_hora'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('precio_hora') }}</p>
+                                @endif
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Imagen actual</label>
+                                @if ($cancha->imagen_url)
+                                    <img src="{{ asset(ltrim($cancha->imagen_url, '/')) }}" alt="Imagen de {{ $cancha->nombre }}"
+                                        class="h-20 w-32 rounded-lg border border-slate-700 object-cover">
+                                @else
+                                    <p class="text-xs text-slate-400">Sin imagen cargada.</p>
+                                @endif
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Actualizar imagen</label>
+                                <input type="file" name="imagen" accept="image/*"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm file:bg-slate-800 file:text-slate-200 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-blue-500">
+                                @if ($rowIsEditing && $errors->editarCancha->has('imagen'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('imagen') }}</p>
+                                @endif
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="hidden" name="activa" value="0">
+                                <input type="checkbox" id="modal_activa_{{ $cancha->id }}" name="activa" value="1"
+                                    class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-blue-500 focus:ring-blue-500"
+                                    {{ $editActiva ? 'checked' : '' }}>
+                                <label for="modal_activa_{{ $cancha->id }}"
+                                    class="text-xs uppercase tracking-widest text-slate-400">Activa para reservas</label>
+                            </div>
+                            @if ($rowIsEditing && $errors->editarCancha->has('activa'))
+                                <div class="md:col-span-2 text-xs text-red-300">
+                                    {{ $errors->editarCancha->first('activa') }}
+                                </div>
+                            @endif
+                            <div class="md:col-span-2 flex justify-end gap-3">
+                                <button type="button" data-edit-modal-close
+                                    class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">Cancelar</button>
+                                <button type="submit"
+                                    class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
+                                    Guardar cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     </section>
 
     <!-- SECCIÓN RESERVAS -->
@@ -500,34 +525,77 @@
             }
         };
 
-        const initEditForms = () => {
-            const toggleRow = (rowId, forceOpen = null) => {
-                const row = document.getElementById(rowId);
-                if (!row) {
+        const initEditModals = () => {
+            const modals = document.querySelectorAll('[data-edit-modal]');
+            if (!modals.length) {
+                return;
+            }
+
+            let activeModal = null;
+            const setBodyScroll = (locked) => document.body.classList.toggle('overflow-hidden', locked);
+
+            const openModal = (modal) => {
+                if (activeModal === modal) {
                     return;
                 }
+                if (activeModal) {
+                    activeModal.classList.add('hidden');
+                    activeModal.classList.remove('flex');
+                }
+                activeModal = modal;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setBodyScroll(true);
+            };
 
-                const shouldOpen = forceOpen ?? row.classList.contains('hidden');
-                row.classList.toggle('hidden', !shouldOpen);
+            const openModalById = (id) => {
+                const modal = document.getElementById(id);
+                if (modal) {
+                    openModal(modal);
+                }
+            };
+
+            const closeModal = (modal) => {
+                if (!modal) {
+                    return;
+                }
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                if (activeModal === modal) {
+                    activeModal = null;
+                    setBodyScroll(false);
+                }
             };
 
             document.querySelectorAll('[data-edit-target]').forEach((btn) => {
-                btn.addEventListener('click', () => toggleRow(btn.dataset.editTarget));
+                btn.addEventListener('click', () => openModalById(btn.dataset.editTarget));
             });
 
-            document.querySelectorAll('[data-close-edit]').forEach((btn) => {
-                btn.addEventListener('click', () => toggleRow(btn.dataset.closeEdit, false));
+            document.querySelectorAll('[data-edit-modal-close]').forEach((btn) => {
+                btn.addEventListener('click', () => closeModal(btn.closest('[data-edit-modal]')));
             });
 
-            if (serverEditId) {
-                toggleRow(`edit-form-${serverEditId}`, true);
+            modals.forEach((modal) => {
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+
+                if (modal.dataset.openDefault === 'true') {
+                    openModal(modal);
+                }
+            });
+
+            if (!activeModal && serverEditId) {
+                openModalById(`edit-modal-${serverEditId}`);
             }
         };
 
         const initPage = () => {
             initNav();
             initModal();
-            initEditForms();
+            initEditModals();
         };
 
         if (document.readyState === 'loading') {
