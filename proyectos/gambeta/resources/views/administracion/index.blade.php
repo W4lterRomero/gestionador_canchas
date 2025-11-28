@@ -2,8 +2,11 @@
 
 @php
     $canchas = $canchas ?? collect();
+    $bloqueos = $bloqueos ?? collect();
     $editarCanchaId = session('editarCanchaId');
+    $editarBloqueoId = session('editarBloqueoId');
     $shouldOpenCreateModal = $errors->crearCancha->any();
+    $shouldOpenBloqueoModal = $errors->crearBloqueo->any();
     $feedbackStatus = session('status');
     $feedbackError = session('error');
     $feedbackMessage = $feedbackStatus ?: $feedbackError;
@@ -539,7 +542,317 @@
 
     <!-- SECCIÓN BLOQUEOS -->
     <section id="bloqueos" data-section="bloqueos" class="scroll-mt-32 hidden">
-        <!-- ... (todo tu contenido de bloqueos tal como lo tienes) ... -->
+        <div class="bg-slate-900 min-h-screen flex justify-center p-10">
+            <div class="w-full max-w-5xl space-y-4">
+                <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Bloqueos programados</h1>
+                        <p class="text-sm text-slate-400">Controla los horarios donde las canchas no estarán disponibles.</p>
+                    </div>
+                    <button id="abrirBloqueoModal" type="button"
+                        class="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold px-4 py-2 rounded-lg shadow-md transition">
+                        <span class="text-xl font-bold">+</span>
+                        NUEVO BLOQUEO
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-slate-900/80">
+                            <tr class="uppercase text-xs text-slate-400 tracking-wide">
+                                <th class="px-6 py-3">Cancha</th>
+                                <th class="px-6 py-3">Inicio</th>
+                                <th class="px-6 py-3">Fin</th>
+                                <th class="px-6 py-3">Motivo</th>
+                                <th class="px-6 py-3">Registró</th>
+                                <th class="px-6 py-3 text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800">
+                            @forelse ($bloqueos as $bloqueo)
+                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="font-semibold text-white">{{ optional($bloqueo->cancha)->nombre ?? 'Cancha eliminada' }}</div>
+                                        <div class="text-xs text-slate-500">ID #{{ $bloqueo->cancha_id }}</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-semibold text-emerald-400">
+                                            {{ optional($bloqueo->fecha_inicio)->format('d/m/Y H:i') ?? '—' }}
+                                        </div>
+                                        <p class="text-xs text-slate-400">Hora local</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-semibold text-rose-300">
+                                            {{ optional($bloqueo->fecha_fin)->format('d/m/Y H:i') ?? '—' }}
+                                        </div>
+                                        <p class="text-xs text-slate-400">Hora local</p>
+                                    </td>
+                                    <td class="px-6 py-4 max-w-xs">
+                                        <p class="text-sm text-slate-300 leading-snug">
+                                            {{ $bloqueo->motivo }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-white">
+                                            {{ optional($bloqueo->creador)->nombre ?? 'Usuario no disponible' }}
+                                        </p>
+                                        <p class="text-xs text-slate-400">
+                                            {{ optional($bloqueo->creador)->email ?? 'Sin correo' }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center justify-end gap-3 text-lg">
+                                            <button type="button"
+                                                class="hover:text-emerald-300 transition-colors"
+                                                data-bloqueo-edit-target="bloqueo-edit-modal-{{ $bloqueo->id }}"
+                                                title="Editar bloqueo">
+                                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                                                </svg>
+                                            </button>
+                                            <form id="delete-bloqueo-form-{{ $bloqueo->id }}" method="POST"
+                                                action="{{ route('admin.bloqueos.destroy', $bloqueo) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="hover:text-red-400 transition-colors"
+                                                    data-bloqueo-delete-target="delete-bloqueo-form-{{ $bloqueo->id }}"
+                                                    title="Eliminar bloqueo">
+                                                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zm3-9h2v7H9V10zm4 0h2v7h-2v-7z" />
+                                                        <path d="M15.5 4l-1-1h-5l-1 1H5v2h14V4z" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-10 text-center text-slate-400">
+                                        Aún no hay bloqueos registrados.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL PARA CREAR BLOQUEO -->
+        <div id="bloqueo-modal"
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
+            <div
+                class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                <button type="button" data-bloqueo-modal-close
+                    class="absolute top-4 right-4 bg-emerald-500 text-slate-950 w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 hover:text-white transition">
+                    ✕
+                </button>
+
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.3em] text-emerald-300">Nuevo bloqueo</p>
+                        <h2 class="text-2xl font-semibold">Bloquear una cancha</h2>
+                        <p class="text-slate-400 text-sm">Define el intervalo de fechas y el motivo del bloqueo.</p>
+                    </div>
+
+                    <form method="POST" action="{{ route('admin.bloqueos.store') }}" class="grid gap-4 md:grid-cols-2 text-sm">
+                        @csrf
+                        <div class="md:col-span-2">
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                            <select name="cancha_id"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                required>
+                                <option value="">Selecciona una cancha</option>
+                                @foreach ($canchas as $canchaOption)
+                                    <option value="{{ $canchaOption->id }}" {{ (int) old('cancha_id') === $canchaOption->id ? 'selected' : '' }}>
+                                        {{ $canchaOption->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('cancha_id', 'crearBloqueo')
+                                <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de inicio</label>
+                            <input type="datetime-local" name="fecha_inicio" value="{{ old('fecha_inicio') }}"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                required>
+                            @error('fecha_inicio', 'crearBloqueo')
+                                <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de fin</label>
+                            <input type="datetime-local" name="fecha_fin" value="{{ old('fecha_fin') }}"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                required>
+                            @error('fecha_fin', 'crearBloqueo')
+                                <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Motivo</label>
+                            <textarea name="motivo" rows="3"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                required>{{ old('motivo') }}</textarea>
+                            @error('motivo', 'crearBloqueo')
+                                <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="md:col-span-2 flex justify-end gap-3">
+                            <button type="button" data-bloqueo-modal-close
+                                class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                                Cancelar
+                            </button>
+                            <button type="submit"
+                                class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold transition">
+                                Guardar bloqueo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODALES PARA EDITAR BLOQUEOS -->
+        @foreach ($bloqueos as $bloqueo)
+            @php
+                $rowIsEditingBloqueo = (int) $editarBloqueoId === $bloqueo->id;
+                $editCanchaId = $rowIsEditingBloqueo ? (int) old('cancha_id', $bloqueo->cancha_id) : $bloqueo->cancha_id;
+                $editFechaInicio = $rowIsEditingBloqueo ? old('fecha_inicio', optional($bloqueo->fecha_inicio)->format('Y-m-d\\TH:i')) : optional($bloqueo->fecha_inicio)->format('Y-m-d\\TH:i');
+                $editFechaFin = $rowIsEditingBloqueo ? old('fecha_fin', optional($bloqueo->fecha_fin)->format('Y-m-d\\TH:i')) : optional($bloqueo->fecha_fin)->format('Y-m-d\\TH:i');
+                $editMotivo = $rowIsEditingBloqueo ? old('motivo', $bloqueo->motivo) : $bloqueo->motivo;
+            @endphp
+            <div id="bloqueo-edit-modal-{{ $bloqueo->id }}"
+                class="bloqueo-edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
+                data-bloqueo-edit-modal data-open-default="{{ $rowIsEditingBloqueo ? 'true' : 'false' }}">
+                <div
+                    class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                    <button type="button" data-bloqueo-edit-modal-close
+                        class="absolute top-4 right-4 bg-emerald-500 text-slate-950 w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 hover:text-white transition">
+                        ✕
+                    </button>
+
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-emerald-300">Editar bloqueo</p>
+                            <h2 class="text-2xl font-semibold">Actualizar bloqueo de {{ optional($bloqueo->cancha)->nombre ?? 'Cancha eliminada' }}</h2>
+                            <p class="text-slate-400 text-sm">Ajusta fechas o cambia el motivo cuando sea necesario.</p>
+                        </div>
+
+                        <form method="POST" action="{{ route('admin.bloqueos.update', $bloqueo) }}" class="grid gap-4 md:grid-cols-2 text-sm">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="md:col-span-2">
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                                <select name="cancha_id"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                    required>
+                                    <option value="">Selecciona una cancha</option>
+                                    @foreach ($canchas as $canchaOption)
+                                        <option value="{{ $canchaOption->id }}" {{ $editCanchaId === $canchaOption->id ? 'selected' : '' }}>
+                                            {{ $canchaOption->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @if ($rowIsEditingBloqueo && $errors->editarBloqueo->has('cancha_id'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarBloqueo->first('cancha_id') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de inicio</label>
+                                <input type="datetime-local" name="fecha_inicio" value="{{ $editFechaInicio }}"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                    required>
+                                @if ($rowIsEditingBloqueo && $errors->editarBloqueo->has('fecha_inicio'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarBloqueo->first('fecha_inicio') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de fin</label>
+                                <input type="datetime-local" name="fecha_fin" value="{{ $editFechaFin }}"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                    required>
+                                @if ($rowIsEditingBloqueo && $errors->editarBloqueo->has('fecha_fin'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarBloqueo->first('fecha_fin') }}</p>
+                                @endif
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Motivo</label>
+                                <textarea name="motivo" rows="3"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                    required>{{ $editMotivo }}</textarea>
+                                @if ($rowIsEditingBloqueo && $errors->editarBloqueo->has('motivo'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $errors->editarBloqueo->first('motivo') }}</p>
+                                @endif
+                            </div>
+
+                            <div class="md:col-span-2 flex justify-end gap-3">
+                                <button type="button" data-bloqueo-edit-modal-close
+                                    class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                                    Cancelar
+                                </button>
+                                <button type="submit"
+                                    class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold transition">
+                                    Guardar cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+        <!-- MODAL ELIMINAR BLOQUEO -->
+        <div id="bloqueo-delete-modal"
+            class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
+            <div class="relative w-full max-w-lg border border-red-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
+                <button type="button" data-bloqueo-delete-cancel
+                    class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    ✕
+                </button>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="rounded-full p-2 bg-red-500/15 text-red-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor"
+                                stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v4" />
+                                <path d="M12 17h.01" />
+                                <path d="M10 3h4l7 12-2 4H5l-2-4 7-12z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-red-300">Alerta</p>
+                            <p class="text-lg font-semibold text-white">
+                                El bloqueo seleccionado se eliminará de forma permanente.
+                            </p>
+                            <p class="text-sm text-slate-400 mt-1">Esta acción no se puede deshacer.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3">
+                        <button type="button" data-bloqueo-delete-cancel
+                            class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                            Cancelar
+                        </button>
+                        <button type="button" data-bloqueo-delete-confirm
+                            class="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- SECCIÓN PRECIOS -->
@@ -553,6 +866,8 @@
     (() => {
         const shouldOpenCreateModal = @json($shouldOpenCreateModal);
         const serverEditId = @json($editarCanchaId);
+        const shouldOpenBloqueoModal = @json($shouldOpenBloqueoModal);
+        const serverBloqueoEditId = @json($editarBloqueoId);
 
         const initNav = () => {
             const navButtons = document.querySelectorAll('#admin-panels-nav [data-section-target]');
@@ -609,6 +924,33 @@
             });
 
             if (shouldOpenCreateModal) {
+                toggleModal(true);
+            }
+        };
+
+        const initBloqueoModal = () => {
+            const modal = document.getElementById('bloqueo-modal');
+            const openButton = document.getElementById('abrirBloqueoModal');
+            if (!modal) {
+                return;
+            }
+
+            const closeButtons = modal.querySelectorAll('[data-bloqueo-modal-close]');
+            const toggleModal = (show) => {
+                modal.classList.toggle('hidden', !show);
+                modal.classList.toggle('flex', show);
+                document.body.classList.toggle('overflow-hidden', show);
+            };
+
+            openButton?.addEventListener('click', () => toggleModal(true));
+            closeButtons.forEach((btn) => btn.addEventListener('click', () => toggleModal(false)));
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    toggleModal(false);
+                }
+            });
+
+            if (shouldOpenBloqueoModal) {
                 toggleModal(true);
             }
         };
@@ -677,6 +1019,73 @@
 
             if (!activeModal && serverEditId) {
                 openModalById(`edit-modal-${serverEditId}`);
+            }
+        };
+
+        const initBloqueoEditModals = () => {
+            const modals = document.querySelectorAll('[data-bloqueo-edit-modal]');
+            if (!modals.length) {
+                return;
+            }
+
+            let activeModal = null;
+            const setBodyScroll = (locked) => document.body.classList.toggle('overflow-hidden', locked);
+
+            const openModal = (modal) => {
+                if (activeModal === modal) {
+                    return;
+                }
+                if (activeModal) {
+                    activeModal.classList.add('hidden');
+                    activeModal.classList.remove('flex');
+                }
+                activeModal = modal;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setBodyScroll(true);
+            };
+
+            const openModalById = (id) => {
+                const modal = document.getElementById(id);
+                if (modal) {
+                    openModal(modal);
+                }
+            };
+
+            const closeModal = (modal) => {
+                if (!modal) {
+                    return;
+                }
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                if (activeModal === modal) {
+                    activeModal = null;
+                    setBodyScroll(false);
+                }
+            };
+
+            document.querySelectorAll('[data-bloqueo-edit-target]').forEach((btn) => {
+                btn.addEventListener('click', () => openModalById(btn.dataset.bloqueoEditTarget));
+            });
+
+            document.querySelectorAll('[data-bloqueo-edit-modal-close]').forEach((btn) => {
+                btn.addEventListener('click', () => closeModal(btn.closest('[data-bloqueo-edit-modal]')));
+            });
+
+            modals.forEach((modal) => {
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+
+                if (modal.dataset.openDefault === 'true') {
+                    openModal(modal);
+                }
+            });
+
+            if (!activeModal && serverBloqueoEditId) {
+                openModalById(`bloqueo-edit-modal-${serverBloqueoEditId}`);
             }
         };
 
@@ -749,12 +1158,56 @@
             });
         };
 
+        const initBloqueoDeleteModal = () => {
+            const deleteModal = document.getElementById('bloqueo-delete-modal');
+            if (!deleteModal) {
+                return;
+            }
+
+            let pendingForm = null;
+            const toggleModal = (show) => {
+                deleteModal.classList.toggle('hidden', !show);
+                deleteModal.classList.toggle('flex', show);
+                document.body.classList.toggle('overflow-hidden', show);
+                if (!show) {
+                    pendingForm = null;
+                }
+            };
+
+            document.querySelectorAll('[data-bloqueo-delete-target]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    pendingForm = document.getElementById(btn.dataset.bloqueoDeleteTarget);
+                    toggleModal(true);
+                });
+            });
+
+            deleteModal.querySelectorAll('[data-bloqueo-delete-cancel]').forEach((btn) => {
+                btn.addEventListener('click', () => toggleModal(false));
+            });
+
+            const confirmBtn = deleteModal.querySelector('[data-bloqueo-delete-confirm]');
+            confirmBtn?.addEventListener('click', () => {
+                if (pendingForm) {
+                    pendingForm.submit();
+                }
+            });
+
+            deleteModal.addEventListener('click', (event) => {
+                if (event.target === deleteModal) {
+                    toggleModal(false);
+                }
+            });
+        };
+
         const initPage = () => {
             initNav();
             initModal();
+            initBloqueoModal();
             initEditModals();
+            initBloqueoEditModals();
             initFeedbackModal();
             initDeleteModal();
+            initBloqueoDeleteModal();
         };
 
         if (document.readyState === 'loading') {

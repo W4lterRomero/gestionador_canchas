@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BloqueoHorario;
 use App\Models\Cancha;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -67,8 +68,11 @@ class CanchaController extends Controller
     public function index(): View
     {
         $canchas = Cancha::orderBy('nombre')->get();
+        $bloqueos = BloqueoHorario::with(['cancha', 'creador'])
+            ->latest('fecha_inicio')
+            ->get();
 
-        return view('administracion.index', compact('canchas'));
+        return view('administracion.index', compact('canchas', 'bloqueos'));
     }
 
     public function store(Request $request): RedirectResponse

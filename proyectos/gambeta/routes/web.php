@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Counter;
+use App\Http\Controllers\BloqueoHorarioController;
 use App\Http\Controllers\CanchaController;
 
 // Página de Login
@@ -39,6 +40,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/canchas', [CanchaController::class, 'store'])->name('canchas.store');
     Route::put('/canchas/{cancha}', [CanchaController::class, 'update'])->name('canchas.update');
     Route::delete('/canchas/{cancha}', [CanchaController::class, 'destroy'])->name('canchas.destroy');
+    Route::post('/bloqueos', [BloqueoHorarioController::class, 'store'])->name('bloqueos.store');
+    Route::put('/bloqueos/{bloqueo}', [BloqueoHorarioController::class, 'update'])->name('bloqueos.update');
+    Route::delete('/bloqueos/{bloqueo}', [BloqueoHorarioController::class, 'destroy'])->name('bloqueos.destroy');
 });
 
 // Livewire Counter (opcional)
