@@ -41,4 +41,21 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    /**
+     * Define un usuario con rol de Administrador.
+     */
+    public function admin(): static
+    {
+        return $this->state(function (array $attributes) {
+            $role = Role::firstOrCreate(
+                ['nombre' => 'Administrador'],
+                ['descripcion' => 'Rol creado automáticamente para bloqueos.']
+            );
+
+            return [
+                'role_id' => $role->id,
+            ];
+        });
+    }
 }

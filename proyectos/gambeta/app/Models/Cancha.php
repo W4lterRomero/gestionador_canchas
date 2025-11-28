@@ -50,4 +50,12 @@ class Cancha extends Model
     {
         return $this->hasMany(CanchaPrecio::class);
     }
+
+    /**
+     * Bloqueos de horario configurados para la cancha.
+     */
+    public function bloqueos(): HasMany
+    {
+        return $this->hasMany(BloqueoHorario::class);
+    }
 }

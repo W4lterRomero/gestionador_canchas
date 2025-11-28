@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             CanchaSeeder::class,
             CanchaPrecioSeeder::class,
+            ClienteSeeder::class,
         ]);
 
         $roles = Role::pluck('id', 'nombre');
@@ -58,6 +59,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'empleado2@example.com',
             'password' => Hash::make('Empleado2'),
             'activo' => true,
+        ]);
+
+        $this->call([
+            BloqueoHorarioSeeder::class,
+            ReservaSeeder::class,
+            PagoSeeder::class,
         ]);
     }
 }
