@@ -4,6 +4,12 @@
     $canchas = $canchas ?? collect();
     $editarCanchaId = session('editarCanchaId');
     $shouldOpenCreateModal = $errors->crearCancha->any();
+    $feedbackStatus = session('status');
+    $feedbackError = session('error');
+    $feedbackMessage = $feedbackStatus ?: $feedbackError;
+    $feedbackType = $feedbackStatus ? 'success' : ($feedbackError ? 'error' : null);
+    $isErrorFeedback = $feedbackType === 'error';
+    $feedbackTitle = $isErrorFeedback ? 'Ocurrió un problema' : 'Operación exitosa';
 @endphp
 
 @section('content')
@@ -113,12 +119,6 @@
     <section id="canchas" data-section="canchas" class="scroll-mt-32">
         <div class="bg-slate-900 min-h-screen flex justify-center p-10">
             <div class="w-full max-w-5xl space-y-4">
-                @if (session('status'))
-                    <div class="rounded-xl border border-emerald-500/50 bg-emerald-500/10 px-5 py-3 text-sm text-emerald-200">
-                        {{ session('status') }}
-                    </div>
-                @endif
-
                 <!-- ENCABEZADO + BOTÓN -->
                 <div class="flex items-center justify-between">
                     <div>
@@ -442,6 +442,54 @@
                 </div>
             </div>
         @endforeach
+
+        <div id="feedback-modal"
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
+            data-feedback-modal data-feedback-visible="{{ $feedbackMessage ? 'true' : 'false' }}"
+            data-feedback-type="{{ $feedbackType ?? 'success' }}">
+            <div
+                class="relative w-full max-w-lg border {{ $isErrorFeedback ? 'border-red-500/40' : 'border-emerald-500/40' }} bg-slate-950/95 p-6 shadow-2xl text-white">
+                <button type="button" data-feedback-close
+                    class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    ✕
+                </button>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div
+                            class="rounded-full p-2 {{ $isErrorFeedback ? 'bg-red-500/15 text-red-300' : 'bg-emerald-500/15 text-emerald-300' }}">
+                            @if ($isErrorFeedback)
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor"
+                                    stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 9v4" />
+                                    <path d="M12 17h.01" />
+                                    <path d="M10 3h4l7 12-2 4H5l-2-4 7-12z" />
+                                </svg>
+                            @else
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor"
+                                    stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 13l4 4L19 7" />
+                                </svg>
+                            @endif
+                        </div>
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-slate-400">{{ $feedbackTitle }}</p>
+                            <p class="text-lg font-semibold text-white">{{ $feedbackMessage }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3">
+                        <button type="button" data-feedback-close
+                            class="px-5 py-2 rounded-lg font-semibold transition bg-red-500 hover:bg-red-600 text-white {{ $isErrorFeedback ? '' : 'hidden' }}">
+                            Cancelar
+                        </button>
+                        <button type="button" data-feedback-close
+                            class="px-5 py-2 rounded-lg font-semibold transition bg-emerald-500 hover:bg-emerald-600 text-slate-900 {{ $isErrorFeedback ? 'hidden' : '' }}">
+                            Aceptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- SECCIÓN RESERVAS -->
@@ -592,10 +640,39 @@
             }
         };
 
+        const initFeedbackModal = () => {
+            const feedbackModal = document.getElementById('feedback-modal');
+            if (!feedbackModal) {
+                return;
+            }
+
+            const shouldShow = feedbackModal.dataset.feedbackVisible === 'true';
+            const toggleModal = (show) => {
+                feedbackModal.classList.toggle('hidden', !show);
+                feedbackModal.classList.toggle('flex', show);
+                document.body.classList.toggle('overflow-hidden', show);
+            };
+
+            feedbackModal.querySelectorAll('[data-feedback-close]').forEach((btn) => {
+                btn.addEventListener('click', () => toggleModal(false));
+            });
+
+            feedbackModal.addEventListener('click', (event) => {
+                if (event.target === feedbackModal) {
+                    toggleModal(false);
+                }
+            });
+
+            if (shouldShow) {
+                toggleModal(true);
+            }
+        };
+
         const initPage = () => {
             initNav();
             initModal();
             initEditModals();
+            initFeedbackModal();
         };
 
         if (document.readyState === 'loading') {
