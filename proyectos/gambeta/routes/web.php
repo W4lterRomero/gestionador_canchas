@@ -27,15 +27,31 @@ Route::get('/reservas', function () {
     return view('reservas.index');
 })->name('reservas.index');
 
-// Página de Reportes
-Route::get('/reportes', function () {
-    return view('reportes.index');
-})->name('reportes.index');
+Route::get('/reservas/editar', function () {
+    return view('reservas.editar');
+})->name('reservas.editar');
 
 // Página de Administración
 Route::get('/admin', function () {
     return view('administracion.index');
 })->name('admin.index');
+// Página de Reportes
 
+Route::get('/administracion/reportes', function () {
+    return view('administracion.reportes');
+})->name('administracion.reportes');
+
+// USUARIOS
+Route::get('/usuarios', function () {
+    return view('usuarios.index');
+})->name('usuarios.index');
+
+Route::get('/usuarios/ver', function () {
+    return view('usuarios.ver');
+})->name('usuarios.ver');
+
+Route::get('/usuarios/editar', function () {
+    return view('usuarios.editar');
+})->name('usuarios.editar');
 // Livewire Counter (opcional)
 Route::get('/counter', Counter::class);

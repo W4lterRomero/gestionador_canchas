@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Sistema Nacional de áreas deportivas</title>
+    <title>Sistema Nacional de Áreas Deportivas</title>
     <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
+
+    @livewireStyles
 
     <!-- TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -24,18 +26,23 @@
 
 </head>
 
-<body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
 
+    <!-- NAVBAR -->
     @include('components.navbar')
 
+    <!-- CONTENIDO -->
     <main class="flex-grow">
         @yield('content')
     </main>
 
-</body>
-
     <!-- FOOTER -->
-    <footer class="mt-16 bg-main text-white text-center py-4">
+    <footer class="mt-16 bg-green-700 text-white text-center py-4">
         &copy; 2025 Sistema Nacional de Estadios Deportivos — Todos los derechos reservados
     </footer>
+
+    <!-- SCRIPTS LIVEWIRE -->
+    @livewireScripts
+
+</body>
 </html>
