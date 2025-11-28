@@ -64,6 +64,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             BloqueoHorarioSeeder::class,
             ReservaSeeder::class,
+            ReservaEstadoHistorialSeeder::class,
             PagoSeeder::class,
         ]);
     }
