@@ -18,6 +18,10 @@ Route::get('/estadios', function () {
     return view('estadios.index');
 })->name('estadios.index');
 
+Route::get('/reservar', function () {
+    return view('estadios.reservar');
+})->name('estadios.reservar');
+
 // Página de Reservas
 Route::get('/reservas', function () {
     return view('reservas.index');
