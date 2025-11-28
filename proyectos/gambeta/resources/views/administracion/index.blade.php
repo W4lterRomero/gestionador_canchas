@@ -208,11 +208,12 @@
                                                     <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
                                                 </svg>
                                             </button>
-                                            <form method="POST" action="{{ route('admin.canchas.destroy', $cancha) }}"
-                                                onsubmit="return confirm('¿Eliminar la cancha {{ $cancha->nombre }}?');">
+                                            <form id="delete-form-{{ $cancha->id }}" method="POST"
+                                                action="{{ route('admin.canchas.destroy', $cancha) }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="hover:text-red-400 transition-colors" title="Eliminar">
+                                                <button type="button" class="hover:text-red-400 transition-colors"
+                                                    data-delete-target="delete-form-{{ $cancha->id }}" title="Eliminar">
                                                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                                                         <path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zm3-9h2v7H9V10zm4 0h2v7h-2v-7z" />
                                                         <path d="M15.5 4l-1-1h-5l-1 1H5v2h14V4z" />
@@ -490,6 +491,45 @@
                 </div>
             </div>
         </div>
+
+        <div id="delete-modal"
+            class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
+            <div class="relative w-full max-w-lg border border-red-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
+                <button type="button" data-delete-cancel
+                    class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    ✕
+                </button>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="rounded-full p-2 bg-red-500/15 text-red-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor"
+                                stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v4" />
+                                <path d="M12 17h.01" />
+                                <path d="M10 3h4l7 12-2 4H5l-2-4 7-12z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-red-300">Alerta</p>
+                            <p class="text-lg font-semibold text-white">
+                                Si elimina esta cancha se eliminarán todas las reservas asociadas a esta cancha.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3">
+                        <button type="button" data-delete-cancel
+                            class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                            Cancelar
+                        </button>
+                        <button type="button" data-delete-confirm
+                            class="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition">
+                            Aceptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- SECCIÓN RESERVAS -->
@@ -668,11 +708,53 @@
             }
         };
 
+        const initDeleteModal = () => {
+            const deleteModal = document.getElementById('delete-modal');
+            if (!deleteModal) {
+                return;
+            }
+
+            let pendingForm = null;
+            const toggleModal = (show) => {
+                deleteModal.classList.toggle('hidden', !show);
+                deleteModal.classList.toggle('flex', show);
+                document.body.classList.toggle('overflow-hidden', show);
+                if (!show) {
+                    pendingForm = null;
+                }
+            };
+
+            document.querySelectorAll('[data-delete-target]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    pendingForm = document.getElementById(btn.dataset.deleteTarget);
+                    toggleModal(true);
+                });
+            });
+
+            deleteModal.querySelectorAll('[data-delete-cancel]').forEach((btn) => {
+                btn.addEventListener('click', () => toggleModal(false));
+            });
+
+            const confirmBtn = deleteModal.querySelector('[data-delete-confirm]');
+            confirmBtn?.addEventListener('click', () => {
+                if (pendingForm) {
+                    pendingForm.submit();
+                }
+            });
+
+            deleteModal.addEventListener('click', (event) => {
+                if (event.target === deleteModal) {
+                    toggleModal(false);
+                }
+            });
+        };
+
         const initPage = () => {
             initNav();
             initModal();
             initEditModals();
             initFeedbackModal();
+            initDeleteModal();
         };
 
         if (document.readyState === 'loading') {
