@@ -547,7 +547,7 @@
     <section id="reservas" data-section="reservas" class="scroll-mt-32 hidden">
         <div class="bg-slate-900 min-h-screen flex justify-center p-10">
             <div class="w-full max-w-6xl space-y-4">
-                <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div>
                         <h1 class="text-xl font-bold text-white">Reservas registradas</h1>
                         <p class="text-sm text-slate-400">Consulta el detalle de cada reserva creada en el sistema.</p>
@@ -570,6 +570,8 @@
                                 <th class="px-6 py-3 text-right">Total</th>
                                 <th class="px-6 py-3 text-center">Estado</th>
                                 <th class="px-6 py-3">Creado por</th>
+                                <th class="px-6 py-3">Actualizado por</th>
+                                <th class="px-6 py-3 text-right">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-800">
@@ -638,16 +640,92 @@
                                             {{ optional($reserva->creador)->email ?? '—' }}
                                         </p>
                                     </td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-white">
+                                            {{ optional($reserva->actualizador)->nombre ?? 'Usuario no disponible' }}
+                                        </p>
+                                        <p class="text-xs text-slate-400">
+                                            {{ optional($reserva->actualizador)->email ?? '—' }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center justify-end gap-3 text-lg">
+                                            <button type="button"
+                                                class="hover:text-rose-400 transition-colors"
+                                                data-reserva-delete-target="reserva-delete-form-{{ $reserva->id }}"
+                                                data-reserva-delete-id="{{ $reserva->id }}"
+                                                data-reserva-delete-name="{{ optional($reserva->cliente)->nombre ?? 'Cliente no disponible' }}"
+                                                title="Eliminar reserva">
+                                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zm3-9h2v7H9V10zm4 0h2v7h-2v-7z" />
+                                                    <path d="M15.5 4l-1-1h-5l-1 1H5v2h14V4z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <form id="reserva-delete-form-{{ $reserva->id }}" method="POST"
+                                            action="{{ route('admin.reservas.destroy', $reserva) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="px-6 py-10 text-center text-slate-400">
+                                    <td colspan="11" class="px-6 py-10 text-center text-slate-400">
                                         Aún no hay reservas registradas.
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL ELIMINAR RESERVA -->
+        <div id="reserva-delete-modal"
+            class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
+            <div class="relative w-full max-w-lg border border-rose-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
+                <button type="button" data-reserva-delete-cancel
+                    class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    ✕
+                </button>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="rounded-full p-2 bg-rose-500/15 text-rose-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor"
+                                stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v4" />
+                                <path d="M12 17h.01" />
+                                <path d="M10 3h4l7 12-2 4H5l-2-4 7-12z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-rose-300">Confirmar acción</p>
+                            <p class="text-lg font-semibold text-white">
+                                ¿Eliminar esta reserva?
+                            </p>
+                            <p class="text-sm text-slate-400 mt-1">
+                                Esta acción no se puede deshacer y liberará el horario seleccionado.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+                        <p class="text-sm text-slate-400">Cliente</p>
+                        <p class="text-lg font-semibold text-white" data-reserva-delete-name>—</p>
+                        <p class="text-xs text-slate-500" data-reserva-delete-id></p>
+                    </div>
+
+                    <div class="flex justify-end gap-3">
+                        <button type="button" data-reserva-delete-cancel
+                            class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                            Cancelar
+                        </button>
+                        <button type="button" data-reserva-delete-confirm
+                            class="px-5 py-2 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-semibold transition">
+                            Eliminar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1499,6 +1577,8 @@
             }
         };
 
+        
+
         const initEditModals = () => {
             const modals = document.querySelectorAll('[data-edit-modal]');
             if (!modals.length) {
@@ -1700,6 +1780,60 @@
             }
         };
 
+        
+
+        const initReservaDeleteModal = () => {
+            const deleteModal = document.getElementById('reserva-delete-modal');
+            if (!deleteModal) {
+                return;
+            }
+
+            const nameHolder = deleteModal.querySelector('[data-reserva-delete-name]');
+            const idHolder = deleteModal.querySelector('[data-reserva-delete-id]');
+            let pendingForm = null;
+
+            const toggleModal = (show) => {
+                deleteModal.classList.toggle('hidden', !show);
+                deleteModal.classList.toggle('flex', show);
+                document.body.classList.toggle('overflow-hidden', show);
+                if (!show) {
+                    pendingForm = null;
+                }
+            };
+
+            document.querySelectorAll('[data-reserva-delete-target]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    pendingForm = document.getElementById(btn.dataset.reservaDeleteTarget);
+                    const reservaName = btn.dataset.reservaDeleteName ?? 'Cliente no disponible';
+                    const reservaId = btn.dataset.reservaDeleteId ?? '';
+                    if (nameHolder) {
+                        nameHolder.textContent = reservaName;
+                    }
+                    if (idHolder) {
+                        idHolder.textContent = reservaId ? `ID #${reservaId}` : '';
+                    }
+                    toggleModal(true);
+                });
+            });
+
+            deleteModal.querySelectorAll('[data-reserva-delete-cancel]').forEach((btn) => {
+                btn.addEventListener('click', () => toggleModal(false));
+            });
+
+            const confirmBtn = deleteModal.querySelector('[data-reserva-delete-confirm]');
+            confirmBtn?.addEventListener('click', () => {
+                if (pendingForm) {
+                    pendingForm.submit();
+                }
+            });
+
+            deleteModal.addEventListener('click', (event) => {
+                if (event.target === deleteModal) {
+                    toggleModal(false);
+                }
+            });
+        };
+
         const initFeedbackModal = () => {
             const feedbackModal = document.getElementById('feedback-modal');
             if (!feedbackModal) {
@@ -1863,6 +1997,7 @@
             initDeleteModal();
             initBloqueoDeleteModal();
             initPrecioDeleteModal();
+            initReservaDeleteModal();
         };
 
         if (document.readyState === 'loading') {

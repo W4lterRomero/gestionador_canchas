@@ -70,7 +70,7 @@ class CanchaController extends Controller
     public function index(): View
     {
         $canchas = Cancha::orderBy('nombre')->get();
-        $reservas = Reserva::with(['cancha', 'cliente', 'creador'])
+        $reservas = Reserva::with(['cancha', 'cliente', 'creador', 'actualizador'])
             ->latest('fecha_reserva')
             ->get();
         $bloqueos = BloqueoHorario::with(['cancha', 'creador'])
