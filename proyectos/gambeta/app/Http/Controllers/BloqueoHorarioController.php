@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\BloqueoHorario;
 use App\Models\User;
+use Illuminate\Contracts\Validation\Validator as ValidationContract;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Carbon;
 use RuntimeException;
 
 class BloqueoHorarioController extends Controller
@@ -35,8 +36,16 @@ class BloqueoHorarioController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validateWithBag('crearBloqueo', $this->rules());
-        $payload = $this->sanitize($validated);
+        $validator = Validator::make($request->all(), $this->rules(), $this->validationMessages());
+
+        if ($validator->fails()) {
+            return back()
+                ->withInput()
+                ->withErrors($validator, 'crearBloqueo')
+                ->with('error', $this->extractErrorMessage($validator));
+        }
+
+        $payload = $this->sanitize($validator->validated());
 
         if ($this->hasOverlap($payload)) {
             return back()
@@ -56,13 +65,14 @@ class BloqueoHorarioController extends Controller
 
     public function update(Request $request, BloqueoHorario $bloqueo): RedirectResponse
     {
-        $validator = Validator::make($request->all(), $this->rules());
+        $validator = Validator::make($request->all(), $this->rules(), $this->validationMessages());
 
         if ($validator->fails()) {
             return back()
                 ->withInput()
                 ->with('editarBloqueoId', $bloqueo->id)
-                ->withErrors($validator, 'editarBloqueo');
+                ->withErrors($validator, 'editarBloqueo')
+                ->with('error', $this->extractErrorMessage($validator));
         }
 
         $payload = $this->sanitize($validator->validated());
@@ -150,5 +160,26 @@ class BloqueoHorarioController extends Controller
             'fecha_fin' => $payload['fecha_fin']->copy()->setSecond(0)->toDateTimeString(),
             'motivo' => $payload['motivo'],
         ];
+    }
+
+    private function validationMessages(): array
+    {
+        return [
+            'fecha_inicio.before' => 'La hora de inicio debe ser menor a la hora de fin.',
+            'fecha_fin.after' => 'La hora de fin debe ser mayor a la hora de inicio.',
+        ];
+    }
+
+    private function extractErrorMessage(ValidationContract $validator): string
+    {
+        $fields = ['fecha_inicio', 'fecha_fin', 'cancha_id', 'motivo'];
+
+        foreach ($fields as $field) {
+            if ($validator->errors()->has($field)) {
+                return $validator->errors()->first($field);
+            }
+        }
+
+        return 'No se pudo procesar el bloqueo. Revisa la información ingresada.';
     }
 }

@@ -7,6 +7,8 @@
     $editarBloqueoId = session('editarBloqueoId');
     $shouldOpenCreateModal = $errors->crearCancha->any();
     $shouldOpenBloqueoModal = $errors->crearBloqueo->any();
+    $crearBloqueoErrors = $errors->crearBloqueo ?? null;
+    $editarBloqueoErrors = $errors->editarBloqueo ?? null;
     $feedbackStatus = session('status');
     $feedbackError = session('error');
     $feedbackMessage = $feedbackStatus ?: $feedbackError;
@@ -660,8 +662,11 @@
                         @csrf
                         <div class="md:col-span-2">
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                            @php
+                                $crearCanchaError = $crearBloqueoErrors?->has('cancha_id');
+                            @endphp
                             <select name="cancha_id"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                 required>
                                 <option value="">Selecciona una cancha</option>
                                 @foreach ($canchas as $canchaOption)
@@ -677,8 +682,11 @@
 
                         <div>
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de inicio</label>
+                            @php
+                                $crearInicioError = $crearBloqueoErrors?->has('fecha_inicio');
+                            @endphp
                             <input type="datetime-local" name="fecha_inicio" value="{{ old('fecha_inicio') }}"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearInicioError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                 required>
                             @error('fecha_inicio', 'crearBloqueo')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -687,8 +695,11 @@
 
                         <div>
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de fin</label>
+                            @php
+                                $crearFinError = $crearBloqueoErrors?->has('fecha_fin');
+                            @endphp
                             <input type="datetime-local" name="fecha_fin" value="{{ old('fecha_fin') }}"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearFinError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                 required>
                             @error('fecha_fin', 'crearBloqueo')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -697,8 +708,11 @@
 
                         <div class="md:col-span-2">
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Motivo</label>
+                            @php
+                                $crearMotivoError = $crearBloqueoErrors?->has('motivo');
+                            @endphp
                             <textarea name="motivo" rows="3"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearMotivoError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                 required>{{ old('motivo') }}</textarea>
                             @error('motivo', 'crearBloqueo')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -752,8 +766,11 @@
 
                             <div class="md:col-span-2">
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                                @php
+                                    $editCanchaError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('cancha_id');
+                                @endphp
                                 <select name="cancha_id"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                     <option value="">Selecciona una cancha</option>
                                     @foreach ($canchas as $canchaOption)
@@ -769,8 +786,11 @@
 
                             <div>
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de inicio</label>
+                                @php
+                                    $editInicioError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('fecha_inicio');
+                                @endphp
                                 <input type="datetime-local" name="fecha_inicio" value="{{ $editFechaInicio }}"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editInicioError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                 @if ($rowIsEditingBloqueo && $errors->editarBloqueo->has('fecha_inicio'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarBloqueo->first('fecha_inicio') }}</p>
@@ -779,8 +799,11 @@
 
                             <div>
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de fin</label>
+                                @php
+                                    $editFinError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('fecha_fin');
+                                @endphp
                                 <input type="datetime-local" name="fecha_fin" value="{{ $editFechaFin }}"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editFinError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                 @if ($rowIsEditingBloqueo && $errors->editarBloqueo->has('fecha_fin'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarBloqueo->first('fecha_fin') }}</p>
@@ -789,8 +812,11 @@
 
                             <div class="md:col-span-2">
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Motivo</label>
+                                @php
+                                    $editMotivoError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('motivo');
+                                @endphp
                                 <textarea name="motivo" rows="3"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editMotivoError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>{{ $editMotivo }}</textarea>
                                 @if ($rowIsEditingBloqueo && $errors->editarBloqueo->has('motivo'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarBloqueo->first('motivo') }}</p>
