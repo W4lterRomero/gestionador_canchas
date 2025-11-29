@@ -22,9 +22,8 @@ Route::get('/estadios', function () {
     return view('estadios.index');
 })->name('estadios.index');
 
-Route::get('/estadios/detalles', function () {
-    return view('estadios.detalles');
-})->name('estadios.detalles');
+// Detalles de estadio con Livewire
+Route::get('/estadios/{id}', App\Livewire\EstadioDetalles::class)->name('estadios.detalles');
 
 
 // Página de Reservas

@@ -129,7 +129,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('estadios.detalles') }}"
+                    <a href="{{ route('estadios.detalles', ['id' => $cancha->id]) }}"
                         class="group/btn relative w-full h-12 flex items-center justify-center rounded-2xl font-semibold text-sm overflow-hidden transition-all duration-300 {{ $cancha->activa ? 'bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/40' : 'bg-gray-100 text-gray-400 cursor-not-allowed' }}">
                         <span class="relative z-10 flex items-center gap-2">
                             Ver Detalles

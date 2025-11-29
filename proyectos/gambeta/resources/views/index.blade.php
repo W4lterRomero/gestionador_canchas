@@ -3,7 +3,7 @@
 @section('content')
 
 <!-- HERO / HEAD SECTION -->
-<header 
+<header
     class="relative h-[480px] bg-cover bg-center bg-no-repeat flex items-center justify-center text-white"
     style="background-image: url('{{ asset("images/EstadioMagico.png") }}');"
 >
@@ -12,7 +12,7 @@
 
     <!-- Contenido -->
     <div class="relative z-10 text-center px-6">
-        <img src="{{ asset('images/logo.png') }}" 
+        <img src="{{ asset('images/logo.png') }}"
              class="h-32 w-auto mx-auto mb-4 drop-shadow-xl" alt="Logo">
 
         <h1 class="text-4xl md:text-5xl font-bold mb-3 tracking-wide">
@@ -20,7 +20,7 @@
         </h1>
 
         <p class="max-w-2xl mx-auto text-lg opacity-95">
-            Plataforma moderna para administrar estadios, coordinar reservaciones y gestionar 
+            Plataforma moderna para administrar estadios, coordinar reservaciones y gestionar
             la disponibilidad deportiva a nivel nacional.
         </p>
     </div>
@@ -94,7 +94,7 @@
 
         <!-- Estadio 1 -->
         <div class="rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 bg-white">
-            <img src="{{ asset('images/EstadioMagico.png') }}" 
+            <img src="{{ asset('images/EstadioMagico.png') }}"
                  class="h-56 w-full object-cover" alt="Estadio Mágico González">
             <div class="p-5 text-center">
                 <h3 class="text-xl font-semibold text-green-700">Estadio Mágico González</h3>
@@ -106,7 +106,7 @@
 
         <!-- Estadio 2 -->
         <div class="rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 bg-white">
-            <img src="{{ asset('images/EstadioBarraza.jpg') }}" 
+            <img src="{{ asset('images/EstadioBarraza.jpg') }}"
                  class="h-56 w-full object-cover" alt="Estadio Juan Francisco Barraza">
             <div class="p-5 text-center">
                 <h3 class="text-xl font-semibold text-green-700">Estadio Juan Francisco Barraza</h3>
@@ -118,7 +118,7 @@
 
         <!-- Estadio 3 -->
         <div class="rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 bg-white">
-            <img src="{{ asset('images/EstadioFlores.jpg') }}" 
+            <img src="{{ asset('images/EstadioFlores.jpg') }}"
                  class="h-56 w-full object-cover" alt="Estadio Ramón Flores Berríos">
             <div class="p-5 text-center">
                 <h3 class="text-xl font-semibold text-green-700">Estadio Ramón Flores Berríos</h3>
@@ -132,4 +132,4 @@
 
 </section>
 
-@endsection
+   @endsection

@@ -34,6 +34,7 @@
     <!-- CONTENIDO -->
     <main class="flex-grow">
         @yield('content')
+        {{ $slot ?? '' }}
     </main>
 
     <!-- FOOTER -->
