@@ -1034,6 +1034,12 @@
 
                     <form method="POST" action="{{ route('admin.precios.store') }}" class="grid gap-4 md:grid-cols-2 text-sm">
                         @csrf
+                        @if ($crearPrecioErrors?->any())
+                            <div class="md:col-span-2 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                                <p class="font-semibold text-red-100">No pudimos guardar el precio</p>
+                                <p>{{ $crearPrecioErrors->first() }}</p>
+                            </div>
+                        @endif
                         <div class="md:col-span-2">
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
                             @php
@@ -1140,6 +1146,12 @@
                         <form method="POST" action="{{ route('admin.precios.update', $precio) }}" class="grid gap-4 md:grid-cols-2 text-sm">
                             @csrf
                             @method('PUT')
+                            @if ($rowIsEditingPrecio && $editarPrecioErrors?->any())
+                                <div class="md:col-span-2 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                                    <p class="font-semibold text-red-100">Revisa la vigencia ingresada</p>
+                                    <p>{{ $editarPrecioErrors->first() }}</p>
+                                </div>
+                            @endif
 
                             <div class="md:col-span-2">
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
