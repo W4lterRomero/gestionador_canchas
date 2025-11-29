@@ -2,8 +2,19 @@
 
 @php
     $canchas = $canchas ?? collect();
+    $reservas = $reservas ?? collect();
+    $bloqueos = $bloqueos ?? collect();
+    $precios = $precios ?? collect();
     $editarCanchaId = session('editarCanchaId');
+    $editarBloqueoId = session('editarBloqueoId');
+    $editarPrecioId = session('editarPrecioId');
     $shouldOpenCreateModal = $errors->crearCancha->any();
+    $shouldOpenBloqueoModal = $errors->crearBloqueo->any();
+    $shouldOpenPrecioModal = $errors->crearPrecio->any();
+    $crearBloqueoErrors = $errors->crearBloqueo ?? null;
+    $editarBloqueoErrors = $errors->editarBloqueo ?? null;
+    $crearPrecioErrors = $errors->crearPrecio ?? null;
+    $editarPrecioErrors = $errors->editarPrecio ?? null;
     $feedbackStatus = session('status');
     $feedbackError = session('error');
     $feedbackMessage = $feedbackStatus ?: $feedbackError;
@@ -211,11 +222,241 @@
             </div>
 
         </div>
-
     </section>
 
+    <!-- SECCIÓN RESERVAS -->
+    <section id="reservas" data-section="reservas" class="scroll-mt-32 hidden">
+        <!-- ... (todo tu contenido de reservas tal como lo tienes) ... -->
+    </section>
+
+    <!-- SECCIÓN BLOQUEOS -->
+    <section id="bloqueos" data-section="bloqueos" class="scroll-mt-32 hidden">
+        <!-- ... (todo tu contenido de bloqueos tal como lo tienes) ... -->
+    </section>
+
+    <!-- SECCIÓN PRECIOS -->
+    <section id="precios" data-section="precios" class="scroll-mt-32 hidden">
+        <!-- ... (todo tu contenido de precios tal como lo tienes) ... -->
+    </section>
 </div>
 
-</section>
+{{-- SCRIPT PARA ACTIVAR SECCIONES Y ESTILOS (TEXTO NEGRO SIEMPRE) --}}
+<script>
+    (() => {
+        const shouldOpenCreateModal = @json($shouldOpenCreateModal);
+        const serverEditId = @json($editarCanchaId);
 
+        const initNav = () => {
+            const navButtons = document.querySelectorAll('#admin-panels-nav [data-section-target]');
+            const sections = document.querySelectorAll('[data-section]');
+
+            if (!navButtons.length) {
+                return;
+            }
+
+            const activeClasses = ['bg-indigo-200', 'shadow'];
+            const inactiveClasses = ['bg-white', 'hover:bg-gray-100'];
+
+            const activateSection = (target) => {
+                sections.forEach((section) => {
+                    section.classList.toggle('hidden', section.dataset.section !== target);
+                });
+
+                navButtons.forEach((btn) => {
+                    const isActive = btn.dataset.sectionTarget === target;
+                    btn.classList.remove(...activeClasses, ...inactiveClasses);
+                    btn.classList.add(...(isActive ? activeClasses : inactiveClasses), 'text-gray-900');
+                });
+            };
+
+            navButtons.forEach((btn) => btn.addEventListener('click', () => activateSection(btn.dataset.sectionTarget)));
+
+            const initialTarget =
+                document.querySelector('#admin-panels-nav [data-default]')?.dataset.sectionTarget ||
+                navButtons[0]?.dataset.sectionTarget;
+
+            activateSection(initialTarget);
+        };
+
+        const initModal = () => {
+            const modal = document.getElementById('modal');
+            const openButton = document.getElementById('abrirModal');
+            if (!modal) {
+                return;
+            }
+
+            const closeButtons = modal.querySelectorAll('[data-modal-close]');
+            const toggleModal = (show) => {
+                modal.classList.toggle('hidden', !show);
+                modal.classList.toggle('flex', show);
+                document.body.classList.toggle('overflow-hidden', show);
+            };
+
+            openButton?.addEventListener('click', () => toggleModal(true));
+            closeButtons.forEach((btn) => btn.addEventListener('click', () => toggleModal(false)));
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    toggleModal(false);
+                }
+            });
+
+            if (shouldOpenCreateModal) {
+                toggleModal(true);
+            }
+        };
+
+        const initEditModals = () => {
+            const modals = document.querySelectorAll('[data-edit-modal]');
+            if (!modals.length) {
+                return;
+            }
+
+            let activeModal = null;
+            const setBodyScroll = (locked) => document.body.classList.toggle('overflow-hidden', locked);
+
+            const openModal = (modal) => {
+                if (activeModal === modal) {
+                    return;
+                }
+                if (activeModal) {
+                    activeModal.classList.add('hidden');
+                    activeModal.classList.remove('flex');
+                }
+                activeModal = modal;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setBodyScroll(true);
+            };
+
+            const openModalById = (id) => {
+                const modal = document.getElementById(id);
+                if (modal) {
+                    openModal(modal);
+                }
+            };
+
+            const closeModal = (modal) => {
+                if (!modal) {
+                    return;
+                }
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                if (activeModal === modal) {
+                    activeModal = null;
+                    setBodyScroll(false);
+                }
+            };
+
+            document.querySelectorAll('[data-edit-target]').forEach((btn) => {
+                btn.addEventListener('click', () => openModalById(btn.dataset.editTarget));
+            });
+
+            document.querySelectorAll('[data-edit-modal-close]').forEach((btn) => {
+                btn.addEventListener('click', () => closeModal(btn.closest('[data-edit-modal]')));
+            });
+
+            modals.forEach((modal) => {
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+
+                if (modal.dataset.openDefault === 'true') {
+                    openModal(modal);
+                }
+            });
+
+            if (!activeModal && serverEditId) {
+                openModalById(`edit-modal-${serverEditId}`);
+            }
+        };
+
+        const initFeedbackModal = () => {
+            const feedbackModal = document.getElementById('feedback-modal');
+            if (!feedbackModal) {
+                return;
+            }
+
+            const shouldShow = feedbackModal.dataset.feedbackVisible === 'true';
+            const toggleModal = (show) => {
+                feedbackModal.classList.toggle('hidden', !show);
+                feedbackModal.classList.toggle('flex', show);
+                document.body.classList.toggle('overflow-hidden', show);
+            };
+
+            feedbackModal.querySelectorAll('[data-feedback-close]').forEach((btn) => {
+                btn.addEventListener('click', () => toggleModal(false));
+            });
+
+            feedbackModal.addEventListener('click', (event) => {
+                if (event.target === feedbackModal) {
+                    toggleModal(false);
+                }
+            });
+
+            if (shouldShow) {
+                toggleModal(true);
+            }
+        };
+
+        const initDeleteModal = () => {
+            const deleteModal = document.getElementById('delete-modal');
+            if (!deleteModal) {
+                return;
+            }
+
+            let pendingForm = null;
+            const toggleModal = (show) => {
+                deleteModal.classList.toggle('hidden', !show);
+                deleteModal.classList.toggle('flex', show);
+                document.body.classList.toggle('overflow-hidden', show);
+                if (!show) {
+                    pendingForm = null;
+                }
+            };
+
+            document.querySelectorAll('[data-delete-target]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    pendingForm = document.getElementById(btn.dataset.deleteTarget);
+                    toggleModal(true);
+                });
+            });
+
+            deleteModal.querySelectorAll('[data-delete-cancel]').forEach((btn) => {
+                btn.addEventListener('click', () => toggleModal(false));
+            });
+
+            const confirmBtn = deleteModal.querySelector('[data-delete-confirm]');
+            confirmBtn?.addEventListener('click', () => {
+                if (pendingForm) {
+                    pendingForm.submit();
+                }
+            });
+
+            deleteModal.addEventListener('click', (event) => {
+                if (event.target === deleteModal) {
+                    toggleModal(false);
+                }
+            });
+        };
+
+        const initPage = () => {
+            initNav();
+            initModal();
+            initEditModals();
+            initFeedbackModal();
+            initDeleteModal();
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initPage, { once: true });
+        } else {
+            initPage();
+        }
+    })();
+</script>
+
+{{-- logica --}}
+<script src="{{ asset('js/reservas.js') }}"></script>
 @endsection

@@ -30,8 +30,8 @@ class CanchaPrecio extends Model
      */
     protected $casts = [
         'precio_hora' => 'decimal:2',
-        'fecha_desde' => 'date',
-        'fecha_hasta' => 'date',
+        'fecha_desde' => 'datetime',
+        'fecha_hasta' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
