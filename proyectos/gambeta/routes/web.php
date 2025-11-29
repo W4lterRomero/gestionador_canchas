@@ -18,9 +18,10 @@ Route::get('/estadios', function () {
     return view('estadios.index');
 })->name('estadios.index');
 
-Route::get('/reservar', function () {
-    return view('estadios.reservar');
-})->name('estadios.reservar');
+Route::get('/estadios/detalles', function () {
+    return view('estadios.detalles');
+})->name('estadios.detalles');
+
 
 // Página de Reservas
 Route::get('/reservas', function () {
@@ -35,8 +36,8 @@ Route::get('/reservas/editar', function () {
 Route::get('/admin', function () {
     return view('administracion.index');
 })->name('admin.index');
-// Página de Reportes
 
+// Página de Reportes
 Route::get('/administracion/reportes', function () {
     return view('administracion.reportes');
 })->name('administracion.reportes');
@@ -53,5 +54,6 @@ Route::get('/usuarios/ver', function () {
 Route::get('/usuarios/editar', function () {
     return view('usuarios.editar');
 })->name('usuarios.editar');
+
 // Livewire Counter (opcional)
 Route::get('/counter', Counter::class);

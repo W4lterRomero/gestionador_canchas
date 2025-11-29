@@ -2,201 +2,305 @@
 
 @section('content')
 
-<section class="container mx-auto px-6 py-10 space-y-12">
+<section class="container mx-auto px-6 py-10">
 
-    <!-- =================================================================== -->
-    <!-- 🔵 TÍTULO PRINCIPAL -->
-    <!-- =================================================================== -->
-    <h1 class="text-3xl font-bold text-green-700 mb-4">
-        Gestión de Reservas
+    <!-- TÍTULO -->
+    <h1 class="text-3xl font-bold text-green-700 mb-6">
+        Crear nueva reserva
     </h1>
 
-    <p class="text-gray-600 mb-8">
-        Consulta, modifica y administra todas las reservas del sistema.
-    </p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+        <!-- ========================================================= -->
+        <!--                 FORMULARIO DE RESERVA                     -->
+        <!-- ========================================================= -->
+        <div class="md:col-span-2 bg-white rounded-2xl shadow-xl p-8 space-y-10 border border-green-200">
+
+            <!-- ========================================================= -->
+            <!--              DATOS DEL CLIENTE (AMPLIADO)                 -->
+            <!-- ========================================================= -->
+            <div>
+                <h2 class="text-2xl font-bold text-green-700 mb-4">Datos del Cliente</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                    <!-- Nombre -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Nombre completo</label>
+                        <input type="text"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full"
+                            placeholder="Ej: Carlos Pérez">
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Teléfono</label>
+                        <input type="text"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full"
+                            placeholder="0000-0000">
+                    </div>
+
+                    <!-- Equipo -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Equipo o grupo</label>
+                        <input type="text"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full"
+                            placeholder="Nombre del equipo">
+                    </div>
+
+                    <!-- DUI -->
+                    <div>
+                        <label class="font-semibold text-gray-700">DUI</label>
+                        <input type="text"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full"
+                            placeholder="00000000-0">
+                    </div>
+
+                    <!-- Dirección -->
+                    <div class="md:col-span-2">
+                        <label class="font-semibold text-gray-700">Dirección</label>
+                        <input type="text"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full"
+                            placeholder="Colonia, calle, número de casa...">
+                    </div>
+
+                    <!-- Correo -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Correo electrónico</label>
+                        <input type="email"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full"
+                            placeholder="cliente@mail.com">
+                    </div>
+
+                    <!-- Fecha nacimiento -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Fecha de nacimiento</label>
+                        <input type="date"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full">
+                    </div>
+
+                    <!-- Género -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Género</label>
+                        <select class="mary-select mary-select-bordered bg-gray-50 w-full">
+                            <option value="">Seleccione</option>
+                            <option>Masculino</option>
+                            <option>Femenino</option>
+                            <option>Otro / Prefiero no decirlo</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
 
 
-    <!-- =================================================================== -->
-    <!-- 🔵 FILTROS -->
-    <!-- =================================================================== -->
-    <div class="bg-white rounded-2xl shadow-md p-6 border border-green-300">
 
-        <h2 class="text-xl font-bold text-green-700 mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-filter text-green-500"></i>
-            Filtros de búsqueda
-        </h2>
+            <!-- ========================================================= -->
+            <!--                 DATOS DE LA RESERVA                       -->
+            <!-- ========================================================= -->
+            <div>
+                <h2 class="text-2xl font-bold text-green-700 mb-4">Datos de la Reserva</h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-            <!-- Cliente -->
-            <input type="text"
-                class="mary-input mary-input-bordered bg-gray-50"
-                placeholder="Buscar por cliente...">
+                    <!-- Estadio -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Estadio</label>
+                        <select class="mary-select mary-select-bordered bg-gray-50 w-full">
+                            <option>Estadio Juan Francisco Barraza</option>
+                            <option>Estadio Félix Charlaix</option>
+                            <option>Estadio Ramón Flores Berríos</option>
+                            <option>Estadio Marcelino Imbers</option>
+                            <option>Estadio Correcaminos</option>
+                            <option>Estadio Municipal Moncagua</option>
+                        </select>
+                    </div>
 
-            <!-- Estadio -->
-            <select class="mary-select mary-select-bordered bg-gray-50">
-                <option value="">Todos los estadios</option>
-                <option>Estadio Barraza</option>
-                <option>Estadio Charlaix</option>
-                <option>Estadio Imbers</option>
-                <option>Estadio Correcaminos</option>
-            </select>
+                    <!-- Fecha -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Fecha</label>
+                        <input type="date"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full">
+                    </div>
 
-            <!-- Fecha -->
-            <input type="date"
-                class="mary-input mary-input-bordered bg-gray-50">
+                    <!-- Hora -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Hora</label>
+                        <input type="time"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full">
+                    </div>
 
-            <!-- Estado -->
-            <select class="mary-select mary-select-bordered bg-gray-50">
-                <option value="">Estado</option>
-                <option>Pendiente</option>
-                <option>Confirmada</option>
-                <option>Cancelada</option>
-                <option>Finalizada</option>
-            </select>
+                    <!-- Duración -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Duración (horas)</label>
+                        <input type="number" min="1"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full"
+                            placeholder="1">
+                    </div>
+
+                    <!-- Precio -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Precio por hora (USD)</label>
+                        <input type="number" step="0.01"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full"
+                            placeholder="$30">
+                    </div>
+
+                    <!-- Total -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Total a pagar (USD)</label>
+                        <input type="text"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full"
+                            placeholder="Se calculará automáticamente"
+                            disabled>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <!-- ========================================================= -->
+            <!--                 ESTADO DE LA RESERVA                      -->
+            <!-- ========================================================= -->
+            <div>
+                <h2 class="text-2xl font-bold text-green-700 mb-4">Estado de la Reserva</h2>
+
+                <select class="mary-select mary-select-bordered bg-gray-50 w-full md:w-1/3">
+                    <option>Pendiente</option>
+                    <option>Confirmada</option>
+                    <option>Cancelada</option>
+                    <option>Finalizada</option>
+                </select>
+            </div>
+
+
+
+            <!-- ========================================================= -->
+            <!--                    PAGO Y COMPROBANTE                     -->
+            <!-- ========================================================= -->
+            <div>
+                <h2 class="text-2xl font-bold text-green-700 mb-4">Pago y Comprobante</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                    <!-- Estado de pago -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Estado del pago</label>
+                        <select class="mary-select mary-select-bordered bg-gray-50 w-full">
+                            <option>No pagado</option>
+                            <option>Pagado completo</option>
+                            <option>Dejó adelanto</option>
+                        </select>
+                    </div>
+
+                    <!-- Adelanto -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Monto de adelanto (USD)</label>
+                        <input type="number" step="0.01"
+                            class="mary-input mary-input-bordered bg-gray-50 w-full"
+                            placeholder="Ej: 10.00">
+                    </div>
+
+                    <!-- Método de pago -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Método de pago</label>
+                        <select class="mary-select mary-select-bordered bg-gray-50 w-full">
+                            <option>Efectivo</option>
+                            <option>Tarjeta</option>
+                            <option>Transferencia</option>
+                            <option>Depósito bancario</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- Botón PDF -->
+                <div class="mt-6 flex justify-center">
+                    <button class="mary-btn bg-green-600 hover:bg-green-500 text-white rounded-full px-8 py-2 shadow">
+                        Generar comprobante PDF
+                    </button>
+                </div>
+            </div>
 
         </div>
-    </div>
-
-    
-    <!-- =================================================================== -->
-    <!-- 🔵 TABLA DE RESERVAS -->
-    <!-- =================================================================== -->
-    <div class="bg-white rounded-2xl shadow-md p-6 border border-green-300">
-
-        <h2 class="text-xl font-bold text-green-700 mb-6 flex items-center gap-2">
-            <i class="fa-solid fa-list-check text-green-500"></i>
-            Todas las reservas registradas
-        </h2>
-
-        <div class="overflow-x-auto">
-            <table class="table w-full">
-
-                <thead>
-                    <tr class="text-green-700 font-bold text-sm">
-                        <th>Cliente</th>
-                        <th>Estadio</th>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Duración</th>
-                        <th>Total</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-
-                <tbody class="text-sm">
-
-                    <!-- ======================= -->
-                    <!-- RESERVA EJEMPLO 1 -->
-                    <!-- ======================= -->
-                    <tr>
-                        <td>Carlos Pérez</td>
-                        <td>Estadio Barraza</td>
-                        <td>2025-05-10</td>
-                        <td>17:00</td>
-                        <td>2h</td>
-                        <td>$60</td>
-
-                        <td>
-                            <select class="mary-select mary-select-bordered text-sm bg-gray-50">
-                                <option>Pendiente</option>
-                                <option>Confirmada</option>
-                                <option>Cancelada</option>
-                                <option>Finalizada</option>
-                            </select>
-                        </td>
-
-                        <td class="flex gap-2">
-
-                            <a href="{{ route('reservas.editar', 1) }}"
-                               class="mary-btn mary-btn-xs bg-green-600 hover:bg-green-500 text-white rounded">
-                                Editar
-                            </a>
-
-                            <button class="mary-btn mary-btn-xs bg-red-600 hover:bg-red-500 text-white rounded"
-                                    onclick="confirm('¿Eliminar reserva?')">
-                                Eliminar
-                            </button>
-
-                        </td>
-                    </tr>
 
 
-                    <!-- ======================= -->
-                    <!-- RESERVA EJEMPLO 2 -->
-                    <!-- ======================= -->
-                    <tr>
-                        <td>Andrea Gómez</td>
-                        <td>Estadio Charlaix</td>
-                        <td>2025-05-12</td>
-                        <td>18:00</td>
-                        <td>1h</td>
-                        <td>$35</td>
-
-                        <td>
-                            <select class="mary-select mary-select-bordered text-sm bg-gray-50">
-                                <option>Confirmada</option>
-                                <option>Pendiente</option>
-                                <option>Cancelada</option>
-                                <option>Finalizada</option>
-                            </select>
-                        </td>
-
-                        <td class="flex gap-2">
-
-                            <a href="{{ route('reservas.editar', 2) }}"
-                               class="mary-btn mary-btn-xs bg-green-600 hover:bg-green-500 text-white rounded">
-                                Editar
-                            </a>
-
-                            <button class="mary-btn mary-btn-xs bg-red-600 hover:bg-red-500 text-white rounded"
-                                    onclick="confirm('¿Eliminar reserva?')">
-                                Eliminar
-                            </button>
-
-                        </td>
-                    </tr>
 
 
-                    <!-- ======================= -->
-                    <!-- RESERVA EJEMPLO 3 -->
-                    <!-- ======================= -->
-                    <tr>
-                        <td>Mario López</td>
-                        <td>Estadio Imbers</td>
-                        <td>2025-05-14</td>
-                        <td>14:00</td>
-                        <td>3h</td>
-                        <td>$90</td>
+        <!-- ========================================================= -->
+        <!--             CESTA / DETALLES DE COMPRA                    -->
+        <!-- ========================================================= -->
+        <div class="md:col-span-1">
 
-                        <td>
-                            <select class="mary-select mary-select-bordered text-sm bg-gray-50">
-                                <option>Finalizada</option>
-                                <option>Pendiente</option>
-                                <option>Confirmada</option>
-                                <option>Cancelada</option>
-                            </select>
-                        </td>
+            <div class="bg-gray-900 text-white rounded-2xl shadow-xl p-6 border border-green-500/30">
 
-                        <td class="flex gap-2">
+                <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-cart-shopping text-green-400"></i>
+                    Detalles de Compra
+                </h2>
 
-                            <a href="{{ route('reservas.editar', 3) }}"
-                               class="mary-btn mary-btn-xs bg-green-600 hover:bg-green-500 text-white rounded">
-                                Editar
-                            </a>
+                <div class="bg-gray-800 rounded-xl p-4 flex items-center gap-3 border border-gray-700 mb-4">
+                    <i class="fa-solid fa-circle-info text-yellow-400 text-2xl"></i>
+                    <p class="text-gray-300 text-sm">Complete la información para ver el resumen.</p>
+                </div>
 
-                            <button class="mary-btn mary-btn-xs bg-red-600 hover:bg-red-500 text-white rounded"
-                                    onclick="confirm('¿Eliminar reserva?')">
-                                Eliminar
-                            </button>
+                <!-- Datos ejemplo visual -->
+                <div class="space-y-4">
 
-                        </td>
-                    </tr>
+                    <div class="p-4 bg-gray-800 rounded-xl border border-green-600/20">
+                        <p class="font-semibold text-green-400">Estadio</p>
+                        <p class="text-gray-200">–</p>
+                    </div>
 
-                </tbody>
+                    <div class="p-4 bg-gray-800 rounded-xl border border-green-600/20">
+                        <p class="font-semibold text-green-400">Fecha</p>
+                        <p class="text-gray-200">–</p>
+                    </div>
 
-            </table>
+                    <div class="p-4 bg-gray-800 rounded-xl border border-green-600/20">
+                        <p class="font-semibold text-green-400">Hora</p>
+                        <p class="text-gray-200">–</p>
+                    </div>
+
+                    <div class="p-4 bg-gray-800 rounded-xl border border-green-600/20">
+                        <p class="font-semibold text-green-400">Duración</p>
+                        <p class="text-gray-200">–</p>
+                    </div>
+
+                    <div class="p-4 bg-gray-800 rounded-xl border border-green-600/20">
+                        <p class="font-semibold text-green-400">Precio por hora</p>
+                        <p class="text-gray-200">–</p>
+                    </div>
+
+                    <div class="p-4 bg-gray-800 rounded-xl border border-green-600/20">
+                        <p class="font-semibold text-green-400">Total</p>
+                        <p class="text-green-400 font-bold text-xl">–</p>
+                    </div>
+
+                </div>
+
+                <!-- CUPON -->
+                <div class="mt-6">
+                    <p class="text-gray-400 mb-1">¿Tiene un cupón?</p>
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Cupón"
+                            class="mary-input bg-gray-800 border border-green-500/30 text-white w-full">
+                        <button class="bg-green-600 hover:bg-green-500 px-4 rounded-xl font-bold">
+                            Aplicar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BOTÓN FINAL -->
+                <div class="mt-6 flex justify-center">
+                    <button class="mary-btn bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-2 rounded-full shadow-lg">
+                        Confirmar Reserva
+                    </button>
+                </div>
+
+            </div>
+
         </div>
 
     </div>

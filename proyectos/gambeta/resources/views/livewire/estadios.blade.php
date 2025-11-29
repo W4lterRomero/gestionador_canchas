@@ -48,9 +48,9 @@
                         Precio por hora: <b>${{ $e['precio'] }}</b>
                     </p>
 
-                <a href="{{ route('estadios.reservar') }}"
+                <a href="{{ route('estadios.detalles') }}"
                 class="mary-btn bg-green-600 hover:bg-green-500 text-white w-full mt-4 rounded-full text-center block">
-                    Reservar Estadio
+                    Ver Detalles
                 </a>
                 </div>
 
