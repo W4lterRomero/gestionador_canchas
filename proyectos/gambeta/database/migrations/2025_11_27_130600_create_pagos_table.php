@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('pagos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('reserva_id')->constrained('reservas')->restrictOnDelete();
+            $table->foreignId('reserva_id')->constrained('reservas')->cascadeOnDelete();
             $table->decimal('monto', 10, 2);
             $table->enum('tipo_pago', ['anticipo', 'saldo', 'total']);
             $table->string('metodo_pago', 50);
             $table->dateTime('fecha_pago');
             $table->string('comprobante_url', 255);
-            $table->foreignId('registrado_por')->constrained('users')->restrictOnDelete();
+            $table->foreignId('registrado_por')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

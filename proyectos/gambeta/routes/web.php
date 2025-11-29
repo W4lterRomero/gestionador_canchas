@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Counter;
+use App\Http\Controllers\CanchaController;
 
 // Página de Login
 Route::get('/', function () {
@@ -35,23 +36,6 @@ Route::get('/reservas/editar', function () {
 Route::get('/admin', function () {
     return view('administracion.index');
 })->name('admin.index');
-// Página de Reportes
 
-Route::get('/administracion/reportes', function () {
-    return view('administracion.reportes');
-})->name('administracion.reportes');
-
-// USUARIOS
-Route::get('/usuarios', function () {
-    return view('usuarios.index');
-})->name('usuarios.index');
-
-Route::get('/usuarios/ver', function () {
-    return view('usuarios.ver');
-})->name('usuarios.ver');
-
-Route::get('/usuarios/editar', function () {
-    return view('usuarios.editar');
-})->name('usuarios.editar');
 // Livewire Counter (opcional)
 Route::get('/counter', Counter::class);

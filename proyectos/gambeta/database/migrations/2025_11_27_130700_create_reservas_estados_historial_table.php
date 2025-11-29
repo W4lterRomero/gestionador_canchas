@@ -23,7 +23,7 @@ return new class extends Migration
             $table->dateTime('fecha_cambio');
             $table->foreignId('cambiado_por')
                 ->constrained('users')
-                ->restrictOnDelete();
+                ->cascadeOnDelete();
             $table->timestamps();
         });
     }

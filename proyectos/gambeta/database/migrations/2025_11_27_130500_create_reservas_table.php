@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('reservas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('cancha_id')->constrained('canchas')->restrictOnDelete();
-            $table->foreignId('cliente_id')->constrained('clientes')->restrictOnDelete();
+            $table->foreignId('cancha_id')->constrained('canchas')->cascadeOnDelete();
+            $table->foreignId('cliente_id')->constrained('clientes')->cascadeOnDelete();
             $table->date('fecha_reserva'); // Día en el que se tomó la reserva
             $table->dateTime('fecha_inicio'); // Fecha y hora de arranque del turno
             $table->dateTime('fecha_fin'); // Fecha y hora estimada de finalización
@@ -23,8 +23,8 @@ return new class extends Migration
             $table->decimal('total', 10, 2); // Total calculado para la reserva
             $table->enum('estado', ['pendiente', 'confirmada', 'finalizada', 'cancelada']); // Estado de seguimiento
             $table->text('observaciones')->nullable(); // Notas internas o peticiones especiales
-            $table->foreignId('creado_por')->constrained('users')->restrictOnDelete();
-            $table->foreignId('actualizado_por')->constrained('users')->restrictOnDelete();
+            $table->foreignId('creado_por')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('actualizado_por')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

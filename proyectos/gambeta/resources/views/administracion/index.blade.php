@@ -1,62 +1,84 @@
 @extends('components.layouts.app')
 
+@php
+    $canchas = $canchas ?? collect();
+    $editarCanchaId = session('editarCanchaId');
+    $shouldOpenCreateModal = $errors->crearCancha->any();
+    $feedbackStatus = session('status');
+    $feedbackError = session('error');
+    $feedbackMessage = $feedbackStatus ?: $feedbackError;
+    $feedbackType = $feedbackStatus ? 'success' : ($feedbackError ? 'error' : null);
+    $isErrorFeedback = $feedbackType === 'error';
+    $feedbackTitle = $isErrorFeedback ? 'Ocurrió un problema' : 'Operación exitosa';
+@endphp
+
 @section('content')
 
-<section class="container mx-auto px-6 py-10 space-y-12">
+<div class="container py-4">
 
-    <!-- =================================================================== -->
-    <!-- 🔵 SECCIÓN: RESERVAS -->
-    <!-- =================================================================== -->
-    <div class="bg-white rounded-2xl shadow-xl p-8 border border-green-300">
+    <!-- Header -->
+    <div class="hero mb-4"
+        style="background:linear-gradient(90deg,#0b3d91,#1565c0);color:white;padding:18px;border-radius:8px;">
+        <h3 class="mb-0">Panel de Administración</h3>
+        <div class="small">Gestión general del sistema</div>
+    </div>
 
-        <h2 class="text-3xl font-bold text-green-700 mb-6 flex items-center gap-2">
-            <i class="fa-solid fa-calendar-check text-green-500"></i>
-            Gestión de Reservas
-        </h2>
 
-        <!-- FILTRO RÁPIDO -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <!-- ============================================================= -->
+    <!-- 🔵 SECCIÓN 1: VER TODAS LAS RESERVAS -->
+    <!-- ============================================================= -->
+    <section class="mb-5">
 
-            <input type="text" 
-                class="mary-input mary-input-bordered bg-gray-50"
-                placeholder="Buscar por cliente...">
-
-            <select class="mary-select mary-select-bordered bg-gray-50">
-                <option value="">Filtrar por estadio</option>
-                <option>Barraza</option>
-                <option>Charlaix</option>
-                <option>Imbers</option>
-            </select>
-
-            <select class="mary-select mary-select-bordered bg-gray-50">
-                <option value="">Estado</option>
-                <option>Pendiente</option>
-                <option>Confirmada</option>
-                <option>Finalizada</option>
-                <option>Cancelada</option>
-            </select>
-
-        </div>
-
-        <!-- PRÓXIMAS RESERVAS -->
-        <h3 class="text-2xl font-bold text-green-600 mb-3">Próximas Reservas</h3>
-
-        <div class="space-y-4">
-
-            <div class="bg-gray-50 p-4 rounded-xl border border-green-200 flex justify-between items-center">
-                <div>
-                    <p class="font-semibold text-gray-800">Carlos Pérez</p>
-                    <p class="text-gray-600 text-sm">Estadio Barraza — 10:00 AM (Hoy)</p>
-                </div>
-                <span class="mary-badge mary-badge-warning">Pendiente</span>
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Ver todas las reservas</h5>
             </div>
 
-            <div class="bg-gray-50 p-4 rounded-xl border border-green-200 flex justify-between items-center">
-                <div>
-                    <p class="font-semibold text-gray-800">Andrea Gómez</p>
-                    <p class="text-gray-600 text-sm">Estadio Correcaminos — 2:00 PM (Hoy)</p>
+            <div class="card-body">
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Filtrar por fecha</label>
+                        <input type="date" class="form-control">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Filtrar por cancha</label>
+                        <select class="form-select">
+                            <option>Todas</option>
+                            <option>Cancha Central</option>
+                            <option>Indoor Arena</option>
+                            <option>Rápida Norte</option>
+                        </select>
+                    </div>
                 </div>
-                <span class="mary-badge mary-badge-success">Confirmada</span>
+
+                <!-- Tabla de ejemplo (solo diseño) -->
+                <table class="table table-striped">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Cancha</th>
+                            <th>Cliente</th>
+                            <th>Horario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2025-01-10</td>
+                            <td>Cancha Central</td>
+                            <td>Juan Pérez</td>
+                            <td>10:00 - 11:00</td>
+                        </tr>
+                        <tr>
+                            <td>2025-01-11</td>
+                            <td>Indoor Arena</td>
+                            <td>María López</td>
+                            <td>14:00 - 15:00</td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
 
         </div>
@@ -68,115 +90,131 @@
             </a>
         </div>
 
-    </div>
+    </section>
 
 
 
-    <!-- =================================================================== -->
-    <!-- 🟢 SECCIÓN: ESTADIOS -->
-    <!-- =================================================================== -->
-    <div class="bg-white rounded-2xl shadow-xl p-8 border border-green-300">
+    <!-- ============================================================= -->
+    <!-- 🔵 SECCIÓN 2: BLOQUEAR HORARIOS -->
+    <!-- ============================================================= -->
+    <section class="mb-5">
 
-        <h2 class="text-3xl font-bold text-green-700 mb-6 flex items-center gap-2">
-            <i class="fa-solid fa-futbol text-green-500"></i>
-            Gestión de Estadios
-        </h2>
-
-        <!-- ESTADIOS MÁS POPULARES -->
-        <h3 class="text-2xl font-bold text-green-600 mb-3">Estadios más populares</h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-
-            <div class="bg-gray-50 p-5 rounded-xl shadow border border-green-200">
-                <h4 class="font-bold text-lg text-green-700">Estadio Barraza</h4>
-                <p class="text-gray-600 text-sm">Reservas este mes: 32</p>
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Bloquear horarios especiales</h5>
             </div>
 
-            <div class="bg-gray-50 p-5 rounded-xl shadow border border-green-200">
-                <h4 class="font-bold text-lg text-green-700">Estadio Charlaix</h4>
-                <p class="text-gray-600 text-sm">Reservas este mes: 21</p>
-            </div>
+            <div class="card-body">
 
-            <div class="bg-gray-50 p-5 rounded-xl shadow border border-green-200">
-                <h4 class="font-bold text-lg text-green-700">Estadio Imbers</h4>
-                <p class="text-gray-600 text-sm">Reservas este mes: 17</p>
-            </div>
+                <p class="text-muted">
+                    Configure bloqueos temporales para mantenimiento, eventos o actividades exclusivas.
+                </p>
 
-        </div>
+                <div class="row g-3">
 
-        <div class="flex justify-end">
-            <a href="{{ route('estadios.index') }}"
-               class="mary-btn bg-green-600 hover:bg-green-500 text-white rounded-full px-6">
-                Ver lista completa de estadios
-            </a>
-        </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Cancha</label>
+                        <select class="form-select">
+                            <option>Cancha Central</option>
+                            <option>Indoor Arena</option>
+                            <option>Rápida Norte</option>
+                        </select>
+                    </div>
 
-    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Fecha del bloqueo</label>
+                        <input type="date" class="form-control">
+                    </div>
 
+                    <div class="col-md-4">
+                        <label class="form-label">Motivo</label>
+                        <input type="text" class="form-control" placeholder="Mantenimiento, evento, etc.">
+                    </div>
 
-
-
-    <!-- =================================================================== -->
-    <!-- 🟣 SECCIÓN: GESTIÓN DE USUARIOS -->
-    <!-- =================================================================== -->
-    <div class="bg-white rounded-2xl shadow-xl p-8 border border-green-300">
-
-        <h2 class="text-3xl font-bold text-green-700 mb-6 flex items-center gap-2">
-            <i class="fa-solid fa-users text-green-500"></i>
-            Gestión de Usuarios
-        </h2>
-
-        <!-- RESUMEN DE USUARIOS -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-
-            <div class="bg-gray-50 p-5 rounded-xl shadow border border-green-200 text-center">
-                <h4 class="font-bold text-lg text-green-700">Total Usuarios</h4>
-                <p class="text-3xl font-bold text-gray-800 mt-2">128</p>
-            </div>
-
-            <div class="bg-gray-50 p-5 rounded-xl shadow border border-green-200 text-center">
-                <h4 class="font-bold text-lg text-green-700">Administradores</h4>
-                <p class="text-3xl font-bold text-gray-800 mt-2">6</p>
-            </div>
-
-            <div class="bg-gray-50 p-5 rounded-xl shadow border border-green-200 text-center">
-                <h4 class="font-bold text-lg text-green-700">Usuarios activos hoy</h4>
-                <p class="text-3xl font-bold text-gray-800 mt-2">21</p>
-            </div>
-
-        </div>
-
-        <!-- USUARIOS RECIENTES -->
-        <h3 class="text-2xl font-bold text-green-600 mb-4">Usuarios recientes</h3>
-
-        <div class="space-y-4">
-
-            <div class="bg-gray-50 p-4 rounded-xl border border-green-200 flex justify-between items-center">
-                <div>
-                    <p class="font-semibold text-gray-800">José Martínez</p>
-                    <p class="text-gray-600 text-sm">Registrado hace 2 días</p>
                 </div>
-                <span class="mary-badge mary-badge-primary">Activo</span>
-            </div>
 
-            <div class="bg-gray-50 p-4 rounded-xl border border-green-200 flex justify-between items-center">
-                <div>
-                    <p class="font-semibold text-gray-800">María López</p>
-                    <p class="text-gray-600 text-sm">Registrada hace 5 días</p>
+                <div class="mt-3 text-end">
+                    <button class="btn btn-warning">Guardar bloqueo</button>
                 </div>
-                <span class="mary-badge mary-badge-warning">Pendiente</span>
+
+                <hr class="my-4">
+
+                <h6>Bloqueos recientes (ejemplo)</h6>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <b>Cancha Central</b> — 2025-01-15 <br>
+                        Motivo: Mantenimiento general
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+    </section>
+
+
+
+    <!-- ============================================================= -->
+    <!-- 🔵 SECCIÓN 3: GESTIONAR PRECIOS -->
+    <!-- ============================================================= -->
+    <section class="mb-5">
+
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Gestionar precios</h5>
+            </div>
+
+            <div class="card-body">
+
+                <p class="text-muted">
+                    Ajusta el precio por hora de cada cancha.
+                </p>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label class="form-label">Cancha</label>
+                        <select class="form-select">
+                            <option value="f1">Cancha Central</option>
+                            <option value="f2">Indoor Arena</option>
+                            <option value="f3">Rápida Norte</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Nuevo precio (USD)</label>
+                        <input type="number" class="form-control">
+                    </div>
+
+                </div>
+
+                <div class="mt-3 text-end">
+                    <button class="btn btn-success">Guardar precio</button>
+                </div>
+
+                <hr class="my-4">
+
+                <h6>Precios actuales (ejemplo)</h6>
+
+                <ul class="list-group mt-2">
+                    <li class="list-group-item">
+                        <b>Cancha Central</b>: $20/h
+                    </li>
+                    <li class="list-group-item">
+                        <b>Indoor Arena</b>: $35/h
+                    </li>
+                    <li class="list-group-item">
+                        <b>Rápida Norte</b>: $18/h
+                    </li>
+                </ul>
+
             </div>
 
         </div>
 
-        <div class="flex justify-end mt-6">
-            <a href="{{ route('usuarios.index') }}"
-               class="mary-btn bg-green-600 hover:bg-green-500 text-white rounded-full px-6">
-                Ver todos los usuarios
-            </a>
-        </div>
+    </section>
 
-    </div>
+</div>
 
 </section>
 

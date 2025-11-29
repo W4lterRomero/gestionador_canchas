@@ -18,7 +18,7 @@ class CanchaSeeder extends Seeder
                 'tipo' => 'Sintética',
                 'descripcion' => 'Campo techado ideal para torneos entre semana.',
                 'precio_hora' => 35.00,
-                'imagen_url' => '/resources/images/cancha.png',
+                'imagen_url' => '/storage/canchas/cancha.png',
                 'activa' => true,
             ],
             [
@@ -26,7 +26,7 @@ class CanchaSeeder extends Seeder
                 'tipo' => 'Fútbol 5',
                 'descripcion' => 'Espacio abierto con césped natural para grupos pequeños.',
                 'precio_hora' => 22.50,
-                'imagen_url' => '/resources/images/cancha.png',
+                'imagen_url' => '/storage/canchas/cancha.png',
                 'activa' => true,
             ],
             [
@@ -34,7 +34,7 @@ class CanchaSeeder extends Seeder
                 'tipo' => 'Indoor',
                 'descripcion' => 'Cancha climatizada perfecta para la temporada de lluvia.',
                 'precio_hora' => 40.00,
-                'imagen_url' => '/resources/images/cancha.png',
+                'imagen_url' => '/storage/canchas/cancha.png',
                 'activa' => false,
             ],
         ];
