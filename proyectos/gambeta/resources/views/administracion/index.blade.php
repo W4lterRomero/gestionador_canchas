@@ -3,12 +3,17 @@
 @php
     $canchas = $canchas ?? collect();
     $bloqueos = $bloqueos ?? collect();
+    $precios = $precios ?? collect();
     $editarCanchaId = session('editarCanchaId');
     $editarBloqueoId = session('editarBloqueoId');
+    $editarPrecioId = session('editarPrecioId');
     $shouldOpenCreateModal = $errors->crearCancha->any();
     $shouldOpenBloqueoModal = $errors->crearBloqueo->any();
+    $shouldOpenPrecioModal = $errors->crearPrecio->any();
     $crearBloqueoErrors = $errors->crearBloqueo ?? null;
     $editarBloqueoErrors = $errors->editarBloqueo ?? null;
+    $crearPrecioErrors = $errors->crearPrecio ?? null;
+    $editarPrecioErrors = $errors->editarPrecio ?? null;
     $feedbackStatus = session('status');
     $feedbackError = session('error');
     $feedbackMessage = $feedbackStatus ?: $feedbackError;
@@ -883,7 +888,373 @@
 
     <!-- SECCIÓN PRECIOS -->
     <section id="precios" data-section="precios" class="scroll-mt-32 hidden">
-        <!-- ... (todo tu contenido de precios tal como lo tienes) ... -->
+        <div class="bg-slate-900 min-h-screen flex justify-center p-10">
+            <div class="w-full max-w-5xl space-y-4">
+                <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Historial de precios por cancha</h1>
+                        <p class="text-sm text-slate-400">Registra, edita o finaliza periodos de vigencia para cada cancha.</p>
+                    </div>
+                    <button id="abrirPrecioModal" type="button"
+                        class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold px-4 py-2 rounded-lg shadow-md transition">
+                        <span class="text-xl font-bold">+</span>
+                        NUEVO PRECIO
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-slate-900/80">
+                            <tr class="uppercase text-xs text-slate-400 tracking-wide">
+                                <th class="px-6 py-3">Cancha</th>
+                                <th class="px-6 py-3 text-right">Precio/Hora</th>
+                                <th class="px-6 py-3">Desde</th>
+                                <th class="px-6 py-3">Hasta</th>
+                                <th class="px-6 py-3 text-center">Estado</th>
+                                <th class="px-6 py-3 text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800">
+                            @forelse ($precios as $precio)
+                                @php
+                                    $rowIsEditingPrecio = (int) $editarPrecioId === $precio->id;
+                                    $editCanchaId = $rowIsEditingPrecio ? (int) old('cancha_id', $precio->cancha_id) : $precio->cancha_id;
+                                    $editPrecioHora = $rowIsEditingPrecio ? old('precio_hora', $precio->precio_hora) : $precio->precio_hora;
+                                    $editFechaDesde = $rowIsEditingPrecio ? old('fecha_desde', optional($precio->fecha_desde)->format('Y-m-d\\TH:i')) : optional($precio->fecha_desde)->format('Y-m-d\\TH:i');
+                                    $editFechaHasta = $rowIsEditingPrecio ? old('fecha_hasta', optional($precio->fecha_hasta)->format('Y-m-d\\TH:i')) : optional($precio->fecha_hasta)->format('Y-m-d\\TH:i');
+                                    $editFechaDesde = $editFechaDesde ?? '';
+                                    $editFechaHasta = $editFechaHasta ?? '';
+                                    $fechaDesde = $precio->fecha_desde;
+                                    $fechaHasta = $precio->fecha_hasta;
+                                    $state = [
+                                        'label' => 'Vigente',
+                                        'classes' => 'bg-emerald-500/15 text-emerald-300',
+                                        'helper' => 'Disponible para reservas',
+                                    ];
+                                    $now = now();
+                                    if ($fechaDesde && $fechaDesde->isFuture()) {
+                                        $state = [
+                                            'label' => 'Programado',
+                                            'classes' => 'bg-amber-500/10 text-amber-300',
+                                            'helper' => 'Inicia el ' . $fechaDesde->format('d/m/Y H:i'),
+                                        ];
+                                    } elseif ($fechaHasta && $fechaHasta->lessThanOrEqualTo($now)) {
+                                        $state = [
+                                            'label' => 'Finalizado',
+                                            'classes' => 'bg-red-500/10 text-red-300',
+                                            'helper' => 'Terminó el ' . $fechaHasta->format('d/m/Y H:i'),
+                                        ];
+                                    }
+                                @endphp
+                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="font-semibold text-white">{{ optional($precio->cancha)->nombre ?? 'Cancha no disponible' }}</div>
+                                        <div class="text-xs text-slate-500">ID #{{ $precio->cancha_id }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right font-semibold text-amber-300">
+                                        ${{ number_format((float) $precio->precio_hora, 2, '.', ',') }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-semibold text-slate-200">
+                                            {{ optional($fechaDesde)->format('d/m/Y H:i') ?? '—' }}
+                                        </div>
+                                        <p class="text-xs text-slate-400">Hora local</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-semibold text-slate-200">
+                                            {{ optional($fechaHasta)->format('d/m/Y H:i') ?? 'Sin fecha de cierre' }}
+                                        </div>
+                                        <p class="text-xs text-slate-400">
+                                            {{ $fechaHasta ? 'Hora límite' : 'Vigencia abierta' }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="inline-flex flex-col items-center rounded-full px-3 py-1 text-xs font-semibold {{ $state['classes'] }}">
+                                            {{ $state['label'] }}
+                                            <span class="mt-0.5 text-[10px] font-normal text-current">
+                                                {{ $state['helper'] }}
+                                            </span>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center justify-end gap-3 text-lg">
+                                            <button type="button"
+                                                class="hover:text-amber-300 transition-colors"
+                                                data-precio-edit-target="precio-edit-modal-{{ $precio->id }}"
+                                                title="Editar precio">
+                                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                                                </svg>
+                                            </button>
+                                            <form id="delete-precio-form-{{ $precio->id }}" method="POST"
+                                                action="{{ route('admin.precios.destroy', $precio) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="hover:text-red-400 transition-colors"
+                                                    data-precio-delete-target="delete-precio-form-{{ $precio->id }}"
+                                                    title="Eliminar precio">
+                                                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zm3-9h2v7H9V10zm4 0h2v7h-2v-7z" />
+                                                        <path d="M15.5 4l-1-1h-5l-1 1H5v2h14V4z" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-10 text-center text-slate-400">
+                                        Todavía no hay historial de precios registrado.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL PARA CREAR PRECIO -->
+        <div id="precio-modal"
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
+            <div
+                class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                <button type="button" data-precio-modal-close
+                    class="absolute top-4 right-4 bg-amber-500 text-slate-950 w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 hover:text-white transition">
+                    ✕
+                </button>
+
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.3em] text-amber-300">Nuevo precio</p>
+                        <h2 class="text-2xl font-semibold">Definir vigencia y valor</h2>
+                        <p class="text-slate-400 text-sm">Establece la cancha, el precio y el periodo de aplicación.</p>
+                    </div>
+
+                    <form method="POST" action="{{ route('admin.precios.store') }}" class="grid gap-4 md:grid-cols-2 text-sm">
+                        @csrf
+                        <div class="md:col-span-2">
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                            @php
+                                $crearPrecioCanchaError = $crearPrecioErrors?->has('cancha_id');
+                            @endphp
+                            <select name="cancha_id"
+                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearPrecioCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                required>
+                                <option value="">Selecciona una cancha</option>
+                                @foreach ($canchas as $canchaOption)
+                                    <option value="{{ $canchaOption->id }}" {{ (int) old('cancha_id') === $canchaOption->id ? 'selected' : '' }}>
+                                        {{ $canchaOption->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('cancha_id', 'crearPrecio')
+                                <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
+                            @php
+                                $crearPrecioValorError = $crearPrecioErrors?->has('precio_hora');
+                            @endphp
+                            <input type="number" min="0" step="0.01" name="precio_hora" value="{{ old('precio_hora') }}"
+                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearPrecioValorError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                required>
+                            @error('precio_hora', 'crearPrecio')
+                                <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de inicio</label>
+                            @php
+                                $crearPrecioDesdeError = $crearPrecioErrors?->has('fecha_desde');
+                            @endphp
+                            <input type="datetime-local" name="fecha_desde" value="{{ old('fecha_desde') }}"
+                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearPrecioDesdeError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                required>
+                            @error('fecha_desde', 'crearPrecio')
+                                <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de fin (opcional)</label>
+                            @php
+                                $crearPrecioHastaError = $crearPrecioErrors?->has('fecha_hasta');
+                            @endphp
+                            <input type="datetime-local" name="fecha_hasta" value="{{ old('fecha_hasta') }}"
+                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearPrecioHastaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}">
+                            @error('fecha_hasta', 'crearPrecio')
+                                <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="md:col-span-2 flex justify-end gap-3">
+                            <button type="button" data-precio-modal-close
+                                class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                                Cancelar
+                            </button>
+                            <button type="submit"
+                                class="px-5 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold transition">
+                                Guardar precio
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODALES PARA EDITAR PRECIOS -->
+        @foreach ($precios as $precio)
+            @php
+                $rowIsEditingPrecio = (int) $editarPrecioId === $precio->id;
+                $editCanchaId = $rowIsEditingPrecio ? (int) old('cancha_id', $precio->cancha_id) : $precio->cancha_id;
+                $editPrecioHora = $rowIsEditingPrecio ? old('precio_hora', $precio->precio_hora) : $precio->precio_hora;
+                $editFechaDesde = $rowIsEditingPrecio ? old('fecha_desde', optional($precio->fecha_desde)->format('Y-m-d\\TH:i')) : optional($precio->fecha_desde)->format('Y-m-d\\TH:i');
+                $editFechaHasta = $rowIsEditingPrecio ? old('fecha_hasta', optional($precio->fecha_hasta)->format('Y-m-d\\TH:i')) : optional($precio->fecha_hasta)->format('Y-m-d\\TH:i');
+                $editFechaDesde = $editFechaDesde ?? '';
+                $editFechaHasta = $editFechaHasta ?? '';
+            @endphp
+            <div id="precio-edit-modal-{{ $precio->id }}"
+                class="precio-edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
+                data-precio-edit-modal data-open-default="{{ $rowIsEditingPrecio ? 'true' : 'false' }}">
+                <div
+                    class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                    <button type="button" data-precio-edit-modal-close
+                        class="absolute top-4 right-4 bg-amber-500 text-slate-950 w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 hover:text-white transition">
+                        ✕
+                    </button>
+
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-amber-300">Editar precio</p>
+                            <h2 class="text-2xl font-semibold">
+                                {{ optional($precio->cancha)->nombre ?? 'Cancha no disponible' }}
+                            </h2>
+                            <p class="text-slate-400 text-sm">Actualiza el valor o las fechas de vigencia.</p>
+                        </div>
+
+                        <form method="POST" action="{{ route('admin.precios.update', $precio) }}" class="grid gap-4 md:grid-cols-2 text-sm">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="md:col-span-2">
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                                @php
+                                    $editPrecioCanchaError = $rowIsEditingPrecio && $editarPrecioErrors?->has('cancha_id');
+                                @endphp
+                                <select name="cancha_id"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editPrecioCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                    required>
+                                    <option value="">Selecciona una cancha</option>
+                                    @foreach ($canchas as $canchaOption)
+                                        <option value="{{ $canchaOption->id }}" {{ $editCanchaId === $canchaOption->id ? 'selected' : '' }}>
+                                            {{ $canchaOption->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @if ($rowIsEditingPrecio && $editarPrecioErrors?->has('cancha_id'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $editarPrecioErrors->first('cancha_id') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
+                                @php
+                                    $editPrecioValorError = $rowIsEditingPrecio && $editarPrecioErrors?->has('precio_hora');
+                                @endphp
+                                <input type="number" min="0" step="0.01" name="precio_hora" value="{{ $editPrecioHora }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editPrecioValorError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                    required>
+                                @if ($rowIsEditingPrecio && $editarPrecioErrors?->has('precio_hora'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $editarPrecioErrors->first('precio_hora') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de inicio</label>
+                                @php
+                                    $editPrecioDesdeError = $rowIsEditingPrecio && $editarPrecioErrors?->has('fecha_desde');
+                                @endphp
+                                <input type="datetime-local" name="fecha_desde" value="{{ $editFechaDesde }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editPrecioDesdeError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                    required>
+                                @if ($rowIsEditingPrecio && $editarPrecioErrors?->has('fecha_desde'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $editarPrecioErrors->first('fecha_desde') }}</p>
+                                @endif
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de fin (opcional)</label>
+                                @php
+                                    $editPrecioHastaError = $rowIsEditingPrecio && $editarPrecioErrors?->has('fecha_hasta');
+                                @endphp
+                                <input type="datetime-local" name="fecha_hasta" value="{{ $editFechaHasta }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editPrecioHastaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}">
+                                @if ($rowIsEditingPrecio && $editarPrecioErrors?->has('fecha_hasta'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $editarPrecioErrors->first('fecha_hasta') }}</p>
+                                @endif
+                            </div>
+
+                            <div class="md:col-span-2 flex justify-end gap-3">
+                                <button type="button" data-precio-edit-modal-close
+                                    class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                                    Cancelar
+                                </button>
+                                <button type="submit"
+                                    class="px-5 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold transition">
+                                    Guardar cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+        <!-- MODAL ELIMINAR PRECIO -->
+        <div id="precio-delete-modal"
+            class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
+            <div class="relative w-full max-w-lg border border-amber-500/30 bg-slate-950/95 p-6 shadow-2xl text-white">
+                <button type="button" data-precio-delete-cancel
+                    class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    ✕
+                </button>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="rounded-full p-2 bg-amber-500/15 text-amber-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor"
+                                stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v4" />
+                                <path d="M12 17h.01" />
+                                <path d="M10 3h4l7 12-2 4H5l-2-4 7-12z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-amber-300">Confirmar acción</p>
+                            <p class="text-lg font-semibold text-white">
+                                ¿Eliminar esta vigencia de precio?
+                            </p>
+                            <p class="text-sm text-slate-400 mt-1">Las reservas futuras utilizarán el precio vigente restante.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3">
+                        <button type="button" data-precio-delete-cancel
+                            class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                            Cancelar
+                        </button>
+                        <button type="button" data-precio-delete-confirm
+                            class="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </div>
 
@@ -894,6 +1265,8 @@
         const serverEditId = @json($editarCanchaId);
         const shouldOpenBloqueoModal = @json($shouldOpenBloqueoModal);
         const serverBloqueoEditId = @json($editarBloqueoId);
+        const shouldOpenPrecioModal = @json($shouldOpenPrecioModal);
+        const serverPrecioEditId = @json($editarPrecioId);
 
         const initNav = () => {
             const navButtons = document.querySelectorAll('#admin-panels-nav [data-section-target]');
@@ -977,6 +1350,33 @@
             });
 
             if (shouldOpenBloqueoModal) {
+                toggleModal(true);
+            }
+        };
+
+        const initPrecioModal = () => {
+            const modal = document.getElementById('precio-modal');
+            const openButton = document.getElementById('abrirPrecioModal');
+            if (!modal) {
+                return;
+            }
+
+            const closeButtons = modal.querySelectorAll('[data-precio-modal-close]');
+            const toggleModal = (show) => {
+                modal.classList.toggle('hidden', !show);
+                modal.classList.toggle('flex', show);
+                document.body.classList.toggle('overflow-hidden', show);
+            };
+
+            openButton?.addEventListener('click', () => toggleModal(true));
+            closeButtons.forEach((btn) => btn.addEventListener('click', () => toggleModal(false)));
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    toggleModal(false);
+                }
+            });
+
+            if (shouldOpenPrecioModal) {
                 toggleModal(true);
             }
         };
@@ -1115,6 +1515,73 @@
             }
         };
 
+        const initPrecioEditModals = () => {
+            const modals = document.querySelectorAll('[data-precio-edit-modal]');
+            if (!modals.length) {
+                return;
+            }
+
+            let activeModal = null;
+            const setBodyScroll = (locked) => document.body.classList.toggle('overflow-hidden', locked);
+
+            const openModal = (modal) => {
+                if (activeModal === modal) {
+                    return;
+                }
+                if (activeModal) {
+                    activeModal.classList.add('hidden');
+                    activeModal.classList.remove('flex');
+                }
+                activeModal = modal;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setBodyScroll(true);
+            };
+
+            const openModalById = (id) => {
+                const modal = document.getElementById(id);
+                if (modal) {
+                    openModal(modal);
+                }
+            };
+
+            const closeModal = (modal) => {
+                if (!modal) {
+                    return;
+                }
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                if (activeModal === modal) {
+                    activeModal = null;
+                    setBodyScroll(false);
+                }
+            };
+
+            document.querySelectorAll('[data-precio-edit-target]').forEach((btn) => {
+                btn.addEventListener('click', () => openModalById(btn.dataset.precioEditTarget));
+            });
+
+            document.querySelectorAll('[data-precio-edit-modal-close]').forEach((btn) => {
+                btn.addEventListener('click', () => closeModal(btn.closest('[data-precio-edit-modal]')));
+            });
+
+            modals.forEach((modal) => {
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+
+                if (modal.dataset.openDefault === 'true') {
+                    openModal(modal);
+                }
+            });
+
+            if (!activeModal && serverPrecioEditId) {
+                openModalById(`precio-edit-modal-${serverPrecioEditId}`);
+            }
+        };
+
         const initFeedbackModal = () => {
             const feedbackModal = document.getElementById('feedback-modal');
             if (!feedbackModal) {
@@ -1225,15 +1692,59 @@
             });
         };
 
+        const initPrecioDeleteModal = () => {
+            const deleteModal = document.getElementById('precio-delete-modal');
+            if (!deleteModal) {
+                return;
+            }
+
+            let pendingForm = null;
+            const toggleModal = (show) => {
+                deleteModal.classList.toggle('hidden', !show);
+                deleteModal.classList.toggle('flex', show);
+                document.body.classList.toggle('overflow-hidden', show);
+                if (!show) {
+                    pendingForm = null;
+                }
+            };
+
+            document.querySelectorAll('[data-precio-delete-target]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    pendingForm = document.getElementById(btn.dataset.precioDeleteTarget);
+                    toggleModal(true);
+                });
+            });
+
+            deleteModal.querySelectorAll('[data-precio-delete-cancel]').forEach((btn) => {
+                btn.addEventListener('click', () => toggleModal(false));
+            });
+
+            const confirmBtn = deleteModal.querySelector('[data-precio-delete-confirm]');
+            confirmBtn?.addEventListener('click', () => {
+                if (pendingForm) {
+                    pendingForm.submit();
+                }
+            });
+
+            deleteModal.addEventListener('click', (event) => {
+                if (event.target === deleteModal) {
+                    toggleModal(false);
+                }
+            });
+        };
+
         const initPage = () => {
             initNav();
             initModal();
             initBloqueoModal();
+            initPrecioModal();
             initEditModals();
             initBloqueoEditModals();
+            initPrecioEditModals();
             initFeedbackModal();
             initDeleteModal();
             initBloqueoDeleteModal();
+            initPrecioDeleteModal();
         };
 
         if (document.readyState === 'loading') {

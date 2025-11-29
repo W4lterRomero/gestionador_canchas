@@ -33,8 +33,8 @@ class CanchaPrecioFactory extends Factory
         return [
             'cancha_id' => Cancha::factory(),
             'precio_hora' => $this->faker->randomFloat(2, 15, 60),
-            'fecha_desde' => $fechaDesde->format('Y-m-d'),
-            'fecha_hasta' => $fechaHasta?->format('Y-m-d'),
+            'fecha_desde' => $fechaDesde->format('Y-m-d H:i:s'),
+            'fecha_hasta' => $fechaHasta?->format('Y-m-d H:i:s'),
         ];
     }
 

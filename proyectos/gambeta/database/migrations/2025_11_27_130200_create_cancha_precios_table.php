@@ -17,8 +17,8 @@ return new class extends Migration
                 ->constrained('canchas')
                 ->cascadeOnDelete();
             $table->decimal('precio_hora', 10, 2);
-            $table->date('fecha_desde');
-            $table->date('fecha_hasta')->nullable();
+            $table->dateTime('fecha_desde');
+            $table->dateTime('fecha_hasta')->nullable();
             $table->timestamps();
         });
     }
