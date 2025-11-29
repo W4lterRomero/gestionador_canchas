@@ -2,6 +2,7 @@
 
 @php
     $canchas = $canchas ?? collect();
+    $reservas = $reservas ?? collect();
     $bloqueos = $bloqueos ?? collect();
     $precios = $precios ?? collect();
     $editarCanchaId = session('editarCanchaId');
@@ -544,7 +545,112 @@
 
     <!-- SECCIÓN RESERVAS -->
     <section id="reservas" data-section="reservas" class="scroll-mt-32 hidden">
-        <!-- ... (todo tu contenido de reservas tal como lo tienes) ... -->
+        <div class="bg-slate-900 min-h-screen flex justify-center p-10">
+            <div class="w-full max-w-6xl space-y-4">
+                <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Reservas registradas</h1>
+                        <p class="text-sm text-slate-400">Consulta el detalle de cada reserva creada en el sistema.</p>
+                    </div>
+                    <div class="text-sm text-slate-400">
+                        Total: <span class="font-semibold text-white">{{ $reservas->count() }}</span>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-slate-900/80">
+                            <tr class="uppercase text-xs text-slate-400 tracking-wide">
+                                <th class="px-6 py-3">Cancha</th>
+                                <th class="px-6 py-3">Cliente</th>
+                                <th class="px-6 py-3">Fecha reserva</th>
+                                <th class="px-6 py-3">Inicio</th>
+                                <th class="px-6 py-3">Fin</th>
+                                <th class="px-6 py-3">Duración</th>
+                                <th class="px-6 py-3 text-right">Total</th>
+                                <th class="px-6 py-3 text-center">Estado</th>
+                                <th class="px-6 py-3">Creado por</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800">
+                            @forelse ($reservas as $reserva)
+                                @php
+                                    $estadoColors = [
+                                        'pendiente' => 'bg-amber-500/15 text-amber-300',
+                                        'confirmada' => 'bg-emerald-500/15 text-emerald-300',
+                                        'finalizada' => 'bg-blue-500/15 text-blue-300',
+                                        'cancelada' => 'bg-rose-500/15 text-rose-300',
+                                    ];
+                                    $estadoClass = $estadoColors[$reserva->estado] ?? 'bg-slate-500/20 text-slate-200';
+                                @endphp
+                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-white">
+                                            {{ optional($reserva->cancha)->nombre ?? 'Cancha eliminada' }}
+                                        </p>
+                                        <p class="text-xs text-slate-500">Reserva #{{ $reserva->id }}</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-white">
+                                            {{ optional($reserva->cliente)->nombre ?? 'Cliente no disponible' }}
+                                        </p>
+                                        <p class="text-xs text-slate-400">
+                                            {{ optional($reserva->cliente)->telefono ?? optional($reserva->cliente)->email ?? '—' }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-slate-200">
+                                            {{ optional($reserva->fecha_reserva)->format('d/m/Y') ?? '—' }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-emerald-300">
+                                            {{ optional($reserva->fecha_inicio)->format('d/m/Y H:i') ?? '—' }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-rose-200">
+                                            {{ optional($reserva->fecha_fin)->format('d/m/Y H:i') ?? '—' }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-slate-200">
+                                            {{ ! is_null($reserva->duracion_minutos) ? $reserva->duracion_minutos . ' min' : '—' }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4 text-right font-semibold text-emerald-400">
+                                        @if (! is_null($reserva->total))
+                                            ${{ number_format((float) $reserva->total, 2, '.', ',') }}
+                                        @else
+                                            —
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-medium {{ $estadoClass }}">
+                                            {{ $reserva->estado ? ucfirst($reserva->estado) : 'Sin estado' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-white">
+                                            {{ optional($reserva->creador)->nombre ?? 'Usuario no disponible' }}
+                                        </p>
+                                        <p class="text-xs text-slate-400">
+                                            {{ optional($reserva->creador)->email ?? '—' }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="9" class="px-6 py-10 text-center text-slate-400">
+                                        Aún no hay reservas registradas.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- SECCIÓN BLOQUEOS -->
