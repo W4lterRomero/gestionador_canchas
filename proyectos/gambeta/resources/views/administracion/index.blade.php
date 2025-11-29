@@ -1454,7 +1454,7 @@
     </section>
 </div>
 
-{{-- SCRIPT PARA ACTIVAR SECCIONES Y ESTILOS (TEXTO NEGRO SIEMPRE) --}}
+{{-- pasar variables de PHP a JavaScript ignorar error del editor --}}
 <script>
     window.reservasConfig = {
         shouldOpenCreateModal: @json($shouldOpenCreateModal),
@@ -1465,6 +1465,7 @@
         serverPrecioEditId: @json($editarPrecioId),
     };
 </script>
-<script src="{{ asset('js/reservas.js') }}"></script>
 
+{{-- logica --}}
+<script src="{{ asset('js/reservas.js') }}"></script>
 @endsection
