@@ -24,11 +24,11 @@ class RoleFactory extends Factory
             return $this->seederData;
         }
 
-        $roles = ['Administrador', 'Empleado'];
+        $roles = ['admin', 'empleado'];
 
         return [
-            'nombre' => $this->faker->unique()->randomElement($roles),
-            'descripcion' => $this->faker->sentence(),
+            'name' => $this->faker->unique()->randomElement($roles),
+            'description' => $this->faker->sentence(),
         ];
     }
 

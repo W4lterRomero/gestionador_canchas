@@ -25,7 +25,7 @@ class UserFactory extends Factory
     {
         return [
             'role_id' => Role::factory(),
-            'nombre' => fake()->name(),
+            'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
             'activo' => true,
@@ -49,8 +49,8 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $role = Role::firstOrCreate(
-                ['nombre' => 'Administrador'],
-                ['descripcion' => 'Rol creado automáticamente para bloqueos.']
+                ['name' => 'admin'],
+                ['description' => 'Rol creado automáticamente para bloqueos.']
             );
 
             return [

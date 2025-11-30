@@ -2,7 +2,7 @@
 
     <!-- LOGO -->
     <div class="flex items-center gap-3">
-        <a href="{{ route('home') }}" class="flex items-center">
+        <a href="{{ Route::has('home') ? route('home') : url('/') }}" class="flex items-center">
             <img src="{{ asset('images/logo.png') }}" 
                  alt="Logo" 
                  class="h-12 w-auto object-contain drop-shadow-md hover:scale-105 transition">
@@ -13,7 +13,7 @@
     <ul class="hidden md:flex space-x-8 text-lg font-medium text-white">
 
         <li>
-            <a href="{{ route('home') }}" 
+            <a href="{{ Route::has('home') ? route('home') : url('/') }}" 
                class="hover:text-green-300 hover:underline decoration-green-300 underline-offset-8 transition">
                 Inicio
             </a>
@@ -52,7 +52,7 @@
             <ul tabindex="0" 
                 class="dropdown-content menu p-4 mt-3 shadow-xl bg-green-700 text-white rounded-xl w-52 z-[9999]">
 
-                <li><a href="{{ route('home') }}" class="hover:bg-green-500 rounded-lg">Inicio</a></li>
+                <li><a href="{{ Route::has('home') ? route('home') : url('/') }}" class="hover:bg-green-500 rounded-lg">Inicio</a></li>
                 <li><a href="{{ route('estadios.index') }}" class="hover:bg-green-500 rounded-lg">Estadios</a></li>
                 <li><a href="{{ route('reservas.index') }}" class="hover:bg-green-500 rounded-lg">Reservas</a></li>
                 <li><a href="{{ route('admin.index') }}" class="hover:bg-green-500 rounded-lg">Administración</a></li>

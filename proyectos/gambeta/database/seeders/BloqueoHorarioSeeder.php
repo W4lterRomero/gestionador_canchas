@@ -16,7 +16,7 @@ class BloqueoHorarioSeeder extends Seeder
     {
         $canchaIds = Cancha::pluck('id', 'nombre');
         $adminUser = User::whereHas('role', function ($query) {
-            $query->where('nombre', 'Administrador');
+            $query->where('name', 'Administrador');
         })->first();
 
         if ($canchaIds->isEmpty()) {
@@ -25,7 +25,7 @@ class BloqueoHorarioSeeder extends Seeder
 
         if ($adminUser === null) {
             $adminUser = User::factory()->admin()->create([
-                'nombre' => 'Administrador Bloqueos',
+                'name' => 'Administrador Bloqueos',
                 'email' => 'admin.bloqueos.' . uniqid() . '@example.com',
             ]);
         }

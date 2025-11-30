@@ -2,45 +2,29 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'role_id',
-        'nombre',
+        'name',
         'email',
         'password',
         'activo',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -49,19 +33,36 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Relación con el rol asignado al usuario.
-     */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
     }
 
-    /**
-     * Bloqueos registrados por el usuario.
-     */
     public function bloqueosCreados(): HasMany
     {
         return $this->hasMany(BloqueoHorario::class, 'creado_por');
+    }
+
+    /**
+     * Verificar si el usuario es administrador
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasAnyRole(['admin', 'Administrador', 'administrator']);
+    }
+
+    /**
+     * Verificar si el usuario es empleado o admin
+     */
+    public function isEmployee(): bool
+    {
+        return $this->hasAnyRole([
+            'empleado', 
+            'Empleado', 
+            'employee', 
+            'admin', 
+            'Administrador', 
+            'administrator'
+        ]);
     }
 }

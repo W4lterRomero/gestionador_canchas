@@ -47,29 +47,30 @@
             </h2>
 
             <!-- FORMULARIO -->
-            <form class="space-y-5">
+            <form class="space-y-5" method="POST" action="{{ route('admin.login') }}">
+                @csrf
 
-                <!-- Usuario -->
+                <!-- Email -->
                 <div>
-                    <label class="block mb-1 text-green-300 font-semibold">Usuario</label>
-                    <input type="text"
-                        placeholder="Ingrese su usuario"
-                        class="input input-bordered w-full bg-gray-900/40 border-green-600 text-white focus:border-green-400" />
+                    <label class="block mb-1 text-green-300 font-semibold">Email</label>
+                    <input type="email" name="email"
+                        placeholder="admin@example.com"
+                        class="input input-bordered w-full bg-gray-900/40 border-green-600 text-white focus:border-green-400" required />
                 </div>
 
                 <!-- Contraseña -->
                 <div>
                     <label class="block mb-1 text-green-300 font-semibold">Contraseña</label>
-                    <input type="password"
+                    <input type="password" name="password"
                         placeholder="Ingrese su contraseña"
-                        class="input input-bordered w-full bg-gray-900/40 border-green-600 text-white focus:border-green-400" />
+                        class="input input-bordered w-full bg-gray-900/40 border-green-600 text-white focus:border-green-400" required />
                 </div>
 
                 <!-- Botón -->
-                <a href="{{ route('home') }}" 
+                <button type="submit"
                    class="btn w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg rounded-full shadow-lg">
                     Entrar
-                </a>
+                </button>
 
             </form>
 

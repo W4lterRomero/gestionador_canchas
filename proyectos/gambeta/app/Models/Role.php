@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Role as SpatieRole;
 
-class Role extends Model
+class Role extends SpatieRole
 {
     use HasFactory;
 
@@ -19,10 +19,7 @@ class Role extends Model
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'nombre',
-        'descripcion',
-    ];
+    protected $fillable = ['name', 'description', 'guard_name'];
 
     /**
      * The attributes that should be cast.

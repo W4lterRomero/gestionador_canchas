@@ -19,47 +19,45 @@ class DatabaseSeeder extends Seeder
     {
         // Ejecuta los seeders de catálogo necesarios para pruebas
         $this->call([
-            RoleSeeder::class,
+            RolePermissionSeeder::class,
             CanchaSeeder::class,
             CanchaPrecioSeeder::class,
             ClienteSeeder::class,
         ]);
 
-        $roles = Role::pluck('id', 'nombre');
+        // Ensure Spatie roles exist with consistent names
+        $spatieAdminRole = \Spatie\Permission\Models\Role::findOrCreate('admin');
+        $spatieEmployeeRole = \Spatie\Permission\Models\Role::findOrCreate('empleado');
 
-        $adminRoleId = $roles->get('Administrador') ?? Role::factory()->create([
-            'nombre' => 'Administrador',
-            'descripcion' => 'Rol creado automáticamente.',
-        ])->id;
-
-        $employeeRoleId = $roles->get('Empleado') ?? Role::factory()->create([
-            'nombre' => 'Empleado',
-            'descripcion' => 'Rol creado automáticamente.',
-        ])->id;
-
-        User::factory()->create([
-            'role_id' => $adminRoleId,
-            'nombre' => 'Administrador1',
+        // Create one admin and one empleado with password '1234'
+        User::updateOrCreate([
             'email' => 'admin@example.com',
-            'password' => Hash::make('Administrador1'),
+        ], [
+            'role_id' => $spatieAdminRole->id,
+            'name' => 'Administrador',
+            'password' => Hash::make('1234'),
             'activo' => true,
         ]);
 
-        User::factory()->create([
-            'role_id' => $employeeRoleId,
-            'nombre' => 'Empleado1',
-            'email' => 'empleado1@example.com',
-            'password' => Hash::make('Empleado1'),
+        User::updateOrCreate([
+            'email' => 'empleado@example.com',
+        ], [
+            'role_id' => $spatieEmployeeRole->id,
+            'name' => 'Empleado',
+            'password' => Hash::make('1234'),
             'activo' => true,
         ]);
 
-        User::factory()->create([
-            'role_id' => $employeeRoleId,
-            'nombre' => 'Empleado2',
-            'email' => 'empleado2@example.com',
-            'password' => Hash::make('Empleado2'),
-            'activo' => true,
-        ]);
+        // Assign Spatie roles to the created users
+        $adminUser = User::where('email', 'admin@example.com')->first();
+        if ($adminUser && ! $adminUser->hasRole('admin')) {
+            $adminUser->assignRole('admin');
+        }
+
+        $empleadoUser = User::where('email', 'empleado@example.com')->first();
+        if ($empleadoUser && ! $empleadoUser->hasRole('empleado')) {
+            $empleadoUser->assignRole('empleado');
+        }
 
         $this->call([
             BloqueoHorarioSeeder::class,
