@@ -7,16 +7,17 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
+    /**
+     * Panel de administración (requiere auth)
+     */
     public function index()
     {
         return view('administracion.index');
     }
 
+    /**
+     * Procesar login (NO requiere auth)
+     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -29,16 +30,13 @@ class AdminController extends Controller
             
             $user = auth()->user();
             
-            // Usar helpers
+            // Redirigir según rol
             if ($user->isAdmin()) {
                 return redirect()->route('admin.index');
             }
             
-            if ($user->isEmployee()) {
-                return redirect()->route('estadios.index');
-            }
-
-            return redirect()->route('estadios.reservar');
+            // Empleados van a inicio
+            return redirect()->route('inicio');
         }
 
         return back()->withErrors([
@@ -46,6 +44,9 @@ class AdminController extends Controller
         ])->onlyInput('email');
     }
 
+    /**
+     * Cerrar sesión (requiere auth)
+     */
     public function logout(Request $request)
     {
         Auth::logout();

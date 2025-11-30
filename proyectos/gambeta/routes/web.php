@@ -8,21 +8,25 @@ use App\Http\Controllers\CanchaPrecioController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\EmployeeController;
 
-// Página de Login
+// Página de Login (para usuarios no autenticados)
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('inicio');
+    }
     return view('login');
 })->name('login');
 
-Auth::routes();
+// Deshabilitamos las rutas de registro y password de Auth::routes()
+Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
-// Página principal (redirige según rol)
-Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])
-    ->name('admin.index')  
-    ->middleware(['auth', 'role:admin']);
-
-
-// ===== RUTAS PARA EMPLEADOS (employee o admin) =====
-Route::middleware(['auth'])->group(function () {
+// ===== RUTAS PARA EMPLEADOS Y ADMIN (ambos tienen acceso) =====
+Route::middleware(['auth', 'role:empleado'])->group(function () {
+    // Página de inicio para usuarios autenticados
+    Route::get('/inicio', function () {
+        return view('index');
+    })->name('inicio');
+    
+    // Estadios - acceso para empleados y admin
     Route::get('/estadios', [EmployeeController::class, 'estadios'])
         ->name('estadios.index');
     
@@ -30,11 +34,7 @@ Route::middleware(['auth'])->group(function () {
         return view('estadios.reservar');
     })->name('estadios.reservar');
 
-});
-
-// ===== RUTAS SOLO PARA ADMIN =====
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    // Reservas
+    // Reservas - acceso para empleados y admin
     Route::get('/reservas', function () {
         return view('reservas.index');
     })->name('reservas.index');
@@ -42,12 +42,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/reservas/editar', function () {
         return view('reservas.editar');
     })->name('reservas.editar');
+});
 
-    // Admin Dashboard (consolidado)
+// ===== RUTAS SOLO PARA ADMIN =====
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    // Admin Dashboard
     Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])
         ->name('admin.index');
     
-    // CRUD de Canchas y recursos
+    // CRUD de Canchas y recursos (solo admin)
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/canchas', [CanchaController::class, 'store'])->name('canchas.store');
         Route::put('/canchas/{cancha}', [CanchaController::class, 'update'])->name('canchas.update');
@@ -72,7 +75,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 });
 
-// Rutas de autenticación admin (si las necesitas separadas)
+// Rutas de autenticación
 Route::post('/admin/login', [App\Http\Controllers\AdminController::class, 'login'])
     ->name('admin.login');
 Route::post('/admin/logout', [App\Http\Controllers\AdminController::class, 'logout'])

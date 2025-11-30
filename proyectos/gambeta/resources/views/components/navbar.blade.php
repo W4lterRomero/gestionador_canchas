@@ -2,18 +2,19 @@
 
     <!-- LOGO -->
     <div class="flex items-center gap-3">
-        <a href="{{ Route::has('home') ? route('home') : url('/') }}" class="flex items-center">
+        <a href="{{ auth()->check() ? route('inicio') : route('login') }}" class="flex items-center">
             <img src="{{ asset('images/logo.png') }}" 
                  alt="Logo" 
                  class="h-12 w-auto object-contain drop-shadow-md hover:scale-105 transition">
         </a>
     </div>
 
+    @auth
     <!-- MENÚ ESCRITORIO -->
     <ul class="hidden md:flex space-x-8 text-lg font-medium text-white">
 
         <li>
-            <a href="{{ Route::has('home') ? route('home') : url('/') }}" 
+            <a href="{{ route('inicio') }}" 
                class="hover:text-green-300 hover:underline decoration-green-300 underline-offset-8 transition">
                 Inicio
             </a>
@@ -33,12 +34,15 @@
             </a>
         </li>
 
+        {{-- Solo mostrar Administración si el usuario es admin --}}
+        @if(auth()->user()->isAdmin())
         <li>
             <a href="{{ route('admin.index') }}" 
                class="hover:text-green-300 hover:underline decoration-green-300 underline-offset-8 transition">
                 Administración
             </a>
         </li>
+        @endif
 
     </ul>
 
@@ -52,16 +56,33 @@
             <ul tabindex="0" 
                 class="dropdown-content menu p-4 mt-3 shadow-xl bg-green-700 text-white rounded-xl w-52 z-[9999]">
 
-                <li><a href="{{ Route::has('home') ? route('home') : url('/') }}" class="hover:bg-green-500 rounded-lg">Inicio</a></li>
+                <li><a href="{{ route('inicio') }}" class="hover:bg-green-500 rounded-lg">Inicio</a></li>
                 <li><a href="{{ route('estadios.index') }}" class="hover:bg-green-500 rounded-lg">Estadios</a></li>
                 <li><a href="{{ route('reservas.index') }}" class="hover:bg-green-500 rounded-lg">Reservas</a></li>
+                
+                {{-- Solo mostrar Administración si el usuario es admin --}}
+                @if(auth()->user()->isAdmin())
                 <li><a href="{{ route('admin.index') }}" class="hover:bg-green-500 rounded-lg">Administración</a></li>
+                @endif
 
             </ul>
         </div>
     </div>
 
-    <!-- ICONO USUARIO -->
+    <!-- USUARIO LOGUEADO + LOGOUT -->
+    <div class="ml-6 hidden md:flex items-center gap-3">
+        <span class="text-white text-sm">{{ auth()->user()->name }}</span>
+        <form action="{{ route('admin.logout') }}" method="POST" class="inline">
+            @csrf
+            <button type="submit" class="mary-btn mary-btn-circle shadow-lg bg-red-600 border-none hover:bg-red-500 hover:scale-110 transition" title="Cerrar sesión">
+                <i class="fa-solid fa-sign-out-alt text-white text-xl"></i>
+            </button>
+        </form>
+    </div>
+    @endauth
+
+    @guest
+    <!-- ICONO USUARIO (para no logueados) -->
     <div class="ml-6 hidden md:block">
         <a href="{{ route('login') }}">
             <button class="mary-btn mary-btn-circle shadow-lg bg-green-600 border-none hover:bg-green-500 hover:scale-110 transition">
@@ -69,5 +90,6 @@
             </button>
         </a>
     </div>
+    @endguest
 
 </nav>

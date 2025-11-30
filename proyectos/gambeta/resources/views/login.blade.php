@@ -46,6 +46,17 @@
                 Inicio de Sesión
             </h2>
 
+            <!-- MOSTRAR ERRORES -->
+            @if ($errors->any())
+            <div class="alert alert-error mb-4 bg-red-600/80 text-white rounded-lg p-3">
+                <ul class="list-disc list-inside text-sm">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             <!-- FORMULARIO -->
             <form class="space-y-5" method="POST" action="{{ route('admin.login') }}">
                 @csrf
