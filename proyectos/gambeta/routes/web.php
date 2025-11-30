@@ -30,6 +30,10 @@ Route::middleware(['auth', 'role:empleado'])->group(function () {
     Route::get('/estadios', [EmployeeController::class, 'estadios'])
         ->name('estadios.index');
     
+    Route::get('/estadios/{id}', function ($id) {
+        return view('estadios.detalles', ['id' => $id]);
+    })->name('estadios.detalles');
+    
     Route::get('/reservar', function () {
         return view('estadios.reservar');
     })->name('estadios.reservar');
