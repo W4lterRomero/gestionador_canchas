@@ -10,11 +10,6 @@
             <h1 class="text-4xl font-bold">Estadios Deportivos</h1>
             <p class="opacity-90 text-sm">Administración y reservaciones del sistema</p>
         </div>
-
-        <a href="{{ route('admin.index') }}" 
-           class="mary-btn mary-btn-accent px-6 py-2 bg-white text-green-700 rounded-full shadow hover:bg-green-100">
-            Panel de Administración
-        </a>
     </div>
 </section>
 

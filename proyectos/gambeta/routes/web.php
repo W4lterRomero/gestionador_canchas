@@ -20,6 +20,7 @@ Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])
     ->name('admin.index')  
     ->middleware(['auth', 'role:admin']);
 
+
 // ===== RUTAS PARA EMPLEADOS (employee o admin) =====
 Route::middleware(['auth'])->group(function () {
     Route::get('/estadios', [EmployeeController::class, 'estadios'])
@@ -28,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reservar', function () {
         return view('estadios.reservar');
     })->name('estadios.reservar');
+
 });
 
 // ===== RUTAS SOLO PARA ADMIN =====
