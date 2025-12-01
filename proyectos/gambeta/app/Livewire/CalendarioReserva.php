@@ -45,7 +45,6 @@ public function seleccionarDia($dia)
 {
     $fechaSeleccionada = Carbon::create($this->anio, $this->mes, $dia);
 
-    // ESTA ES LA REGLA CORRECTA 👇
     if ($fechaSeleccionada->isPast() && !$fechaSeleccionada->isToday()) {
         return;
     }

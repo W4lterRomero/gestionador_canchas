@@ -80,13 +80,63 @@ class EstadioDetalles extends Component
             ->get();
     }
 
-    // ✅ Computed property: obtiene la cancha cuando la necesitamos
+    // Generar bloques horarios para el timeline (8 AM - 10 PM en bloques de 30 min)
+    public function getBloquesHorariosProperty()
+    {
+        $bloques = [];
+        $horaInicio = 8; // 8 AM
+        $horaFin = 22; // 10 PM
+
+        for ($hora = $horaInicio; $hora < $horaFin; $hora++) {
+            $bloques[] = sprintf('%02d:00', $hora);
+            $bloques[] = sprintf('%02d:30', $hora);
+        }
+
+        return $bloques;
+    }
+
+    // Verificar si un bloque horario tiene una reserva
+    public function getBloqueConReserva($horaBloque)
+    {
+        if (!$this->diaSeleccionado) return null;
+
+        list($hora, $minuto) = explode(':', $horaBloque);
+        $inicioBloque = $this->diaSeleccionado->copy()->setTime($hora, $minuto, 0);
+        $finBloque = $inicioBloque->copy()->addMinutes(30);
+
+        foreach ($this->reservasDiaSeleccionado as $reserva) {
+            // Verificar si la reserva intersecta con este bloque
+            if ($reserva->fecha_inicio < $finBloque && $reserva->fecha_fin > $inicioBloque) {
+                return $reserva;
+            }
+        }
+
+        return null;
+    }
+
+    // Calcular cuántos bloques ocupa una reserva desde su inicio
+    public function calcularBloques($reserva)
+    {
+        $duracionMinutos = $reserva->duracion_minutos ?? $reserva->fecha_inicio->diffInMinutes($reserva->fecha_fin);
+        return ceil($duracionMinutos / 30);
+    }
+
+    // Verificar si esta es la primera aparición de la reserva en el timeline
+    public function esInicioReserva($reserva, $horaBloque)
+    {
+        list($hora, $minuto) = explode(':', $horaBloque);
+        $inicioBloque = $this->diaSeleccionado->copy()->setTime($hora, $minuto, 0);
+
+        // Verificar si el inicio de la reserva está en este bloque de 30 min
+        return $reserva->fecha_inicio >= $inicioBloque &&
+               $reserva->fecha_inicio < $inicioBloque->copy()->addMinutes(30);
+    }
+
     public function getCanchaProperty()
     {
         return Cancha::findOrFail($this->canchaId);
     }
 
-    // ✅ Computed property: obtiene las reservas del mes actual
     public function getReservasProperty()
     {
         $primerDia = \Carbon\Carbon::create($this->añoActual, $this->mesActual, 1)->startOfDay();
@@ -99,7 +149,6 @@ class EstadioDetalles extends Component
             ->get();
     }
 
-    // Computed property: obtiene el array de días del calendario
     public function getDiasCalendarioProperty()
     {
         $primerDia = \Carbon\Carbon::create($this->añoActual, $this->mesActual, 1);

@@ -1,13 +1,10 @@
 <div>
 <section class="container mx-auto px-6 py-10">
 
-    <!--              PASOS SUPERIORES VERDES             -->
-
     <div class="w-full mb-10 select-none">
 
         <div class="flex items-center justify-between relative">
 
-            <!-- Línea -->
             <div class="absolute top-1/2 left-0 w-full border-t border-green-500"></div>
 
             @foreach ([1 => 'RESERVA', 2 => 'CLIENTE', 3 => 'PAGO', 4 => 'DETALLES FINALES'] as $num => $titulo)
@@ -44,182 +41,111 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
 
-
-        <!--               CONTENIDO IZQUIERDO DE LOS PASOS            -->
         <div class="md:col-span-2 bg-white rounded-2xl shadow-xl p-8 space-y-10 border border-green-200">
 
-
-            <!--        PASO 1: RESERVAR CANCHA + PRECIO TOTAL            -->
-
-        <!-- PASO 1 -->
-@if ($pasoActual == 1)
-<div class="space-y-6">
-
-    <h2 class="text-2xl font-bold text-green-700">Reservar cancha</h2>
-
-    <!-- SELECT CANCHA -->
-    <div>
-        <label class="font-semibold text-gray-700">Cancha</label>
-        <select wire:model.live="cancha"
-            class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2">
-            <option value="">-- Seleccionar --</option>
-            @foreach($canchas as $c)
-                <option value="{{ $c->id }}">{{ $c->nombre }}</option>
-            @endforeach
-        </select>
-    </div>
-
-    @if ($canchaObj)
-    <!-- TARJETA -->
-    <div class="flex gap-4 bg-green-50 border border-green-200 rounded-xl p-4 shadow">
-
-        <img src="{{ $canchaImagen }}"
-            class="w-32 h-24 rounded-xl object-cover">
-
-        <div class="flex flex-col justify-center">
-            <p class="text-xl font-bold text-green-700">{{ $canchaTitulo }}</p>
-            <p class="text-gray-600 text-sm">{{ $canchaObj->tipo }}</p>
-
-            <p class="text-gray-600 text-sm">
-                Precio por hora:
-                <b class="text-green-700">${{ number_format($precioHora, 2) }}</b>
-            </p>
-        </div>
-
-    </div>
-    @endif
-
-    @if($canchaObj)
-
-    <!-- FILA 1: FECHA + HORAS -->
-    <div class="flex flex-col md:flex-row gap-6 items-start">
-
-        <div class="w-full">
-            @livewire('calendario-reserva', [
-                'fechaInicial' => $fecha,
-                'canchaId'     => $cancha
-            ])
-        </div>
-
-        <div class="flex-1">
-        </div>
-
-    </div>
-
-    <!-- FILA 2: DURACIÓN + PRECIO -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <!-- DURACION -->
-        <div>
-            <label class="font-semibold text-gray-700">Duración (horas)</label>
-        <input
-            type="text"
-            wire:model.live="duracion"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            maxlength="2"
-            oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-            onblur="
-                if(this.value === '') this.value = 1;
-                if(parseInt(this.value) > 23) this.value = 23;
-                if(parseInt(this.value) < 1) this.value = 1;
-            "
-            class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
-        />
-
-        </div>
-
-        <!-- PRECIO -->
-        <input type="text"
-            wire:model="precioHora"
-            class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2 text-gray-600"
-            readonly>
-
-    </div>
-
-    <!-- =============================== -->
-    <!-- FILA 3: TOTAL -->
-    <!-- =============================== -->
-    <div class="p-4 bg-green-100 rounded-xl border border-green-300">
-        <p class="text-gray-700 font-semibold">Total:</p>
-        <p class="text-3xl font-bold text-green-700">
-            ${{ number_format($this->total, 2) }}
-        </p>
-    </div>
-
-    @endif
-
-    <!-- BOTÓN -->
-    <div class="flex justify-end">
-        <button wire:click="siguiente"
-            class="bg-green-600 hover:bg-green-500 text-white px-8 py-2 rounded-full font-bold shadow">
-            Continuar
-        </button>
-    </div>
-
-</div>
-@endif
-
-            <!--        PASO 2: REGISTRAR CLIENTE                        -->
-
-    @if ($pasoActual == 2)
+    @if ($pasoActual == 1)
     <div class="space-y-6">
 
-        <h2 class="text-2xl font-bold text-green-700">
-            Datos del cliente
-        </h2>
+        @if ($errors->any())
+            <div class="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                Debes completar los campos requeridos antes continuar.
+            </div>
+        @endif
 
-        {{-- BUSCADOR --}}
-        <div class="flex items-center gap-3 relative">
-            <span class="text-green-600 text-xl">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </span>
+        <h2 class="text-2xl font-bold text-green-700">Reservar cancha</h2>
 
-            <input type="text"
-                wire:model.live="busqueda"
-                placeholder="Buscar cliente por nombre..."
-                class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
-            >
+        <div>
+            <label class="font-semibold text-gray-700">Cancha</label>
 
-            @if(count($resultados) > 0)
-                <div class="absolute left-8 top-full w-full bg-white border border-green-200 mt-1 rounded-xl shadow-lg z-50">
-                    @foreach($resultados as $cli)
-                        <div wire:click="seleccionarCliente({{ $cli->id }})"
-                            class="p-2 cursor-pointer hover:bg-green-100">
-                            {{ $cli->nombre }} - {{ $cli->telefono }}
-                        </div>
-                    @endforeach
+            <select
+                wire:model.live="cancha"
+                class="w-full bg-gray-100 rounded-xl px-4 py-2
+                    {{ $errors->has('cancha') ? 'border-red-500' : 'border-green-600' }}">
+                <option value="">-- Seleccionar --</option>
+
+                @foreach($canchas as $c)
+                    <option value="{{ $c->id }}">{{ $c->nombre }}</option>
+                @endforeach
+            </select>
+
+            @error('cancha')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        @if ($canchaObj)
+        <div class="flex gap-4 bg-green-50 border border-green-200 rounded-xl p-4 shadow">
+
+            <img src="{{ $canchaImagen }}"
+                class="w-32 h-24 rounded-xl object-cover">
+
+            <div class="flex flex-col justify-center">
+                <p class="text-xl font-bold text-green-700">{{ $canchaTitulo }}</p>
+                <p class="text-gray-600 text-sm">{{ $canchaObj->tipo }}</p>
+
+                <p class="text-gray-600 text-sm">
+                    Precio por hora:
+                    <b class="text-green-700">${{ number_format($precioHora, 2) }}</b>
+                </p>
+            </div>
+
+        </div>
+        @endif
+
+        @if($canchaObj)
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div class="col-span-1">
+                @livewire('calendario-reserva', [
+                    'fechaInicial' => $fecha,
+                    'canchaId'     => $cancha
+                ])
+            </div>
+
+            <div class="col-span-1 space-y-4">
+
+                <div>
+                    <label class="font-semibold text-gray-700">Duración (horas)</label>
+
+                    <input type="number"
+                        min="1"
+                        wire:model.live="duracion"
+                        class="w-full bg-gray-100 rounded-xl px-4 py-2
+                            {{ $errors->has('duracion') ? 'border-red-500' : 'border-green-600' }}">
+
+                    @error('duracion')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
-            @endif
+
+                <div>
+                    <label class="font-semibold text-gray-700">Precio por hora</label>
+
+                    <input type="text"
+                        wire:model="precioHora"
+                        class="w-full bg-gray-100 rounded-xl px-4 py-2 text-gray-600
+                            {{ $errors->has('precioHora') ? 'border-red-500' : 'border-green-600' }}"
+                        readonly>
+
+                    @error('precioHora')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- TOTAL -->
+                <div class="p-4 bg-green-100 rounded-xl border border-green-300">
+                    <p class="text-gray-700 font-semibold">Total:</p>
+                    <p class="text-3xl font-bold text-green-700">
+                        ${{ number_format($this->total, 2) }}
+                    </p>
+                </div>
+
+            </div>
+
         </div>
+        @endif
 
-        {{-- FORMULARIO --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-            <input type="text" wire:model="nombre"
-                @if($clienteExiste) disabled @endif
-                class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
-                placeholder="Nombre completo">
-
-            <input type="text" wire:model="telefono"
-                @if($clienteExiste) disabled @endif
-                placeholder="Teléfono ####-####"
-                class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2">
-
-            <input type="text" wire:model="equipo"
-                @if($clienteExiste) disabled @endif
-                placeholder="Equipo (opcional)"
-                class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2">
-
-        </div>
-
-        <textarea wire:model="notas"
-            @if($clienteExiste) disabled @endif
-            class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
-            placeholder="Notas adicionales"></textarea>
-
-        <div class="flex justify-between">
-            <button wire:click="anterior" class="text-green-600 font-bold">← Volver</button>
+        <div class="flex justify-end">
             <button wire:click="siguiente"
                 class="bg-green-600 hover:bg-green-500 text-white px-8 py-2 rounded-full font-bold shadow">
                 Continuar
@@ -229,77 +155,61 @@
     </div>
     @endif
 
-            <!--        PASO 3: PAGO (PAGADO / ADELANTO / PDF)           -->
-
-@if ($pasoActual == 3)
+@if ($pasoActual == 2)
 <div class="space-y-6">
 
-    <h2 class="text-2xl font-bold text-green-700">
-        Pago del cliente
-    </h2>
+    <h2 class="text-2xl font-bold text-green-700">Datos del cliente</h2>
 
-    <div class="space-y-4">
+    <!-- BUSCADOR -->
+    <div class="relative">
 
-        <div>
-            <label class="font-semibold text-gray-700">Estado de la reserva</label>
-            <select wire:model="estadoReserva"
-                class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2">
-                <option value="">-- Seleccionar --</option>
-                <option value="pendiente">Pendiente</option>
-                <option value="confirmada">Confirmada</option>
-                <option value="cancelada">Cancelada</option>
-                <option value="finalizada">Finalizada</option>
-            </select>
-        </div>
+        <i class="fa-solid fa-magnifying-glass text-green-700 absolute left-3 top-3"></i>
 
-        <div>
-            <label class="font-semibold text-gray-700">Estado del pago</label>
-            <select wire:model="estadoPago"
-                class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2">
-                <option value="">-- Seleccionar --</option>
-                <option value="pagado">Pagado completo</option>
-                <option value="adelanto">Dejó adelanto</option>
-                <option value="nopago">No pagó</option>
-            </select>
-        </div>
+        <input type="text"
+            wire:model.live="busqueda"
+            placeholder="Buscar cliente por nombre o teléfono"
+            class="w-full bg-gray-100 border border-green-600 rounded-xl pl-10 pr-4 py-2">
 
-        @if ($estadoPago === 'adelanto')
-        <div>
-            <label class="font-semibold text-gray-700">Monto del adelanto</label>
-            <input type="number" wire:model="adelanto" step="0.01"
-                class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2">
-        </div>
+        @if(!empty($resultados))
+            <div class="absolute w-full bg-white border border-green-300 rounded-xl mt-1 shadow-xl z-20">
+
+                @foreach ($resultados as $r)
+                    <div wire:click="seleccionarCliente({{ $r->id }})"
+                        class="px-4 py-2 cursor-pointer hover:bg-green-100">
+
+                        <p class="font-semibold text-green-700">{{ $r->nombre }}</p>
+                        <p class="text-gray-600 text-sm">{{ $r->telefono }}</p>
+
+                    </div>
+                @endforeach
+
+            </div>
         @endif
-
-        <div>
-            <label class="font-semibold text-gray-700">Método de pago</label>
-            <select wire:model="metodoPago"
-                class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2">
-                <option value="">-- Seleccionar --</option>
-                <option value="efectivo">Efectivo</option>
-                <option value="tarjeta">Tarjeta</option>
-                <option value="transferencia">Transferencia</option>
-            </select>
-        </div>
-
-        <div>
-            <label class="font-semibold text-gray-700">Observaciones</label>
-            <input type="text"
-                wire:model="observaciones"
-                class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
-                placeholder="Escribe algo (opcional)">
-        </div>
-
-        <div class="text-center pt-4">
-            <button
-                class="bg-green-600 hover:bg-green-500 text-white px-8 py-2 rounded-full font-bold shadow">
-                Generar comprobante PDF
-            </button>
-        </div>
 
     </div>
 
-    <div class="flex justify-between mt-6">
+    <!-- INPUTS DE CLIENTE -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <input type="text" wire:model.live="nombre"
+            class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
+            placeholder="Nombre completo">
+
+        <input type="text" wire:model.live="telefono"
+            class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
+            placeholder="0000-0000">
+
+        <input type="text" wire:model.live="equipo"
+            class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
+            placeholder="Equipo o grupo (opcional)">
+
+    </div>
+
+    <textarea wire:model.live="notas"
+        class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
+        placeholder="Notas del cliente"></textarea>
+
+    <div class="flex justify-between">
         <button wire:click="anterior" class="text-green-600 font-bold">← Volver</button>
         <button wire:click="siguiente"
             class="bg-green-600 hover:bg-green-500 text-white px-8 py-2 rounded-full font-bold shadow">
@@ -311,70 +221,160 @@
 @endif
 
 
-@if ($pasoActual == 4)
-<div class="space-y-8">
 
-    <h2 class="text-3xl font-bold text-green-700 mb-6">
-        Detalles de la reserva
-    </h2>
+    @if ($pasoActual == 3)
+    <div class="space-y-6">
 
-    {{-- ======================= --}}
-    {{-- SECCIÓN CANCHA --}}
-    {{-- ======================= --}}
-    <div class="space-y-2">
-        <h3 class="text-xl font-bold text-green-600">Detalles de la cancha</h3>
+        @if ($errors->any())
+            <div class="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                ⚠️ Revisa los datos antes de continuar.
+            </div>
+        @endif
 
-        <p><b>Cancha:</b> {{ $canchaObj->nombre }}</p>
+        <h2 class="text-2xl font-bold text-green-700">Pago del cliente</h2>
 
-        <p><b>Fecha y hora:</b> {{ $fecha }} — {{ $hora }}</p>
+        <div class="space-y-4">
 
-        <p><b>Duración:</b> {{ $duracion }} h</p>
-    </div>
+            <div>
+                <label class="font-semibold text-gray-700">Estado del pago</label>
+                <select wire:model="estadoPago"
+                    class="w-full bg-gray-100 rounded-xl px-4 py-2
+                        {{ $errors->has('estadoPago') ? 'border-red-500' : 'border-green-600' }}">
+                    <option value="">-- Seleccionar --</option>
+                    <option value="pagado">Pagado completo</option>
+                    <option value="adelanto">Dejó adelanto</option>
+                    <option value="nopago">No pagó</option>
+                </select>
 
-    {{-- ======================= --}}
-    {{-- SECCIÓN CLIENTE --}}
-    {{-- ======================= --}}
-    <div class="space-y-2 pt-4">
-        <h3 class="text-xl font-bold text-green-600">Detalles del cliente</h3>
+                @error('estadoPago')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <p><b>Cliente:</b> {{ $nombre }} — {{ $telefono }}</p>
+            @if ($estadoPago === 'adelanto')
+            <div>
+                <label class="font-semibold text-gray-700">Monto del adelanto</label>
+                <input type="number"
+                    wire:model="adelanto"
+                    step="0.01"
+                    class="w-full bg-gray-100 rounded-xl px-4 py-2
+                        {{ $errors->has('adelanto') ? 'border-red-500' : 'border-green-600' }}">
 
-        <p><b>Email:</b> {{ $email }}</p>
+                @error('adelanto')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            @endif
 
-        <p><b>Equipo:</b> {{ $equipo ?: '—' }}</p>
-    </div>
+            <div>
+                <label class="font-semibold text-gray-700">Método de pago</label>
+                <select wire:model="metodoPago"
+                    class="w-full bg-gray-100 rounded-xl px-4 py-2
+                        {{ $errors->has('metodoPago') ? 'border-red-500' : 'border-green-600' }}">
+                    <option value="">-- Seleccionar --</option>
+                    <option value="efectivo">Efectivo</option>
+                    <option value="tarjeta">Tarjeta</option>
+                    <option value="transferencia">Transferencia</option>
+                </select>
 
-    {{-- ======================= --}}
-    {{-- SECCIÓN PAGO Y ESTADO --}}
-    {{-- ======================= --}}
-    <div class="space-y-2 pt-4">
-        <h3 class="text-xl font-bold text-green-600">Detalles del pago y estado</h3>
+                @error('metodoPago')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <p><b>Estado de la reserva:</b> {{ $estadoReserva }}</p>
+            <div class="text-center pt-4">
+                <button wire:click="generarComprobante"
+                    class="bg-green-600 hover:bg-green-500 text-white px-8 py-2 rounded-full font-bold shadow">
+                    Generar comprobante PDF
+                </button>
+            </div>
 
-        <p><b>Estado del pago:</b> {{ $estadoPago }}</p>
+            @if ($comprobantePdf)
+            <div class="mt-6 p-4 bg-green-50 border border-green-300 rounded-xl text-center">
+                <p class="font-semibold text-green-700">Comprobante generado correctamente</p>
 
-        <p><b>Método de pago:</b> {{ $metodoPago }}</p>
-
-        <p><b>Observaciones:</b> {{ $observaciones ?: 'Sin observaciones' }}</p>
-
-        <p class="text-xl font-bold pt-2">
-            Total: ${{ number_format($this->total, 2) }}
-        </p>
-    </div>
-
-    <div class="flex justify-end pt-6">
-        <button wire:click="finalizar"
-            class="bg-green-700 hover:bg-green-600 text-white px-8 py-2 rounded-full font-bold shadow">
-            Finalizar reserva
-        </button>
-    </div>
-</div>
-@endif
+                <a href="{{ asset($comprobantePdf) }}" download
+                    class="mt-3 inline-block bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-full font-bold shadow">
+                    Descargar comprobante
+                </a>
+            </div>
+            @endif
 
         </div>
 
-        <!--                RESUMEN DERECHA (EN VIVO)                  -->
+        <div class="flex justify-between mt-6">
+            <button wire:click="anterior" class="text-green-600 font-bold">← Volver</button>
+            <button wire:click="siguiente"
+                class="bg-green-600 hover:bg-green-500 text-white px-8 py-2 rounded-full font-bold shadow">
+                Continuar
+            </button>
+        </div>
+
+    </div>
+    @endif
+
+    @if ($pasoActual == 4)
+    <div class="space-y-8">
+
+        <h2 class="text-3xl font-bold text-green-700 mb-6">
+            Detalles de la reserva
+        </h2>
+
+        {{-- ======================= --}}
+        {{-- SECCIÓN CANCHA --}}
+        {{-- ======================= --}}
+        <div class="space-y-2">
+            <h3 class="text-xl font-bold text-green-600">Detalles de la cancha</h3>
+
+            <p><b>Cancha:</b> {{ $canchaObj->nombre }}</p>
+
+            <p><b>Fecha y hora:</b> {{ $fecha }} — {{ $hora }}</p>
+
+            <p><b>Duración:</b> {{ $duracion }} h</p>
+        </div>
+
+        {{-- ======================= --}}
+        {{-- SECCIÓN CLIENTE --}}
+        {{-- ======================= --}}
+        <div class="space-y-2 pt-4">
+            <h3 class="text-xl font-bold text-green-600">Detalles del cliente</h3>
+
+            <p><b>Cliente:</b> {{ $nombre }} — {{ $telefono }}</p>
+
+            <p><b>Email:</b> {{ $email }}</p>
+
+            <p><b>Equipo:</b> {{ $equipo ?: '—' }}</p>
+        </div>
+
+        {{-- ======================= --}}
+        {{-- SECCIÓN PAGO Y ESTADO --}}
+        {{-- ======================= --}}
+        <div class="space-y-2 pt-4">
+            <h3 class="text-xl font-bold text-green-600">Detalles del pago y estado</h3>
+
+            <p><b>Estado de la reserva:</b> {{ $estadoReserva }}</p>
+
+            <p><b>Estado del pago:</b> {{ $estadoPago }}</p>
+
+            <p><b>Método de pago:</b> {{ $metodoPago }}</p>
+
+            <p><b>Observaciones:</b> {{ $observaciones ?: 'Sin observaciones' }}</p>
+
+            <p class="text-xl font-bold pt-2">
+                Total: ${{ number_format($this->total, 2) }}
+            </p>
+        </div>
+
+        <div class="flex justify-end pt-6">
+            <button wire:click="abrirConfirmacion"
+                class="bg-green-700 hover:bg-green-600 text-white px-8 py-2 rounded-full font-bold shadow">
+                Finalizar reserva
+            </button>
+        </div>
+    </div>
+    @endif
+
+        </div>
 
 <div class="md:col-span-1">
 
@@ -385,7 +385,6 @@
             Resumen
         </h2>
 
-        <!-- PRIMERA SECCIÓN -->
         <div class="grid grid-cols-2 gap-3 text-sm">
 
             <div>
@@ -420,10 +419,8 @@
 
         </div>
 
-        <!-- SEPARADOR -->
         <hr class="my-3 border-green-700/30">
 
-        <!-- SEGUNDA SECCIÓN -->
         <div class="space-y-1 text-sm">
 
             <div>
@@ -459,6 +456,59 @@
 
 </div>
 
+@if($mostrarModalConfirmacion)
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-xl shadow-xl w-96 border border-green-600">
+
+        <h2 class="text-xl font-bold text-green-700 mb-3">
+            ¿Guardar reserva?
+        </h2>
+
+        <p class="text-gray-600 mb-6">
+            ¿Estás seguro que deseas registrar esta reserva?
+        </p>
+
+        <div class="flex justify-end gap-3">
+            <button
+                wire:click="cancelarConfirmacion"
+                class="px-4 py-2 rounded-lg border border-gray-400 text-gray-600 hover:bg-gray-100">
+                Cancelar
+            </button>
+
+            <button
+                wire:click="confirmarGuardado"
+                class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500 shadow">
+                Confirmar
+            </button>
+        </div>
+
+    </div>
+</div>
+@endif
+
+@if($mostrarModalExito)
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-xl shadow-xl w-96 border border-green-600">
+
+        <h2 class="text-xl font-bold text-green-700 mb-2">
+            ¡Reserva creada!
+        </h2>
+
+        <p class="text-gray-600 mb-6">
+            La reserva ha sido registrada correctamente.
+        </p>
+
+        <div class="flex justify-center">
+            <button
+                wire:click="$set('mostrarModalExito', false)"
+                class="px-6 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500 shadow">
+                Aceptar
+            </button>
+        </div>
+
+    </div>
+</div>
+@endif
 
     </div>
 
