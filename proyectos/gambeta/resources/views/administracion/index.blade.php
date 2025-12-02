@@ -27,6 +27,7 @@
     $isErrorFeedback = $feedbackType === 'error';
     $feedbackTitle = $isErrorFeedback ? 'Ocurrió un problema' : 'Operación exitosa';
     $reservasJsVersion = file_exists(public_path('js/reservas.js')) ? filemtime(public_path('js/reservas.js')) : time();
+    $adminCalendarJsVersion = file_exists(public_path('js/admin-calendar.js')) ? filemtime(public_path('js/admin-calendar.js')) : time();
 @endphp
 
 @section('content')
@@ -79,6 +80,26 @@
                     </svg>
                 </span>
                 Reservas
+            </button>
+        </li>
+
+        {{-- CALENDARIO --}}
+        <li class="block">
+            <button type="button"
+                data-section-target="calendario"
+                class="panel-tab flex items-center h-10 leading-10 px-4 rounded-md mx-1 cursor-pointer
+                           transition-colors duration-100
+                           bg-white text-gray-900 hover:bg-gray-100">
+                <span class="mr-3 text-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-900" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="1.7"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 4h18v17H3z" />
+                        <path d="M8 2v4M16 2v4M3 10h18" />
+                        <path d="M7 14h4v4H7z" />
+                    </svg>
+                </span>
+                Calendario
             </button>
         </li>
 
@@ -566,6 +587,15 @@
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN CALENDARIO -->
+    <section id="calendario" data-section="calendario" class="scroll-mt-32 hidden">
+        <div class="bg-slate-900 min-h-screen flex justify-center p-10">
+            <div class="w-full max-w-6xl space-y-6">
+                <livewire:admin-calendar />
             </div>
         </div>
     </section>
@@ -1870,5 +1900,6 @@
 </script>
 
 {{-- logica --}}
+<script src="{{ asset('js/admin-calendar.js') }}?v={{ $adminCalendarJsVersion }}"></script>
 <script src="{{ asset('js/reservas.js') }}?v={{ $reservasJsVersion }}"></script>
 @endsection
