@@ -672,6 +672,7 @@
     };
 
     const initPage = () => {
+        document.body.classList.add('bg-slate-900');
         initNav();
         initModal();
         initBloqueoModal();
