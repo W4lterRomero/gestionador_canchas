@@ -10,14 +10,10 @@
                 </p>
             </div>
             <div class="w-full md:w-auto">
-                <label class="text-xs uppercase tracking-widest text-emerald-200">Visualizar mes</label>
-                <div class="mt-2 rounded-2xl bg-white/10 p-3 backdrop-blur">
-                    <select wire:model="selectedPeriod"
-                        class="w-full bg-transparent text-white font-semibold focus:outline-none">
-                        @foreach ($monthOptions as $value => $label)
-                            <option class="text-slate-900" value="{{ $value }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
+                <div class="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur text-right">
+                    <p class="text-xs uppercase tracking-[0.4em] text-emerald-200">Mes en curso</p>
+                    <p class="mt-2 text-2xl font-bold">{{ $focusedMonthLabel }}</p>
+                    <p class="text-[11px] text-slate-200/80">Actualizado automáticamente</p>
                 </div>
             </div>
         </div>
