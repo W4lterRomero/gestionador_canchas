@@ -328,7 +328,7 @@ private function guardarReserva()
         'duracion_minutos' => $duracionMin,
         'precio_hora'      => $this->precioHora,
         'total'            => $this->total,
-        'estado'           => $this->estadoReserva,
+        'estado'           => $this->estadoReserva ?: 'Pendiente',
         'observaciones'    => null,
         'creado_por'       => auth()->id() ?? 1,
         'actualizado_por'  => auth()->id() ?? 1,
