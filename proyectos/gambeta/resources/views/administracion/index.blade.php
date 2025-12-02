@@ -5,22 +5,28 @@
     $reservas = $reservas ?? collect();
     $bloqueos = $bloqueos ?? collect();
     $precios = $precios ?? collect();
+    $usuarios = $usuarios ?? collect();
+    $roles = $roles ?? collect();
     $editarCanchaId = session('editarCanchaId');
     $editarBloqueoId = session('editarBloqueoId');
     $editarPrecioId = session('editarPrecioId');
+    $editarUsuarioId = session('editarUsuarioId');
     $shouldOpenCreateModal = $errors->crearCancha->any();
     $shouldOpenBloqueoModal = $errors->crearBloqueo->any();
     $shouldOpenPrecioModal = $errors->crearPrecio->any();
+    $shouldOpenUsuarioModal = $errors->crearUsuario->any();
     $crearBloqueoErrors = $errors->crearBloqueo ?? null;
     $editarBloqueoErrors = $errors->editarBloqueo ?? null;
     $crearPrecioErrors = $errors->crearPrecio ?? null;
     $editarPrecioErrors = $errors->editarPrecio ?? null;
+    $usuarioEditErrors = $errors->editarUsuario ?? null;
     $feedbackStatus = session('status');
     $feedbackError = session('error');
     $feedbackMessage = $feedbackStatus ?: $feedbackError;
     $feedbackType = $feedbackStatus ? 'success' : ($feedbackError ? 'error' : null);
     $isErrorFeedback = $feedbackType === 'error';
     $feedbackTitle = $isErrorFeedback ? 'Ocurrió un problema' : 'Operación exitosa';
+    $reservasJsVersion = file_exists(public_path('js/reservas.js')) ? filemtime(public_path('js/reservas.js')) : time();
 @endphp
 
 @section('content')
@@ -117,6 +123,27 @@
                     </svg>
                 </span>
                 Precios
+            </button>
+        </li>
+
+        {{-- USUARIOS --}}
+        <li class="block">
+            <button type="button"
+                data-section-target="usuarios"
+                class="panel-tab flex items-center h-10 leading-10 px-4 rounded-md mx-1 cursor-pointer
+                           transition-colors duration-100
+                           bg-white text-gray-900 hover:bg-gray-100">
+                <span class="mr-3 text-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-900" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="1.7"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2" />
+                        <circle cx="9" cy="7" r="3" />
+                        <path d="M21 21v-2a4 4 0 00-3-3.87" />
+                        <path d="M16 3.13a4 4 0 010 7.75" />
+                    </svg>
+                </span>
+                Usuarios
             </button>
         </li>
 
@@ -1452,6 +1479,380 @@
             </div>
         </div>
     </section>
+
+    <!-- SECCIÓN USUARIOS -->
+    <section id="usuarios" data-section="usuarios" class="scroll-mt-32 hidden">
+        <div class="bg-slate-900 min-h-screen flex justify-center p-10">
+            <div class="w-full max-w-5xl space-y-4">
+                <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Usuarios del sistema</h1>
+                        <p class="text-sm text-slate-400">Administra cuentas, roles y estados de acceso.</p>
+                    </div>
+                    <button id="abrirUsuarioModal" type="button"
+                        class="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition">
+                        <span class="text-xl font-bold">+</span>
+                        NUEVO USUARIO
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-slate-900/80">
+                            <tr class="uppercase text-xs text-slate-400 tracking-wide">
+                                <th class="px-6 py-3">Usuario</th>
+                                <th class="px-6 py-3">Rol</th>
+                                <th class="px-6 py-3 text-center">Estado</th>
+                                <th class="px-6 py-3">Creado</th>
+                                <th class="px-6 py-3 text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800">
+                            @forelse ($usuarios as $usuario)
+                                @php
+                                    $rolLabel = optional($usuario->role)->description ?? optional($usuario->role)->name ?? 'Sin rol asignado';
+                                    $isCurrentUser = auth()->id() === $usuario->id;
+                                @endphp
+                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-white">{{ $usuario->name }}</p>
+                                        <p class="text-xs text-slate-400">{{ $usuario->email }}</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center rounded-full bg-indigo-500/10 text-indigo-200 px-3 py-1 text-xs font-medium">
+                                            {{ ucfirst($rolLabel) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        @if ($usuario->activo)
+                                            <span class="inline-flex items-center justify-center bg-emerald-500/15 text-emerald-300 px-3 py-1 rounded-full text-xs font-medium">
+                                                Activo
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center justify-center bg-rose-500/10 text-rose-300 px-3 py-1 rounded-full text-xs font-medium">
+                                                Inactivo
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="font-semibold text-white">
+                                            {{ optional($usuario->created_at)->format('d/m/Y') ?? '—' }}
+                                        </p>
+                                        <p class="text-xs text-slate-400">ID #{{ $usuario->id }}</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center justify-end gap-3 text-lg">
+                                            <button type="button"
+                                                class="hover:text-indigo-300 transition-colors"
+                                                data-usuario-edit-target="usuario-edit-modal-{{ $usuario->id }}"
+                                                title="Editar usuario">
+                                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                                                </svg>
+                                            </button>
+                                            @if ($isCurrentUser)
+                                                <span class="text-xs text-slate-500 border border-slate-700 rounded-full px-3 py-1" title="No puedes eliminar tu propia cuenta">
+                                                    Sesión activa
+                                                </span>
+                                            @else
+                                                <form id="usuario-delete-form-{{ $usuario->id }}" method="POST"
+                                                    action="{{ route('admin.usuarios.destroy', $usuario) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="hover:text-rose-400 transition-colors"
+                                                        data-usuario-delete-target="usuario-delete-form-{{ $usuario->id }}"
+                                                        data-usuario-delete-name="{{ $usuario->name }}"
+                                                        data-usuario-delete-email="{{ $usuario->email }}"
+                                                        title="Eliminar usuario">
+                                                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                                            <path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zm3-9h2v7H9V10zm4 0h2v7h-2v-7z" />
+                                                            <path d="M15.5 4l-1-1h-5l-1 1H5v2h14V4z" />
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-10 text-center text-slate-400">
+                                        Aún no hay usuarios registrados.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL CREAR USUARIO -->
+        <div id="usuario-modal"
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
+            <div
+                class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+                <button type="button" data-usuario-modal-close
+                    class="absolute top-4 right-4 bg-indigo-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
+                    ✕
+                </button>
+
+                <div class="space-y-6 text-white">
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.3em] text-indigo-300">Nuevo usuario</p>
+                        <h2 class="text-2xl font-semibold">Registrar cuenta</h2>
+                        <p class="text-slate-400 text-sm">Define los datos básicos y el rol que tendrá dentro del sistema.</p>
+                    </div>
+
+                    <form method="POST" action="{{ route('admin.usuarios.store') }}" class="grid gap-4 md:grid-cols-2 text-sm">
+                        @csrf
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre completo</label>
+                            <input type="text" name="name" value="{{ old('name') }}"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                required>
+                            @error('name', 'crearUsuario')
+                                <p class="text-xs text-rose-300 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Correo electrónico</label>
+                            <input type="email" name="email" value=""
+                                autocomplete="off"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                required>
+                            @error('email', 'crearUsuario')
+                                <p class="text-xs text-rose-300 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Rol</label>
+                            <select name="role_id"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                required>
+                                <option value="">Selecciona un rol</option>
+                                @foreach ($roles as $rol)
+                                    <option value="{{ $rol->id }}" @selected(old('role_id') == $rol->id)>
+                                        {{ $rol->description ?? ucfirst($rol->name) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('role_id', 'crearUsuario')
+                                <p class="text-xs text-rose-300 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Contraseña</label>
+                            <input type="password" name="password"
+                                autocomplete="new-password"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                required>
+                            @error('password', 'crearUsuario')
+                                <p class="text-xs text-rose-300 mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-slate-500 mt-1">
+                                Debe tener al menos 8 caracteres y combinar letras, números o símbolos.
+                            </p>
+                        </div>
+
+                        <div class="md:col-span-2 flex items-center gap-3">
+                            <input type="hidden" name="activo" value="0">
+                            <input type="checkbox" id="usuario_activo_create" name="activo" value="1"
+                                class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-indigo-500 focus:ring-indigo-500"
+                                {{ old('activo', 1) ? 'checked' : '' }}>
+                            <label for="usuario_activo_create" class="text-xs uppercase tracking-widest text-slate-400">
+                                Usuario activo
+                            </label>
+                        </div>
+                        @error('activo', 'crearUsuario')
+                            <div class="md:col-span-2 text-xs text-rose-300">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                        <div class="md:col-span-2 flex justify-end gap-3">
+                            <button type="button" data-usuario-modal-close
+                                class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">Cancelar</button>
+                            <button type="submit"
+                                class="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-semibold transition">
+                                Guardar usuario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODALES EDITAR USUARIO -->
+        @foreach ($usuarios as $usuario)
+            @php
+                $usuarioRowEditing = (int) $editarUsuarioId === $usuario->id;
+                $editUsuarioNombre = $usuarioRowEditing ? old('name', $usuario->name) : $usuario->name;
+                $editUsuarioCorreo = $usuarioRowEditing ? old('email', $usuario->email) : $usuario->email;
+                $editUsuarioRol = $usuarioRowEditing ? (int) old('role_id', $usuario->role_id) : $usuario->role_id;
+                $editUsuarioActivo = $usuarioRowEditing ? (bool) old('activo', $usuario->activo) : (bool) $usuario->activo;
+                $isCurrentUser = auth()->id() === $usuario->id;
+            @endphp
+            <div id="usuario-edit-modal-{{ $usuario->id }}"
+                class="usuario-edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
+                data-usuario-edit-modal data-open-default="{{ $usuarioRowEditing ? 'true' : 'false' }}">
+                <div
+                    class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                    <button type="button" data-usuario-edit-modal-close
+                        class="absolute top-4 right-4 bg-indigo-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
+                        ✕
+                    </button>
+
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-indigo-300">Editar usuario</p>
+                            <h2 class="text-2xl font-semibold">Actualizar {{ $usuario->name }}</h2>
+                            <p class="text-slate-400 text-sm">Modifica los datos necesarios y guarda los cambios.</p>
+                        </div>
+
+                        <form method="POST" action="{{ route('admin.usuarios.update', $usuario) }}" class="grid gap-4 md:grid-cols-2 text-sm">
+                            @csrf
+                            @method('PUT')
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre completo</label>
+                                <input type="text" name="name" value="{{ $editUsuarioNombre }}"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                    required>
+                                @if ($usuarioRowEditing && $usuarioEditErrors?->has('name'))
+                                    <p class="text-xs text-rose-300 mt-1">{{ $usuarioEditErrors->first('name') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Correo electrónico</label>
+                                <input type="email" name="email" value="{{ $editUsuarioCorreo }}"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                    required>
+                                @if ($usuarioRowEditing && $usuarioEditErrors?->has('email'))
+                                    <p class="text-xs text-rose-300 mt-1">{{ $usuarioEditErrors->first('email') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Rol</label>
+                                <select name="role_id"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                    required>
+                                    <option value="">Selecciona un rol</option>
+                                    @foreach ($roles as $rol)
+                                        <option value="{{ $rol->id }}" @selected($editUsuarioRol == $rol->id)>
+                                            {{ $rol->description ?? ucfirst($rol->name) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @if ($usuarioRowEditing && $usuarioEditErrors?->has('role_id'))
+                                    <p class="text-xs text-rose-300 mt-1">{{ $usuarioEditErrors->first('role_id') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Contraseña</label>
+                                <input type="password" name="password" value=""
+                                    autocomplete="new-password"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                    placeholder="Dejar en blanco para mantener">
+                            @if ($usuarioRowEditing && $usuarioEditErrors?->has('password'))
+                                <p class="text-xs text-rose-300 mt-1">{{ $usuarioEditErrors->first('password') }}</p>
+                            @endif
+                                <p class="text-xs text-slate-500 mt-1">
+                                    Debe tener mínimo 8 caracteres. Deja el campo vacío para conservar la actual.
+                                </p>
+                            </div>
+
+                            <div class="md:col-span-2 flex flex-col gap-2">
+                                <div class="flex items-center gap-3">
+                                    <input type="hidden" name="activo" value="{{ $isCurrentUser ? (int) $editUsuarioActivo : 0 }}">
+                                    <input type="checkbox" id="usuario_activo_{{ $usuario->id }}" name="activo" value="1"
+                                        class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-indigo-500 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        {{ $editUsuarioActivo ? 'checked' : '' }} {{ $isCurrentUser ? 'disabled' : '' }}>
+                                    <label for="usuario_activo_{{ $usuario->id }}"
+                                        class="text-xs uppercase tracking-widest text-slate-400">Usuario activo</label>
+                                </div>
+                                @if ($isCurrentUser)
+                                    <p class="text-xs text-slate-500">
+                                        No puedes desactivar tu propia cuenta mientras la sesión esté activa.
+                                    </p>
+                                @endif
+                            </div>
+                            @if ($usuarioRowEditing && $usuarioEditErrors?->has('activo'))
+                                <div class="md:col-span-2 text-xs text-rose-300">
+                                    {{ $usuarioEditErrors->first('activo') }}
+                                </div>
+                            @endif
+
+                            <div class="md:col-span-2 flex justify-end gap-3">
+                                <button type="button" data-usuario-edit-modal-close
+                                    class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">Cancelar</button>
+                                <button type="submit"
+                                    class="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-semibold transition">
+                                    Guardar cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+        <!-- MODAL ELIMINAR USUARIO -->
+        <div id="usuario-delete-modal"
+            class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
+            <div class="relative w-full max-w-lg border border-rose-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
+                <button type="button" data-usuario-delete-cancel
+                    class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    ✕
+                </button>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="rounded-full p-2 bg-rose-500/15 text-rose-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor"
+                                stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v4" />
+                                <path d="M12 17h.01" />
+                                <path d="M10 3h4l7 12-2 4H5l-2-4 7-12z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-rose-300">Confirmar acción</p>
+                            <p class="text-lg font-semibold text-white">
+                                ¿Eliminar este usuario?
+                            </p>
+                            <p class="text-sm text-slate-400 mt-1">
+                                Se revocará su acceso inmediatamente. Esta acción no se puede deshacer.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+                        <p class="text-sm text-slate-400">Usuario</p>
+                        <p class="text-lg font-semibold text-white" data-usuario-delete-name>—</p>
+                        <p class="text-xs text-slate-500" data-usuario-delete-email>—</p>
+                    </div>
+
+                    <div class="flex justify-end gap-3">
+                        <button type="button" data-usuario-delete-cancel
+                            class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                            Cancelar
+                        </button>
+                        <button type="button" data-usuario-delete-confirm
+                            class="px-5 py-2 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-semibold transition">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
 {{-- pasar variables de PHP a JavaScript ignorar error del editor --}}
@@ -1463,9 +1864,11 @@
         serverBloqueoEditId: @json($editarBloqueoId),
         shouldOpenPrecioModal: @json($shouldOpenPrecioModal),
         serverPrecioEditId: @json($editarPrecioId),
+        shouldOpenUsuarioModal: @json($shouldOpenUsuarioModal),
+        serverUsuarioEditId: @json($editarUsuarioId),
     };
 </script>
 
 {{-- logica --}}
-<script src="{{ asset('js/reservas.js') }}"></script>
+<script src="{{ asset('js/reservas.js') }}?v={{ $reservasJsVersion }}"></script>
 @endsection
