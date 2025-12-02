@@ -6,6 +6,8 @@
         serverBloqueoEditId = null,
         shouldOpenPrecioModal = false,
         serverPrecioEditId = null,
+        shouldOpenUsuarioModal = false,
+        serverUsuarioEditId = null,
     } = window.reservasConfig || {};
 
     const initNav = () => {
@@ -117,6 +119,33 @@
         });
 
         if (shouldOpenPrecioModal) {
+            toggleModal(true);
+        }
+    };
+
+    const initUsuarioModal = () => {
+        const modal = document.getElementById('usuario-modal');
+        const openButton = document.getElementById('abrirUsuarioModal');
+        if (!modal) {
+            return;
+        }
+
+        const closeButtons = modal.querySelectorAll('[data-usuario-modal-close]');
+        const toggleModal = (show) => {
+            modal.classList.toggle('hidden', !show);
+            modal.classList.toggle('flex', show);
+            document.body.classList.toggle('overflow-hidden', show);
+        };
+
+        openButton?.addEventListener('click', () => toggleModal(true));
+        closeButtons.forEach((btn) => btn.addEventListener('click', () => toggleModal(false)));
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                toggleModal(false);
+            }
+        });
+
+        if (shouldOpenUsuarioModal) {
             toggleModal(true);
         }
     };
@@ -319,6 +348,73 @@
 
         if (!activeModal && serverPrecioEditId) {
             openModalById(`precio-edit-modal-${serverPrecioEditId}`);
+        }
+    };
+
+    const initUsuarioEditModals = () => {
+        const modals = document.querySelectorAll('[data-usuario-edit-modal]');
+        if (!modals.length) {
+            return;
+        }
+
+        let activeModal = null;
+        const setBodyScroll = (locked) => document.body.classList.toggle('overflow-hidden', locked);
+
+        const openModal = (modal) => {
+            if (activeModal === modal) {
+                return;
+            }
+            if (activeModal) {
+                activeModal.classList.add('hidden');
+                activeModal.classList.remove('flex');
+            }
+            activeModal = modal;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setBodyScroll(true);
+        };
+
+        const openModalById = (id) => {
+            const modal = document.getElementById(id);
+            if (modal) {
+                openModal(modal);
+            }
+        };
+
+        const closeModal = (modal) => {
+            if (!modal) {
+                return;
+            }
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            if (activeModal === modal) {
+                activeModal = null;
+                setBodyScroll(false);
+            }
+        };
+
+        document.querySelectorAll('[data-usuario-edit-target]').forEach((btn) => {
+            btn.addEventListener('click', () => openModalById(btn.dataset.usuarioEditTarget));
+        });
+
+        document.querySelectorAll('[data-usuario-edit-modal-close]').forEach((btn) => {
+            btn.addEventListener('click', () => closeModal(btn.closest('[data-usuario-edit-modal]')));
+        });
+
+        modals.forEach((modal) => {
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal(modal);
+                }
+            });
+
+            if (modal.dataset.openDefault === 'true') {
+                openModal(modal);
+            }
+        });
+
+        if (!activeModal && serverUsuarioEditId) {
+            openModalById(`usuario-edit-modal-${serverUsuarioEditId}`);
         }
     };
 
@@ -525,19 +621,72 @@
         });
     };
 
+    const initUsuarioDeleteModal = () => {
+        const deleteModal = document.getElementById('usuario-delete-modal');
+        if (!deleteModal) {
+            return;
+        }
+
+        const nameHolder = deleteModal.querySelector('[data-usuario-delete-name]');
+        const emailHolder = deleteModal.querySelector('[data-usuario-delete-email]');
+        let pendingForm = null;
+
+        const toggleModal = (show) => {
+            deleteModal.classList.toggle('hidden', !show);
+            deleteModal.classList.toggle('flex', show);
+            document.body.classList.toggle('overflow-hidden', show);
+            if (!show) {
+                pendingForm = null;
+            }
+        };
+
+        document.querySelectorAll('[data-usuario-delete-target]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                pendingForm = document.getElementById(btn.dataset.usuarioDeleteTarget);
+                if (nameHolder) {
+                    nameHolder.textContent = btn.dataset.usuarioDeleteName ?? 'Usuario sin nombre';
+                }
+                if (emailHolder) {
+                    emailHolder.textContent = btn.dataset.usuarioDeleteEmail ?? '';
+                }
+                toggleModal(true);
+            });
+        });
+
+        deleteModal.querySelectorAll('[data-usuario-delete-cancel]').forEach((btn) => {
+            btn.addEventListener('click', () => toggleModal(false));
+        });
+
+        const confirmBtn = deleteModal.querySelector('[data-usuario-delete-confirm]');
+        confirmBtn?.addEventListener('click', () => {
+            if (pendingForm) {
+                pendingForm.submit();
+            }
+        });
+
+        deleteModal.addEventListener('click', (event) => {
+            if (event.target === deleteModal) {
+                toggleModal(false);
+            }
+        });
+    };
+
     const initPage = () => {
         initNav();
         initModal();
         initBloqueoModal();
         initPrecioModal();
+        initUsuarioModal();
         initEditModals();
         initBloqueoEditModals();
         initPrecioEditModals();
+        initUsuarioEditModals();
         initFeedbackModal();
         initDeleteModal();
         initBloqueoDeleteModal();
         initPrecioDeleteModal();
         initReservaDeleteModal();
+        initUsuarioDeleteModal();
     };
 
     if (document.readyState === 'loading') {
