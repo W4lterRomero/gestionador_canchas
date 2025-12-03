@@ -104,7 +104,7 @@
 
                             <!-- Reservas -->
                             <td class="px-6 py-4 text-center">
-                                <p class="text-sm font-semibold text-gray-900">{{ $cliente->total_reservas }}</p>
+                                <p class="text-sm font-semibold text-gray-900">{{ $cliente->reservas_count ?? $cliente->total_reservas }}</p>
                                 @if($cliente->ultima_reserva)
                                     <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($cliente->ultima_reserva)->format('d/m/Y') }}</p>
                                 @endif
@@ -192,7 +192,7 @@
                         <p class="text-gray-700"><span class="font-medium">Email:</span> {{ $cliente->email }}</p>
                     @endif
                     <div class="flex justify-between">
-                        <span class="text-gray-700"><span class="font-medium">Reservas:</span> {{ $cliente->total_reservas }}</span>
+                        <span class="text-gray-700"><span class="font-medium">Reservas:</span> {{ $cliente->reservas_count ?? $cliente->total_reservas }}</span>
                         @if($cliente->descuento_porcentaje > 0)
                             <span class="text-green-600 font-bold">{{ $cliente->descuento_porcentaje }}% descuento</span>
                         @endif

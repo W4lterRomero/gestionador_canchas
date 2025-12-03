@@ -212,7 +212,7 @@ class ClientesManager extends Component
    
     public function render()
     {
-        $query = Cliente::query();
+        $query = Cliente::query()->withCount('reservas');
 
         // Aplicar búsqueda
         if (!empty($this->search)) {
@@ -234,7 +234,7 @@ class ClientesManager extends Component
         // Aplicar ordenamiento
         switch ($this->ordenarPor) {
             case 'total_reservas':
-                $query->orderBy('total_reservas', 'desc');
+                $query->orderBy('reservas_count', 'desc');
                 break;
             case 'ultima_reserva':
                 $query->orderBy('ultima_reserva', 'desc');
@@ -243,7 +243,7 @@ class ClientesManager extends Component
                 $query->orderBy('nombre', 'asc');
         }
 
-        $clientes = $query->withCount('reservas')->paginate(15);
+        $clientes = $query->paginate(15);
 
         return view('livewire.clientes-manager', [
             'clientes' => $clientes,

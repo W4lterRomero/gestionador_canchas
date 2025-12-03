@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\Reserva;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -87,9 +88,11 @@ class ReservaController extends Controller
 
         $payload = $this->sanitize($validator->validated());
 
-        Reserva::create($payload + [
+        $reserva = Reserva::create($payload + [
             'actualizado_por' => $this->resolveUpdaterId($request, $payload['creado_por']),
         ]);
+
+        Cliente::find($reserva->cliente_id)?->actualizarEstadisticas();
 
         return redirect()->route('admin.index')->with('status', 'Reserva creada correctamente.');
     }
@@ -108,16 +111,28 @@ class ReservaController extends Controller
 
         $payload = $this->sanitize($validator->validated());
 
+        $originalClienteId = $reserva->cliente_id;
+
         $reserva->update($payload + [
             'actualizado_por' => $this->resolveUpdaterId($request, $payload['creado_por']),
         ]);
+
+        Cliente::find($reserva->cliente_id)?->actualizarEstadisticas();
+
+        if ($originalClienteId !== $reserva->cliente_id) {
+            Cliente::find($originalClienteId)?->actualizarEstadisticas();
+        }
 
         return redirect()->route('admin.index')->with('status', 'Reserva actualizada correctamente.');
     }
 
     public function destroy(Reserva $reserva): RedirectResponse
     {
+        $clienteId = $reserva->cliente_id;
+
         $reserva->delete();
+
+        Cliente::find($clienteId)?->actualizarEstadisticas();
 
         return redirect()->route('admin.index')->with('status', 'Reserva eliminada correctamente.');
     }
@@ -146,4 +161,3 @@ class ReservaController extends Controller
         throw new RuntimeException('No hay usuarios disponibles para registrar reservas.');
     }
 }
-
