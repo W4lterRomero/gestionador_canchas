@@ -24,7 +24,7 @@
     </div>
 </header>
 
-{{-- Sección: Información Inicial --}}
+{{-- Sección Información Inicial --}}
 <section class="container mx-auto mt-16 px-6">
 
     <div class="max-w-3xl mx-auto text-center">
@@ -44,7 +44,7 @@
 
 </section>
 
-{{-- Sección de Opciones --}}
+{{-- Sección Opciones --}}
 <section class="container mx-auto mt-14 px-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 place-items-center">
 
@@ -89,7 +89,7 @@
     </div>
 </section>
 
-{{-- Sección de Estadios --}}
+{{-- Sección Estadios --}}
 <section class="container mx-auto mt-16 px-6">
 
     <h2 class="text-3xl font-bold text-center mb-12 tracking-wide text-white">
@@ -147,7 +147,7 @@
 
 </section>
 
-{{-- Sección: Historia de Estadios --}}
+{{-- Sección Historia Estadios --}}
 <section class="container mx-auto mt-20 px-6">
 
     <h2 class="text-3xl font-bold text-center mb-12 text-white tracking-wide">

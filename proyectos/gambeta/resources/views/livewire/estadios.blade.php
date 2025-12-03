@@ -2,13 +2,13 @@
 
     <section class="container mx-auto pt-12 pb-6 px-6">
 
-        <!-- Header Section -->
+        {{-- Encabezado --}}
         <div class="mb-8">
             <h1 class="text-4xl font-bold text-white tracking-tight mb-2">Nuestras Canchas</h1>
             <p class="text-gray-200 text-lg">Encuentra la cancha perfecta para tu partido</p>
         </div>
 
-        <!-- Filtros Container -->
+        {{-- Filtros --}}
         <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-gray-100 p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -46,7 +46,7 @@
 
             </div>
 
-            <!-- Contador de resultados -->
+            {{-- Contador --}}
             <div class="mt-4 flex items-center gap-2 text-sm">
                 <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <p class="text-gray-600 font-medium">
@@ -65,13 +65,13 @@
 
             <div class="group bg-white rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-green-500/10 {{ !$cancha->activa ? 'opacity-60' : '' }} border border-gray-100">
 
-                <!-- Imagen con overlay -->
+                {{-- Imagen --}}
                 <div class="relative overflow-hidden aspect-[4/3]">
                     <img src="{{ $cancha->imagen_url ? asset($cancha->imagen_url) : asset('images/default-cancha.jpg') }}"
                          class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                          alt="{{ $cancha->nombre }}">
 
-                    <!-- Gradient overlay -->
+                    {{-- Gradiente --}}
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                     <div class="absolute top-4 right-4">
@@ -89,7 +89,7 @@
                     </div>
                 </div>
 
-                <!-- Contenido -->
+                {{-- Contenido --}}
                 <div class="p-6">
                     <h3 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">
                         {{ $cancha->nombre }}
@@ -101,7 +101,7 @@
                         </p>
                     @endif
 
-                    <!-- Info Grid -->
+                    {{-- Información --}}
                     <div class="space-y-3 mb-6">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">

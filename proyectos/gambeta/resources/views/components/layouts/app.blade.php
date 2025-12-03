@@ -21,13 +21,13 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <!-- Archivo CSS extra -->
+    <!-- CSS Personalizado -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
         <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-    <!-- Tema  -->
+    <!-- Tema -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
 
     <!-- Flatpickr JS -->
@@ -36,16 +36,16 @@
 </head>
 
 <body class="text-gray-900 min-h-screen flex flex-col  bg-gradient-to-b from-[#063b2b] via-[#0b5c41] to-[#167a52]">    
-    <!-- NAVBAR -->
+    <!-- Barra de Navegación -->
     @include('components.navbar')
 
-    <!-- CONTENIDO -->
+    <!-- Contenido -->
     <main class="flex-grow">
         @yield('content')
         {{ $slot ?? '' }}
     </main>
 
-<!-- FOOTER -->
+<!-- Pie de Página -->
 <footer class="mt-16 text-white py-6
     bg-gradient-to-r from-[#01150f] via-[#022019] to-[#01150f]">
 
@@ -66,7 +66,7 @@
 
 
 
-    <!-- SCRIPTS LIVEWIRE -->
+    <!-- Scripts Livewire -->
     @livewireScripts
 
 </body>

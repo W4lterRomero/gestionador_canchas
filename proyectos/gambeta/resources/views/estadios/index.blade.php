@@ -3,13 +3,11 @@
 @section('content')
 
 
-<!-- LIVEWIRE: LISTADO Y FILTROS -->
+<!-- Livewire: Listado y Filtros -->
 <livewire:estadios />
 
 
-<!-- ====================================================== -->
-<!-- MODAL DE RESERVA (BOOTSTRAP) — MANTENIDO IGUAL -->
-<!-- ====================================================== -->
+<!-- Modal de Reserva (Bootstrap) -->
 <div class="modal fade" id="modalReserva" tabindex="-1">
   <div class="modal-dialog modal-xl">
     <div class="modal-content rounded-2xl overflow-hidden">
@@ -22,7 +20,7 @@
       <form id="formReserva" method="POST" action="#">
       <div class="modal-body">
 
-        <!-- CLIENTE -->
+        <!-- Cliente -->
         <h4 class="text-green-700 mb-3 font-bold">Datos del Cliente</h4>
 
         <div class="row g-3 mb-4">
@@ -45,7 +43,7 @@
         </div>
 
 
-        <!-- RESERVA -->
+        <!-- Reserva -->
         <h4 class="text-green-700 mb-3 font-bold">Datos de la Reserva</h4>
 
         <div class="row g-3 mb-4">
@@ -85,7 +83,7 @@
         </div>
 
 
-        <!-- ESTADO -->
+        <!-- Estado -->
         <h4 class="text-green-700 mb-3 font-bold">Estado de la Reserva</h4>
 
         <select name="estado" class="form-select">

@@ -4,28 +4,26 @@
 
 <section class="container mx-auto px-6 py-10">
 
-    <!-- TÍTULO PRINCIPAL -->
+    {{-- Título --}}
     <h1 class="text-3xl font-bold text-green-700 mb-8">
         Gestión de Reservas
     </h1>
 
-    <!-- =============================== -->
-    <!-- FILTROS -->
-    <!-- =============================== -->
+    {{-- Filtros --}}
     <div class="bg-white rounded-2xl shadow-lg p-6 border border-green-300 mb-10">
 
         <h2 class="text-xl font-bold text-green-700 mb-4">Filtros de Reservas</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-            <!-- Buscar por Cliente -->
+            {{-- Cliente --}}
             <div>
                 <label class="font-semibold text-gray-700">Buscar por cliente</label>
                 <input type="text" placeholder="Ej: Carlos Pérez" 
                        class="mary-input mary-input-bordered bg-gray-50 w-full">
             </div>
 
-            <!-- Filtrar por Estadio -->
+            {{-- Estadio --}}
             <div>
                 <label class="font-semibold text-gray-700">Filtrar por estadio</label>
                 <select class="mary-select mary-select-bordered bg-gray-50 w-full">
@@ -39,7 +37,7 @@
                 </select>
             </div>
 
-            <!-- Filtrar por Estado -->
+            {{-- Estado --}}
             <div>
                 <label class="font-semibold text-gray-700">Estado</label>
                 <select class="mary-select mary-select-bordered bg-gray-50 w-full">
@@ -57,9 +55,7 @@
 
 
 
-    <!-- =============================== -->
-    <!-- TABLA DE RESERVAS -->
-    <!-- =============================== -->
+    {{-- Tabla de reservas --}}
     <div class="bg-white rounded-2xl shadow-lg p-6 border border-green-300">
 
         <h2 class="text-xl font-bold text-green-700 mb-4">Listado de Reservas</h2>
@@ -81,7 +77,7 @@
 
                 <tbody class="text-sm">
 
-                    <!-- EJEMPLO 1 -->
+                    {{-- Ejemplo 1 --}}
                     <tr>
                         <td>Carlos Pérez</td>
                         <td>Estadio Barraza</td>
@@ -95,7 +91,7 @@
                         </td>
                     </tr>
 
-                    <!-- EJEMPLO 2 -->
+                    {{-- Ejemplo 2 --}}
                     <tr>
                         <td>José Martínez</td>
                         <td>Estadio Félix Charlaix</td>
@@ -109,7 +105,7 @@
                         </td>
                     </tr>
 
-                    <!-- EJEMPLO 3 -->
+                    {{-- Ejemplo 3 --}}
                     <tr>
                         <td>Ana Gómez</td>
                         <td>Estadio Moncagua</td>
@@ -132,9 +128,7 @@
 
 
 
-    <!-- =============================== -->
-    <!-- CLIENTES FRECUENTES -->
-    <!-- =============================== -->
+    {{-- Clientes frecuentes --}}
 
     <div class="bg-white rounded-2xl shadow-lg mt-12 p-6 border border-green-300">
 
@@ -148,7 +142,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            <!-- Cliente 1 -->
+            {{-- Cliente 1 --}}
             <div class="bg-gray-50 p-5 rounded-xl shadow border border-green-200 hover:border-green-400 hover:shadow-lg transition">
                 <h3 class="text-green-700 font-bold text-lg">Carlos Pérez</h3>
                 <p class="text-gray-600 text-sm mt-1">Reservas realizadas: <b>12</b></p>
@@ -158,7 +152,7 @@
                 </button>
             </div>
 
-            <!-- Cliente 2 -->
+            {{-- Cliente 2 --}}
             <div class="bg-gray-50 p-5 rounded-xl shadow border border-green-200 hover:border-green-400 hover:shadow-lg transition">
                 <h3 class="text-green-700 font-bold text-lg">José Martínez</h3>
                 <p class="text-gray-600 text-sm mt-1">Reservas realizadas: <b>9</b></p>
@@ -168,7 +162,7 @@
                 </button>
             </div>
 
-            <!-- Cliente 3 -->
+            {{-- Cliente 3 --}}
             <div class="bg-gray-50 p-5 rounded-xl shadow border border-green-200 hover:border-green-400 hover:shadow-lg transition">
                 <h3 class="text-green-700 font-bold text-lg">Ana Gómez</h3>
                 <p class="text-gray-600 text-sm mt-1">Reservas realizadas: <b>7</b></p>

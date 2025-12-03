@@ -9,7 +9,7 @@ use App\Http\Controllers\CanchaPrecioController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\EmployeeController;
 
-// Página de Login (para usuarios no autenticados)
+// Login page
 Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('inicio');
@@ -17,17 +17,17 @@ Route::get('/', function () {
     return view('login');
 })->name('login');
 
-// Deshabilitamos las rutas de registro y password de Auth::routes()
+// Disable default auth routes we don't need
 Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
-// ===== RUTAS PARA EMPLEADOS Y ADMIN (ambos tienen acceso) =====
+// Shared routes for staff
 Route::middleware(['auth', 'role:empleado'])->group(function () {
-    // Página de inicio para usuarios autenticados
+    // Dashboard
     Route::get('/inicio', function () {
         return view('index');
     })->name('inicio');
     
-    // Estadios - acceso para empleados y admin
+    // Stadiums
     Route::get('/estadios', [EmployeeController::class, 'estadios'])
         ->name('estadios.index');
     
@@ -39,7 +39,7 @@ Route::middleware(['auth', 'role:empleado'])->group(function () {
         return view('estadios.reservar');
     })->name('estadios.reservar');
 
-    // Reservas - acceso para empleados y admin
+    // Reservations
     Route::get('/reservas', function () {
         return view('reservas.index');
     })->name('reservas.index');
@@ -49,13 +49,13 @@ Route::middleware(['auth', 'role:empleado'])->group(function () {
     })->name('reservas.editar');
 });
 
-// ===== RUTAS SOLO PARA ADMIN =====
+// Admin Only Routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    // Admin Dashboard
+    // Dashboard
     Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])
         ->name('admin.index');
     
-    // CRUD de Canchas y recursos (solo admin)
+    // Resource Management
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/canchas', [CanchaController::class, 'store'])->name('canchas.store');
         Route::put('/canchas/{cancha}', [CanchaController::class, 'update'])->name('canchas.update');

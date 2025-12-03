@@ -2,7 +2,7 @@
             bg-gradient-to-r from-[#022019] via-[#063b2b] to-[#0b5c41]
             backdrop-blur-xl border-b border-green-500/20">
 
-    <!-- LOGO -->
+    <!-- Logo -->
     <div class="flex items-center gap-3">
         <a href="{{ auth()->check() ? route('inicio') : route('login') }}" class="flex items-center">
             <img src="{{ asset('images/logo.png') }}" 
@@ -12,7 +12,7 @@
     </div>
 
     @auth
-    <!-- MENÚ ESCRITORIO -->
+    <!-- Menú Escritorio -->
     <ul class="hidden md:flex space-x-8 text-lg font-medium text-white">
 
         <li>
@@ -47,7 +47,7 @@
 
     </ul>
 
-    <!-- MENÚ RESPONSIVE -->
+    <!-- Menú Móvil -->
     <div class="md:hidden">
         <div class="dropdown dropdown-end">
             <label tabindex="0" 
@@ -72,7 +72,7 @@
         </div>
     </div>
 
-    <!-- USUARIO LOGUEADO + LOGOUT -->
+    <!-- Usuario y Salir -->
     <div class="ml-6 hidden md:flex items-center gap-3">
         <span class="text-white text-sm">{{ auth()->user()->name }}</span>
         <form action="{{ route('admin.logout') }}" method="POST" class="inline">
@@ -88,7 +88,7 @@
     @endauth
 
     @guest
-    <!-- Usuario no logueado -->
+    <!-- Usuario Invitado -->
     <div class="ml-6 hidden md:block">
         <a href="{{ route('login') }}">
             <button class="mary-btn mary-btn-circle shadow-lg

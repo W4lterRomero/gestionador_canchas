@@ -31,17 +31,19 @@
 @endphp
 
 @section('content')
+{{-- Encabezado Panel Admin --}}
 <header class="bg-gradient-to-r from-slate-900 via-blue-800 to-blue-500 text-white p-8 shadow-xl">
     <div class="flex flex-col gap-2">
         <p class="text-sm uppercase tracking-[0.3em] text-blue-200">PANEL DE ADMINISTRADOR</p>
     </div>
 </header>
-{{-- NAVBAR --}}
+
+{{-- Pestañas de Navegación --}}
 <nav id="admin-panels-nav"
     class="sticky top-0 z-50 bg-white shadow-lg border-b border-gray-200 px-3 sm:px-5 py-3">
     <ul class="flex w-full flex-wrap items-center gap-1 sm:gap-0 sm:-mx-1 text-sm font-medium">
 
-        {{-- CANCHAS --}}
+        {{-- Pestaña Canchas --}}
         <li class="block">
             <button type="button"
                 data-section-target="canchas"
@@ -50,7 +52,6 @@
                            transition-colors duration-100
                            bg-indigo-200 text-gray-900 shadow hover:bg-indigo-300">
                 <span class="text-xl">
-                    {{-- Icono cancha --}}
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-900" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="1.7"
                         stroke-linecap="round" stroke-linejoin="round">
@@ -63,7 +64,7 @@
             </button>
         </li>
 
-        {{-- RESERVAS --}}
+        {{-- Pestaña Reservas --}}
         <li class="block">
             <button type="button"
                 data-section-target="reservas"
@@ -71,7 +72,6 @@
                            transition-colors duration-100
                            bg-white text-gray-900 hover:bg-gray-100">
                 <span class="text-xl">
-                    {{-- Icono calendario --}}
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-900" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="1.7"
                         stroke-linecap="round" stroke-linejoin="round">
@@ -83,7 +83,7 @@
             </button>
         </li>
 
-        {{-- CALENDARIO --}}
+        {{-- Pestaña Calendario --}}
         <li class="block">
             <button type="button"
                 data-section-target="calendario"
@@ -103,7 +103,7 @@
             </button>
         </li>
 
-        {{-- BLOQUEOS --}}
+        {{-- Pestaña Bloqueos --}}
         <li class="block">
             <button type="button"
                 data-section-target="bloqueos"
@@ -111,7 +111,6 @@
                            transition-colors duration-100
                            bg-white text-gray-900 hover:bg-gray-100">
                 <span class="text-xl">
-                    {{-- Icono candado --}}
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-900" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="1.7"
                         stroke-linecap="round" stroke-linejoin="round">
@@ -124,7 +123,7 @@
             </button>
         </li>
 
-        {{-- PRECIOS --}}
+        {{-- Pestaña Precios --}}
         <li class="block">
             <button type="button"
                 data-section-target="precios"
@@ -132,14 +131,11 @@
                            transition-colors duration-100
                            bg-white text-gray-900 hover:bg-gray-100">
                 <span class="text-xl">
-                    {{-- Nuevo icono dólar bonito --}}
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-900" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="1.7"
                         stroke-linecap="round" stroke-linejoin="round">
-                        <!-- Línea superior e inferior -->
                         <path d="M12 3v3" />
                         <path d="M12 18v3" />
-                        <!-- Curva del símbolo $ -->
                         <path d="M9 8.5C9 7.1 10.2 6 12 6s3 1.1 3 2.5S13.8 11 12 11s-3 1.1-3 2.5S10.2 16 12 16s3-1.1 3-2.5" />
                     </svg>
                 </span>
@@ -147,7 +143,7 @@
             </button>
         </li>
 
-        {{-- USUARIOS --}}
+        {{-- Pestaña Usuarios --}}
         <li class="block">
             <button type="button"
                 data-section-target="usuarios"
@@ -174,11 +170,11 @@
 
 
 <div>
-    <!-- SECCIÓN CANCHAS -->
+    <!-- Sección Canchas -->
     <section id="canchas" data-section="canchas" class="scroll-mt-32">
         <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-5xl space-y-4">
-                <!-- ENCABEZADO + BOTÓN -->
+                <!-- Encabezado y Botón Agregar -->
                 <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
                     <div>
                         <h1 class="text-lg sm:text-xl font-bold text-white">Canchas registradas</h1>
@@ -192,7 +188,7 @@
                     </button>
                 </div>
 
-                <!-- VISTA DE TABLA (Desktop) -->
+                <!-- Vista Tabla Escritorio -->
                 <div class="hidden md:block overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-slate-900/80">
@@ -287,7 +283,7 @@
                     </table>
                 </div>
 
-                <!-- VISTA DE TARJETAS (Móvil) -->
+                <!-- Vista Tarjetas Móvil -->
                 <div class="md:hidden space-y-4">
                     @forelse ($canchas as $cancha)
                         @php
@@ -366,7 +362,7 @@
             </div>
         </div>
 
-        <!-- MODAL PARA CREAR CANCHA -->
+        <!-- Modal Crear Cancha -->
         <div id="modal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-4 sm:py-8">
             <div
@@ -464,7 +460,7 @@
             </div>
         </div>
 
-        <!-- MODALES PARA EDITAR CANCHAS -->
+        <!-- Modales Editar Cancha -->
         @foreach ($canchas as $cancha)
             @php
                 $rowIsEditing = (int) $editarCanchaId === $cancha->id;
@@ -699,7 +695,7 @@
         </div>
     </section>
 
-    <!-- SECCIÓN CALENDARIO -->
+    <!-- Sección Calendario -->
     <section id="calendario" data-section="calendario" class="scroll-mt-32 hidden">
         <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-6xl space-y-6">
@@ -708,7 +704,7 @@
         </div>
     </section>
 
-    <!-- SECCIÓN RESERVAS -->
+    <!-- Sección Reservas -->
     <section id="reservas" data-section="reservas" class="scroll-mt-32 hidden">
         <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-6xl space-y-4">
@@ -846,7 +842,7 @@
                 </div>
             </div>
         </div>
-        <!-- MODAL ELIMINAR RESERVA -->
+        <!-- Modal Eliminar Reserva -->
         <div id="reserva-delete-modal"
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div class="relative w-full max-w-lg border border-rose-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
@@ -896,7 +892,7 @@
         </div>
     </section>
 
-    <!-- SECCIÓN BLOQUEOS -->
+    <!-- Sección Bloqueos -->
     <section id="bloqueos" data-section="bloqueos" class="scroll-mt-32 hidden">
         <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-5xl space-y-4">
@@ -996,7 +992,7 @@
             </div>
         </div>
 
-        <!-- MODAL PARA CREAR BLOQUEO -->
+        <!-- Modal Crear Bloqueo -->
         <div id="bloqueo-modal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-4 sm:py-8">
             <div
@@ -1089,7 +1085,7 @@
             </div>
         </div>
 
-        <!-- MODALES PARA EDITAR BLOQUEOS -->
+        <!-- Modales Editar Bloqueo -->
         @foreach ($bloqueos as $bloqueo)
             @php
                 $rowIsEditingBloqueo = (int) $editarBloqueoId === $bloqueo->id;
@@ -1194,7 +1190,7 @@
             </div>
         @endforeach
 
-        <!-- MODAL ELIMINAR BLOQUEO -->
+        <!-- Modal Eliminar Bloqueo -->
         <div id="bloqueo-delete-modal"
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div class="relative w-full max-w-lg border border-red-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
@@ -1236,7 +1232,7 @@
         </div>
     </section>
 
-    <!-- SECCIÓN PRECIOS -->
+    <!-- Sección Precios -->
     <section id="precios" data-section="precios" class="scroll-mt-32 hidden">
         <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-5xl space-y-4">
@@ -1366,7 +1362,7 @@
             </div>
         </div>
 
-        <!-- MODAL PARA CREAR PRECIO -->
+        <!-- Modal Crear Precio -->
         <div id="precio-modal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div
@@ -1464,7 +1460,7 @@
             </div>
         </div>
 
-        <!-- MODALES PARA EDITAR PRECIOS -->
+        <!-- Modales Editar Precio -->
         @foreach ($precios as $precio)
             @php
                 $rowIsEditingPrecio = (int) $editarPrecioId === $precio->id;
@@ -1578,7 +1574,7 @@
             </div>
         @endforeach
 
-        <!-- MODAL ELIMINAR PRECIO -->
+        <!-- Modal Eliminar Precio -->
         <div id="precio-delete-modal"
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div class="relative w-full max-w-lg border border-amber-500/30 bg-slate-950/95 p-6 shadow-2xl text-white">
@@ -1620,7 +1616,7 @@
         </div>
     </section>
 
-    <!-- SECCIÓN USUARIOS -->
+    <!-- Sección Usuarios -->
     <section id="usuarios" data-section="usuarios" class="scroll-mt-32 hidden">
         <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-5xl space-y-4">
@@ -1728,7 +1724,7 @@
             </div>
         </div>
 
-        <!-- MODAL CREAR USUARIO -->
+        <!-- Modal Crear Usuario -->
         <div id="usuario-modal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div
@@ -1828,7 +1824,7 @@
             </div>
         </div>
 
-        <!-- MODALES EDITAR USUARIO -->
+        <!-- Modales Editar Usuario -->
         @foreach ($usuarios as $usuario)
             @php
                 $usuarioRowEditing = (int) $editarUsuarioId === $usuario->id;
@@ -1945,7 +1941,7 @@
             </div>
         @endforeach
 
-        <!-- MODAL ELIMINAR USUARIO -->
+        <!-- Modal Eliminar Usuario -->
         <div id="usuario-delete-modal"
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div class="relative w-full max-w-lg border border-rose-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
