@@ -76,7 +76,9 @@
                         $baseClasses = 'relative min-h-[90px] rounded-2xl border px-3 py-4 text-left transition-all';
                         $stateClasses = match (true) {
                             ! $day['isCurrentMonth'] => 'border-slate-900 bg-slate-900/30 text-slate-600',
-                            $day['isToday'] => 'border-emerald-400 bg-emerald-500/10 text-white shadow-lg shadow-emerald-500/20',
+                            $day['isToday'] && $day['hasReservations'] => 'border-emerald-400 bg-emerald-500/15 text-white shadow-lg shadow-emerald-500/20',
+                            $day['isToday'] => 'border-cyan-400 bg-slate-900/60 text-white shadow-lg shadow-cyan-500/20',
+                            $day['hasReservations'] => 'border-emerald-500/40 bg-emerald-500/10 text-white/90',
                             default => 'border-slate-800 bg-slate-900/50 text-slate-300',
                         };
                         $interactivityClasses = $day['hasReservations']
