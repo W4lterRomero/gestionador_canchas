@@ -6,11 +6,13 @@
     $bloqueos = $bloqueos ?? collect();
     $precios = $precios ?? collect();
     $usuarios = $usuarios ?? collect();
+    $clientes = $clientes ?? collect();
     $roles = $roles ?? collect();
     $editarCanchaId = session('editarCanchaId');
     $editarBloqueoId = session('editarBloqueoId');
     $editarPrecioId = session('editarPrecioId');
     $editarUsuarioId = session('editarUsuarioId');
+    $editarReservaId = session('editarReservaId');
     $shouldOpenCreateModal = $errors->crearCancha->any();
     $shouldOpenBloqueoModal = $errors->crearBloqueo->any();
     $shouldOpenPrecioModal = $errors->crearPrecio->any();
@@ -20,6 +22,7 @@
     $crearPrecioErrors = $errors->crearPrecio ?? null;
     $editarPrecioErrors = $errors->editarPrecio ?? null;
     $usuarioEditErrors = $errors->editarUsuario ?? null;
+    $reservaEditErrors = $errors->editarReserva ?? null;
     $feedbackStatus = session('status');
     $feedbackError = session('error');
     $feedbackMessage = $feedbackStatus ?: $feedbackError;
@@ -28,6 +31,19 @@
     $feedbackTitle = $isErrorFeedback ? 'Ocurrió un problema' : 'Operación exitosa';
     $reservasJsVersion = file_exists(public_path('js/reservas.js')) ? filemtime(public_path('js/reservas.js')) : time();
     $adminCalendarJsVersion = file_exists(public_path('js/admin-calendar.js')) ? filemtime(public_path('js/admin-calendar.js')) : time();
+    $canchaTipos = $canchas->pluck('tipo')->filter()->unique()->sort()->values();
+    $reservaTipos = $reservas->map(function ($reserva) {
+        return optional($reserva->cancha)->tipo;
+    })->filter()->unique()->sort()->values();
+    $bloqueoTipos = $bloqueos->map(function ($bloqueo) {
+        return optional($bloqueo->cancha)->tipo;
+    })->filter()->unique()->sort()->values();
+    $precioTipos = $precios->map(function ($precio) {
+        return optional($precio->cancha)->tipo;
+    })->filter()->unique()->sort()->values();
+    $usuarioRoles = $usuarios->map(function ($usuario) {
+        return optional($usuario->role)->description ?? optional($usuario->role)->name;
+    })->filter()->unique()->sort()->values();
 @endphp
 
 @section('content')
@@ -192,6 +208,37 @@
                     </button>
                 </div>
 
+                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 shadow-2xl">
+                    <div class="flex flex-col gap-4 md:flex-row md:items-end">
+                        <div class="flex-1">
+                            <label for="cancha-search" class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por nombre</label>
+                            <div class="relative mt-1">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35m0 0A7 7 0 1 0 6.5 6.5a7 7 0 0 0 10.15 10.15z" />
+                                    </svg>
+                                </span>
+                                <input id="cancha-search" type="search" placeholder="Ej. Arena Indoor"
+                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    data-cancha-search>
+                            </div>
+                        </div>
+
+                        <div class="w-full md:w-64">
+                            <label for="cancha-type-filter" class="text-xs uppercase tracking-[0.3em] text-slate-400">Filtrar por tipo</label>
+                            <select id="cancha-type-filter"
+                                class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                data-cancha-type-filter>
+                                <option value="">Todos los tipos</option>
+                                @foreach ($canchaTipos as $tipo)
+                                    <option value="{{ $tipo }}">{{ $tipo }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- VISTA DE TABLA (Desktop) -->
                 <div class="hidden md:block overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
@@ -213,7 +260,10 @@
                                     $rowIsEditing = (int) $editarCanchaId === $cancha->id;
                                     $imagenPath = $cancha->imagen_url ? ltrim($cancha->imagen_url, '/') : null;
                                 @endphp
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-slate-900/70 transition-colors"
+                                    data-cancha-row
+                                    data-cancha-nombre="{{ mb_strtolower($cancha->nombre ?? '') }}"
+                                    data-cancha-tipo="{{ mb_strtolower($cancha->tipo ?? '') }}">
                                     <td class="px-6 py-4 font-semibold text-white">
                                         {{ $cancha->nombre }}
                                     </td>
@@ -283,6 +333,13 @@
                                     </td>
                                 </tr>
                             @endforelse
+                            @if ($canchas->isNotEmpty())
+                                <tr class="hidden" data-cancha-empty-row>
+                                    <td colspan="7" class="px-6 py-10 text-center text-slate-400">
+                                        No se encontraron canchas que coincidan con los filtros aplicados.
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -293,7 +350,10 @@
                         @php
                             $imagenPath = $cancha->imagen_url ? ltrim($cancha->imagen_url, '/') : null;
                         @endphp
-                        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 shadow-xl">
+                        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 shadow-xl"
+                            data-cancha-card
+                            data-cancha-nombre="{{ mb_strtolower($cancha->nombre ?? '') }}"
+                            data-cancha-tipo="{{ mb_strtolower($cancha->tipo ?? '') }}">
                             <div class="flex items-start gap-4">
                                 @if ($imagenPath)
                                     <img src="{{ asset($imagenPath) }}" alt="Imagen de {{ $cancha->nombre }}"
@@ -362,6 +422,12 @@
                             Aún no hay canchas registradas.
                         </div>
                     @endforelse
+                    @if ($canchas->isNotEmpty())
+                        <div class="hidden rounded-xl border border-slate-800 bg-slate-950/60 p-6 text-center text-slate-400"
+                            data-cancha-empty-mobile>
+                            No se encontraron canchas que coincidan con los filtros aplicados.
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -400,9 +466,14 @@
 
                         <div>
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Tipo</label>
-                            <input type="text" name="tipo" value="{{ old('tipo') }}"
+                            <select name="tipo"
                                 class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
                                 required>
+                                <option value="" disabled {{ old('tipo') ? '' : 'selected' }}>Selecciona un tipo</option>
+                                <option value="Arena Indoor" {{ old('tipo') === 'Arena Indoor' ? 'selected' : '' }}>Arena Indoor</option>
+                                <option value="Estadio Chico" {{ old('tipo') === 'Estadio Chico' ? 'selected' : '' }}>Estadio Chico</option>
+                                <option value="Cancha Central" {{ old('tipo') === 'Cancha Central' ? 'selected' : '' }}>Cancha Central</option>
+                            </select>
                             @error('tipo', 'crearCancha')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
                             @enderror
@@ -506,9 +577,14 @@
                             </div>
                             <div>
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Tipo</label>
-                                <input type="text" name="tipo" value="{{ $editTipo }}"
+                                <select name="tipo"
                                     class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
                                     required>
+                                    <option value="" disabled {{ $editTipo ? '' : 'selected' }}>Selecciona un tipo</option>
+                                    <option value="Arena Indoor" {{ $editTipo === 'Arena Indoor' ? 'selected' : '' }}>Arena Indoor</option>
+                                    <option value="Estadio Chico" {{ $editTipo === 'Estadio Chico' ? 'selected' : '' }}>Estadio Chico</option>
+                                    <option value="Cancha Central" {{ $editTipo === 'Cancha Central' ? 'selected' : '' }}>Cancha Central</option>
+                                </select>
                                 @if ($rowIsEditing && $errors->editarCancha->has('tipo'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('tipo') }}</p>
                                 @endif
@@ -722,6 +798,56 @@
                     </div>
                 </div>
 
+                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 shadow-2xl">
+                    <div class="grid gap-4 md:grid-cols-3">
+                        <div>
+                            <label for="reserva-cancha-search"
+                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por cancha</label>
+                            <div class="relative mt-1">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m21 21-4.35-4.35m0 0A7 7 0 1 0 6.5 6.5a7 7 0 0 0 10.15 10.15z" />
+                                    </svg>
+                                </span>
+                                <input id="reserva-cancha-search" type="search" placeholder="Ej. Cancha Central"
+                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    data-reserva-cancha-search>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="reserva-tipo-filter" class="text-xs uppercase tracking-[0.3em] text-slate-400">Filtrar por tipo</label>
+                            <select id="reserva-tipo-filter"
+                                class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                data-reserva-tipo-filter>
+                                <option value="">Todos los tipos</option>
+                                @foreach ($reservaTipos as $tipo)
+                                    <option value="{{ $tipo }}">{{ $tipo }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="reserva-cliente-search"
+                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por cliente</label>
+                            <div class="relative mt-1">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m21 21-4.35-4.35m0 0A7 7 0 1 0 6.5 6.5a7 7 0 0 0 10.15 10.15z" />
+                                    </svg>
+                                </span>
+                                <input id="reserva-cliente-search" type="search" placeholder="Ej. Juan Pérez"
+                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    data-reserva-cliente-search>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-slate-900/80">
@@ -750,7 +876,11 @@
                                     ];
                                     $estadoClass = $estadoColors[$reserva->estado] ?? 'bg-slate-500/20 text-slate-200';
                                 @endphp
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-slate-900/70 transition-colors"
+                                    data-reserva-row
+                                    data-reserva-cancha="{{ mb_strtolower(optional($reserva->cancha)->nombre ?? '') }}"
+                                    data-reserva-tipo="{{ mb_strtolower(optional($reserva->cancha)->tipo ?? '') }}"
+                                    data-reserva-cliente="{{ mb_strtolower(optional($reserva->cliente)->nombre ?? '') }}">
                                     <td class="px-6 py-4">
                                         <p class="font-semibold text-white">
                                             {{ optional($reserva->cancha)->nombre ?? 'Cancha eliminada' }}
@@ -799,7 +929,7 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <p class="font-semibold text-white">
-                                            {{ optional($reserva->creador)->nombre ?? 'Usuario no disponible' }}
+                                            {{ optional($reserva->creador)->name ?? 'Usuario no disponible' }}
                                         </p>
                                         <p class="text-xs text-slate-400">
                                             {{ optional($reserva->creador)->email ?? '—' }}
@@ -807,7 +937,7 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <p class="font-semibold text-white">
-                                            {{ optional($reserva->actualizador)->nombre ?? 'Usuario no disponible' }}
+                                            {{ optional($reserva->actualizador)->name ?? 'Usuario no disponible' }}
                                         </p>
                                         <p class="text-xs text-slate-400">
                                             {{ optional($reserva->actualizador)->email ?? '—' }}
@@ -815,6 +945,14 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center justify-end gap-3 text-lg">
+                                            <button type="button"
+                                                class="hover:text-blue-300 transition-colors"
+                                                data-reserva-edit-target="reserva-edit-modal-{{ $reserva->id }}"
+                                                title="Editar reserva">
+                                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                                                </svg>
+                                            </button>
                                             <button type="button"
                                                 class="hover:text-rose-400 transition-colors"
                                                 data-reserva-delete-target="reserva-delete-form-{{ $reserva->id }}"
@@ -841,11 +979,205 @@
                                     </td>
                                 </tr>
                             @endforelse
+                            @if ($reservas->isNotEmpty())
+                                <tr class="hidden" data-reserva-empty-row>
+                                    <td colspan="11" class="px-6 py-10 text-center text-slate-400">
+                                        No se encontraron reservas que coincidan con los filtros aplicados.
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+        <!-- MODALES EDITAR RESERVA -->
+        @foreach ($reservas as $reserva)
+            @php
+                $reservaRowEditing = (int) $editarReservaId === $reserva->id;
+                $editCanchaId = $reservaRowEditing ? (int) old('cancha_id', $reserva->cancha_id) : $reserva->cancha_id;
+                $editClienteId = $reservaRowEditing ? (int) old('cliente_id', $reserva->cliente_id) : $reserva->cliente_id;
+                $editFechaReserva = $reservaRowEditing ? old('fecha_reserva', optional($reserva->fecha_reserva)->format('Y-m-d')) : optional($reserva->fecha_reserva)->format('Y-m-d');
+                $editFechaInicio = $reservaRowEditing ? old('fecha_inicio', optional($reserva->fecha_inicio)->format('Y-m-d\\TH:i')) : optional($reserva->fecha_inicio)->format('Y-m-d\\TH:i');
+                $editFechaFin = $reservaRowEditing ? old('fecha_fin', optional($reserva->fecha_fin)->format('Y-m-d\\TH:i')) : optional($reserva->fecha_fin)->format('Y-m-d\\TH:i');
+                $editDuracion = $reservaRowEditing ? old('duracion_minutos', $reserva->duracion_minutos) : $reserva->duracion_minutos;
+                $editPrecioHora = $reservaRowEditing ? old('precio_hora', $reserva->precio_hora) : $reserva->precio_hora;
+                $editTotal = $reservaRowEditing ? old('total', $reserva->total) : $reserva->total;
+                $editEstado = $reservaRowEditing ? old('estado', $reserva->estado) : $reserva->estado;
+                $editObservaciones = $reservaRowEditing ? old('observaciones', $reserva->observaciones) : $reserva->observaciones;
+                $editCreadoPor = $reservaRowEditing ? old('creado_por', $reserva->creado_por) : $reserva->creado_por;
+                $estadoOptions = \App\Models\Reserva::ESTADOS;
+            @endphp
+            <div id="reserva-edit-modal-{{ $reserva->id }}"
+                class="reserva-edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
+                data-reserva-edit-modal data-open-default="{{ $reservaRowEditing ? 'true' : 'false' }}">
+                <div class="relative w-full max-w-4xl border border-blue-500/30 bg-slate-950/95 p-6 md:p-8 shadow-2xl text-white max-h-[90vh] overflow-y-auto">
+                    <button type="button" data-reserva-edit-modal-close
+                        class="absolute top-3 right-3 bg-blue-600 hover:bg-red-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold transition">
+                        ✕
+                    </button>
+
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.3em] text-blue-300">Editar reserva</p>
+                            <h2 class="text-2xl font-semibold">Actualizar reserva #{{ $reserva->id }}</h2>
+                            <p class="text-slate-400 text-sm">Modifica las fechas, importes o el estado cuando sea necesario.</p>
+                        </div>
+
+                        <form method="POST" action="{{ route('admin.reservas.update', $reserva) }}" class="grid gap-4 md:grid-cols-2 text-sm">
+                            @csrf
+                            @method('PUT')
+
+                            @if ($reservaRowEditing && $reservaEditErrors?->any())
+                                <div class="md:col-span-2 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                                    <p class="font-semibold text-red-100">No pudimos actualizar la reserva</p>
+                                    <p>{{ $reservaEditErrors->first() }}</p>
+                                </div>
+                            @endif
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                                <select name="cancha_id"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('cancha_id') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    required>
+                                    <option value="">Selecciona una cancha</option>
+                                    @foreach ($canchas as $canchaOption)
+                                        <option value="{{ $canchaOption->id }}" {{ $editCanchaId === $canchaOption->id ? 'selected' : '' }}>
+                                            {{ $canchaOption->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @if ($reservaRowEditing && $reservaEditErrors?->has('cancha_id'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('cancha_id') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cliente</label>
+                                <select name="cliente_id"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('cliente_id') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    required>
+                                    <option value="">Selecciona un cliente</option>
+                                    @foreach ($clientes as $clienteOption)
+                                        <option value="{{ $clienteOption->id }}" {{ $editClienteId === $clienteOption->id ? 'selected' : '' }}>
+                                            {{ $clienteOption->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @if ($reservaRowEditing && $reservaEditErrors?->has('cliente_id'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('cliente_id') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha de reserva</label>
+                                <input type="date" name="fecha_reserva" value="{{ $editFechaReserva }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('fecha_reserva') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    required>
+                                @if ($reservaRowEditing && $reservaEditErrors?->has('fecha_reserva'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('fecha_reserva') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Duración (minutos)</label>
+                                <input type="number" min="15" max="1440" step="15" name="duracion_minutos" value="{{ $editDuracion }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('duracion_minutos') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    required>
+                                @if ($reservaRowEditing && $reservaEditErrors?->has('duracion_minutos'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('duracion_minutos') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Inicio</label>
+                                <input type="datetime-local" name="fecha_inicio" value="{{ $editFechaInicio }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('fecha_inicio') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    required>
+                                @if ($reservaRowEditing && $reservaEditErrors?->has('fecha_inicio'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('fecha_inicio') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fin</label>
+                                <input type="datetime-local" name="fecha_fin" value="{{ $editFechaFin }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('fecha_fin') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    required>
+                                @if ($reservaRowEditing && $reservaEditErrors?->has('fecha_fin'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('fecha_fin') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
+                                <input type="number" min="0" step="0.01" name="precio_hora" value="{{ $editPrecioHora }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('precio_hora') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    required>
+                                @if ($reservaRowEditing && $reservaEditErrors?->has('precio_hora'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('precio_hora') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Total</label>
+                                <input type="number" min="0" step="0.01" name="total" value="{{ $editTotal }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('total') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    required>
+                                @if ($reservaRowEditing && $reservaEditErrors?->has('total'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('total') }}</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Estado</label>
+                                <select name="estado"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('estado') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    required>
+                                    <option value="">Selecciona un estado</option>
+                                    @foreach ($estadoOptions as $estado)
+                                        <option value="{{ $estado }}" {{ $editEstado === $estado ? 'selected' : '' }}>
+                                            {{ ucfirst($estado) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @if ($reservaRowEditing && $reservaEditErrors?->has('estado'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('estado') }}</p>
+                                @endif
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Observaciones</label>
+                                <textarea name="observaciones" rows="3"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('observaciones') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    placeholder="Notas internas o mensajes para el equipo">{{ $editObservaciones }}</textarea>
+                                @if ($reservaRowEditing && $reservaEditErrors?->has('observaciones'))
+                                    <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('observaciones') }}</p>
+                                @endif
+                            </div>
+
+                            <input type="hidden" name="creado_por" value="{{ $editCreadoPor }}">
+                            @if ($reservaRowEditing && $reservaEditErrors?->has('creado_por'))
+                                <div class="md:col-span-2 text-xs text-red-300">
+                                    {{ $reservaEditErrors->first('creado_por') }}
+                                </div>
+                            @endif
+
+                            <div class="md:col-span-2 flex justify-end gap-3">
+                                <button type="button" data-reserva-edit-modal-close
+                                    class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                                    Cancelar
+                                </button>
+                                <button type="submit"
+                                    class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
+                                    Guardar cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
         <!-- MODAL ELIMINAR RESERVA -->
         <div id="reserva-delete-modal"
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
@@ -913,6 +1245,40 @@
                     </button>
                 </div>
 
+                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 shadow-2xl">
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label for="bloqueo-cancha-search"
+                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por cancha</label>
+                            <div class="relative mt-1">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m21 21-4.35-4.35m0 0A7 7 0 1 0 6.5 6.5a7 7 0 0 0 10.15 10.15z" />
+                                    </svg>
+                                </span>
+                                <input id="bloqueo-cancha-search" type="search" placeholder="Ej. Arena Indoor"
+                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                    data-bloqueo-search>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="bloqueo-type-filter"
+                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Filtrar por tipo</label>
+                            <select id="bloqueo-type-filter"
+                                class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                data-bloqueo-type>
+                                <option value="">Todos los tipos</option>
+                                @foreach ($bloqueoTipos as $tipo)
+                                    <option value="{{ $tipo }}">{{ $tipo }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-slate-900/80">
@@ -927,7 +1293,10 @@
                         </thead>
                         <tbody class="divide-y divide-slate-800">
                             @forelse ($bloqueos as $bloqueo)
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-slate-900/70 transition-colors"
+                                    data-bloqueo-row
+                                    data-bloqueo-cancha="{{ mb_strtolower(optional($bloqueo->cancha)->nombre ?? '') }}"
+                                    data-bloqueo-tipo="{{ mb_strtolower(optional($bloqueo->cancha)->tipo ?? '') }}">
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-white">{{ optional($bloqueo->cancha)->nombre ?? 'Cancha eliminada' }}</div>
                                         <div class="text-xs text-slate-500">ID #{{ $bloqueo->cancha_id }}</div>
@@ -951,7 +1320,7 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <p class="font-semibold text-white">
-                                            {{ optional($bloqueo->creador)->nombre ?? 'Usuario no disponible' }}
+                                            {{ optional($bloqueo->creador)->name ?? 'Usuario no disponible' }}
                                         </p>
                                         <p class="text-xs text-slate-400">
                                             {{ optional($bloqueo->creador)->email ?? 'Sin correo' }}
@@ -990,6 +1359,13 @@
                                     </td>
                                 </tr>
                             @endforelse
+                            @if ($bloqueos->isNotEmpty())
+                                <tr class="hidden" data-bloqueo-empty-row>
+                                    <td colspan="6" class="px-6 py-10 text-center text-slate-400">
+                                        No se encontraron bloqueos que coincidan con los filtros aplicados.
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -1253,6 +1629,40 @@
                     </button>
                 </div>
 
+                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 shadow-2xl">
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div>
+                            <label for="precio-cancha-search"
+                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por cancha</label>
+                            <div class="relative mt-1">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m21 21-4.35-4.35m0 0A7 7 0 1 0 6.5 6.5a7 7 0 0 0 10.15 10.15z" />
+                                    </svg>
+                                </span>
+                                <input id="precio-cancha-search" type="search" placeholder="Ej. Cancha Central"
+                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                    data-precio-search>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="precio-type-filter"
+                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Filtrar por tipo</label>
+                            <select id="precio-type-filter"
+                                class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                data-precio-type>
+                                <option value="">Todos los tipos</option>
+                                @foreach ($precioTipos as $tipo)
+                                    <option value="{{ $tipo }}">{{ $tipo }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-slate-900/80">
@@ -1297,7 +1707,10 @@
                                         ];
                                     }
                                 @endphp
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-slate-900/70 transition-colors"
+                                    data-precio-row
+                                    data-precio-cancha="{{ mb_strtolower(optional($precio->cancha)->nombre ?? '') }}"
+                                    data-precio-tipo="{{ mb_strtolower(optional($precio->cancha)->tipo ?? '') }}">
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-white">{{ optional($precio->cancha)->nombre ?? 'Cancha no disponible' }}</div>
                                         <div class="text-xs text-slate-500">ID #{{ $precio->cancha_id }}</div>
@@ -1360,6 +1773,13 @@
                                     </td>
                                 </tr>
                             @endforelse
+                            @if ($precios->isNotEmpty())
+                                <tr class="hidden" data-precio-empty-row>
+                                    <td colspan="6" class="px-6 py-10 text-center text-slate-400">
+                                        No se encontraron precios que coincidan con los filtros aplicados.
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -1637,6 +2057,40 @@
                     </button>
                 </div>
 
+                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 shadow-2xl">
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div>
+                            <label for="usuario-search"
+                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por nombre/correo</label>
+                            <div class="relative mt-1">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m21 21-4.35-4.35m0 0A7 7 0 1 0 6.5 6.5a7 7 0 0 0 10.15 10.15z" />
+                                    </svg>
+                                </span>
+                                <input id="usuario-search" type="search" placeholder="Ej. Ana, ana@mail.com"
+                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    data-usuario-search>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="usuario-role-filter"
+                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Filtrar por rol</label>
+                            <select id="usuario-role-filter"
+                                class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                data-usuario-role>
+                                <option value="">Todos los roles</option>
+                                @foreach ($usuarioRoles as $rolNombre)
+                                    <option value="{{ $rolNombre }}">{{ ucfirst($rolNombre) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-slate-900/80">
@@ -1654,7 +2108,11 @@
                                     $rolLabel = optional($usuario->role)->description ?? optional($usuario->role)->name ?? 'Sin rol asignado';
                                     $isCurrentUser = auth()->id() === $usuario->id;
                                 @endphp
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-slate-900/70 transition-colors"
+                                    data-usuario-row
+                                    data-usuario-nombre="{{ mb_strtolower($usuario->name) }}"
+                                    data-usuario-email="{{ mb_strtolower($usuario->email) }}"
+                                    data-usuario-rol="{{ mb_strtolower($rolLabel) }}">
                                     <td class="px-6 py-4">
                                         <p class="font-semibold text-white">{{ $usuario->name }}</p>
                                         <p class="text-xs text-slate-400">{{ $usuario->email }}</p>
@@ -1722,6 +2180,13 @@
                                     </td>
                                 </tr>
                             @endforelse
+                            @if ($usuarios->isNotEmpty())
+                                <tr class="hidden" data-usuario-empty-row>
+                                    <td colspan="5" class="px-6 py-10 text-center text-slate-400">
+                                        No se encontraron usuarios que coincidan con los filtros aplicados.
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -2008,7 +2473,227 @@
         serverPrecioEditId: @json($editarPrecioId),
         shouldOpenUsuarioModal: @json($shouldOpenUsuarioModal),
         serverUsuarioEditId: @json($editarUsuarioId),
+        serverReservaEditId: @json($editarReservaId),
     };
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const normalise = (value = '') => {
+            const text = (value ?? '').toString().toLowerCase();
+            return text.normalize ? text.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : text;
+        };
+
+        (function setupCanchaFilters() {
+            const searchInput = document.querySelector('[data-cancha-search]');
+            const typeFilter = document.querySelector('[data-cancha-type-filter]');
+            if (!searchInput || !typeFilter) {
+                return;
+            }
+
+            const tableRows = Array.from(document.querySelectorAll('[data-cancha-row]'));
+            const cardItems = Array.from(document.querySelectorAll('[data-cancha-card]'));
+            const tableEmptyRow = document.querySelector('[data-cancha-empty-row]');
+            const mobileEmptyCard = document.querySelector('[data-cancha-empty-mobile]');
+
+            const applyFilters = () => {
+                const searchTerm = normalise(searchInput.value.trim());
+                const selectedType = normalise(typeFilter.value).trim();
+                let matchesCount = 0;
+
+                const matchesCancha = (nombre, tipo) => {
+                    const normalisedName = normalise(nombre);
+                    const normalisedType = normalise(tipo);
+                    const byName = !searchTerm || normalisedName.includes(searchTerm);
+                    const byType = !selectedType || normalisedType === selectedType;
+                    return byName && byType;
+                };
+
+                tableRows.forEach((row) => {
+                    const nombre = row.dataset.canchaNombre || '';
+                    const tipo = row.dataset.canchaTipo || '';
+                    const matches = matchesCancha(nombre, tipo);
+                    row.classList.toggle('hidden', !matches);
+                    if (matches) {
+                        matchesCount++;
+                    }
+                });
+
+                cardItems.forEach((card) => {
+                    const nombre = card.dataset.canchaNombre || '';
+                    const tipo = card.dataset.canchaTipo || '';
+                    const matches = matchesCancha(nombre, tipo);
+                    card.classList.toggle('hidden', !matches);
+                });
+
+                const noResults = matchesCount === 0 && (tableRows.length > 0 || cardItems.length > 0);
+                if (tableEmptyRow) {
+                    tableEmptyRow.classList.toggle('hidden', !noResults);
+                }
+                if (mobileEmptyCard) {
+                    mobileEmptyCard.classList.toggle('hidden', !noResults);
+                }
+            };
+
+            searchInput.addEventListener('input', applyFilters);
+            typeFilter.addEventListener('change', applyFilters);
+            applyFilters();
+        })();
+
+        (function setupReservaFilters() {
+            const canchaSearch = document.querySelector('[data-reserva-cancha-search]');
+            const tipoFilter = document.querySelector('[data-reserva-tipo-filter]');
+            const clienteSearch = document.querySelector('[data-reserva-cliente-search]');
+            if (!canchaSearch || !tipoFilter || !clienteSearch) {
+                return;
+            }
+
+            const rows = Array.from(document.querySelectorAll('[data-reserva-row]'));
+            const emptyRow = document.querySelector('[data-reserva-empty-row]');
+
+            const applyReservaFilters = () => {
+                const canchaTerm = normalise(canchaSearch.value.trim());
+                const tipoTerm = normalise(tipoFilter.value).trim();
+                const clienteTerm = normalise(clienteSearch.value.trim());
+                let matchesCount = 0;
+
+                rows.forEach((row) => {
+                    const canchaNombre = row.dataset.reservaCancha || '';
+                    const tipoNombre = row.dataset.reservaTipo || '';
+                    const clienteNombre = row.dataset.reservaCliente || '';
+                    const byCancha = !canchaTerm || normalise(canchaNombre).includes(canchaTerm);
+                    const byTipo = !tipoTerm || normalise(tipoNombre) === tipoTerm;
+                    const byCliente = !clienteTerm || normalise(clienteNombre).includes(clienteTerm);
+                    const matches = byCancha && byTipo && byCliente;
+                    row.classList.toggle('hidden', !matches);
+                    if (matches) {
+                        matchesCount++;
+                    }
+                });
+
+                if (emptyRow) {
+                    const shouldShowEmpty = rows.length > 0 && matchesCount === 0;
+                    emptyRow.classList.toggle('hidden', !shouldShowEmpty);
+                }
+            };
+
+            canchaSearch.addEventListener('input', applyReservaFilters);
+            tipoFilter.addEventListener('change', applyReservaFilters);
+            clienteSearch.addEventListener('input', applyReservaFilters);
+            applyReservaFilters();
+        })();
+
+        (function setupBloqueoFilters() {
+            const searchInput = document.querySelector('[data-bloqueo-search]');
+            const typeFilter = document.querySelector('[data-bloqueo-type]');
+            if (!searchInput || !typeFilter) {
+                return;
+            }
+
+            const rows = Array.from(document.querySelectorAll('[data-bloqueo-row]'));
+            const emptyRow = document.querySelector('[data-bloqueo-empty-row]');
+
+            const applyFilters = () => {
+                const searchTerm = normalise(searchInput.value.trim());
+                const typeTerm = normalise(typeFilter.value).trim();
+                let matches = 0;
+
+                rows.forEach((row) => {
+                    const canchaNombre = row.dataset.bloqueoCancha || '';
+                    const canchaTipo = row.dataset.bloqueoTipo || '';
+                    const fitsName = !searchTerm || normalise(canchaNombre).includes(searchTerm);
+                    const fitsType = !typeTerm || normalise(canchaTipo) === typeTerm;
+                    const shouldShow = fitsName && fitsType;
+                    row.classList.toggle('hidden', !shouldShow);
+                    if (shouldShow) {
+                        matches++;
+                    }
+                });
+
+                if (emptyRow) {
+                    emptyRow.classList.toggle('hidden', !(rows.length > 0 && matches === 0));
+                }
+            };
+
+            searchInput.addEventListener('input', applyFilters);
+            typeFilter.addEventListener('change', applyFilters);
+            applyFilters();
+        })();
+
+        (function setupPrecioFilters() {
+            const searchInput = document.querySelector('[data-precio-search]');
+            const typeFilter = document.querySelector('[data-precio-type]');
+            if (!searchInput || !typeFilter) {
+                return;
+            }
+
+            const rows = Array.from(document.querySelectorAll('[data-precio-row]'));
+            const emptyRow = document.querySelector('[data-precio-empty-row]');
+
+            const applyFilters = () => {
+                const nameTerm = normalise(searchInput.value.trim());
+                const typeTerm = normalise(typeFilter.value).trim();
+                let matches = 0;
+
+                rows.forEach((row) => {
+                    const canchaNombre = row.dataset.precioCancha || '';
+                    const canchaTipo = row.dataset.precioTipo || '';
+                    const fitsName = !nameTerm || normalise(canchaNombre).includes(nameTerm);
+                    const fitsType = !typeTerm || normalise(canchaTipo) === typeTerm;
+                    const shouldShow = fitsName && fitsType;
+                    row.classList.toggle('hidden', !shouldShow);
+                    if (shouldShow) {
+                        matches++;
+                    }
+                });
+
+                if (emptyRow) {
+                    emptyRow.classList.toggle('hidden', !(rows.length > 0 && matches === 0));
+                }
+            };
+
+            searchInput.addEventListener('input', applyFilters);
+            typeFilter.addEventListener('change', applyFilters);
+            applyFilters();
+        })();
+
+        (function setupUsuarioFilters() {
+            const searchInput = document.querySelector('[data-usuario-search]');
+            const roleFilter = document.querySelector('[data-usuario-role]');
+            if (!searchInput || !roleFilter) {
+                return;
+            }
+
+            const rows = Array.from(document.querySelectorAll('[data-usuario-row]'));
+            const emptyRow = document.querySelector('[data-usuario-empty-row]');
+
+            const applyFilters = () => {
+                const searchTerm = normalise(searchInput.value.trim());
+                const roleTerm = normalise(roleFilter.value).trim();
+                let matches = 0;
+
+                rows.forEach((row) => {
+                    const nombre = row.dataset.usuarioNombre || '';
+                    const email = row.dataset.usuarioEmail || '';
+                    const rol = row.dataset.usuarioRol || '';
+                    const fitsName = !searchTerm || normalise(nombre).includes(searchTerm) || normalise(email).includes(searchTerm);
+                    const fitsRole = !roleTerm || normalise(rol) === roleTerm;
+                    const shouldShow = fitsName && fitsRole;
+                    row.classList.toggle('hidden', !shouldShow);
+                    if (shouldShow) {
+                        matches++;
+                    }
+                });
+
+                if (emptyRow) {
+                    emptyRow.classList.toggle('hidden', !(rows.length > 0 && matches === 0));
+                }
+            };
+
+            searchInput.addEventListener('input', applyFilters);
+            roleFilter.addEventListener('change', applyFilters);
+            applyFilters();
+        })();
+    });
 </script>
 
 {{-- logica --}}

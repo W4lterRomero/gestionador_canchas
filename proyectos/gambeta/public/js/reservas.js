@@ -8,6 +8,7 @@
         serverPrecioEditId = null,
         shouldOpenUsuarioModal = false,
         serverUsuarioEditId = null,
+        serverReservaEditId = null,
     } = window.reservasConfig || {};
 
     const initNav = () => {
@@ -418,6 +419,73 @@
         }
     };
 
+    const initReservaEditModals = () => {
+        const modals = document.querySelectorAll('[data-reserva-edit-modal]');
+        if (!modals.length) {
+            return;
+        }
+
+        let activeModal = null;
+        const setBodyScroll = (locked) => document.body.classList.toggle('overflow-hidden', locked);
+
+        const openModal = (modal) => {
+            if (activeModal === modal) {
+                return;
+            }
+            if (activeModal) {
+                activeModal.classList.add('hidden');
+                activeModal.classList.remove('flex');
+            }
+            activeModal = modal;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setBodyScroll(true);
+        };
+
+        const openModalById = (id) => {
+            const modal = document.getElementById(id);
+            if (modal) {
+                openModal(modal);
+            }
+        };
+
+        const closeModal = (modal) => {
+            if (!modal) {
+                return;
+            }
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            if (activeModal === modal) {
+                activeModal = null;
+                setBodyScroll(false);
+            }
+        };
+
+        document.querySelectorAll('[data-reserva-edit-target]').forEach((btn) => {
+            btn.addEventListener('click', () => openModalById(btn.dataset.reservaEditTarget));
+        });
+
+        document.querySelectorAll('[data-reserva-edit-modal-close]').forEach((btn) => {
+            btn.addEventListener('click', () => closeModal(btn.closest('[data-reserva-edit-modal]')));
+        });
+
+        modals.forEach((modal) => {
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal(modal);
+                }
+            });
+
+            if (modal.dataset.openDefault === 'true') {
+                openModal(modal);
+            }
+        });
+
+        if (!activeModal && serverReservaEditId) {
+            openModalById(`reserva-edit-modal-${serverReservaEditId}`);
+        }
+    };
+
     const initReservaDeleteModal = () => {
         const deleteModal = document.getElementById('reserva-delete-modal');
         if (!deleteModal) {
@@ -683,6 +751,7 @@
         initPrecioEditModals();
         initUsuarioEditModals();
         initFeedbackModal();
+        initReservaEditModals();
         initDeleteModal();
         initBloqueoDeleteModal();
         initPrecioDeleteModal();

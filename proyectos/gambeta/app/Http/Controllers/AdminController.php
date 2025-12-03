@@ -6,6 +6,7 @@ use App\Models\BloqueoHorario;
 use App\Models\Cancha;
 use App\Models\CanchaPrecio;
 use App\Models\Reserva;
+use App\Models\Cliente;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ class AdminController extends Controller
         $reservas = Reserva::with(['cancha', 'cliente', 'creador', 'actualizador'])
             ->latest('fecha_reserva')
             ->get();
+        $clientes = Cliente::orderBy('nombre')->get();
         $bloqueos = BloqueoHorario::with(['cancha', 'creador'])
             ->latest('fecha_inicio')
             ->get();
@@ -33,7 +35,7 @@ class AdminController extends Controller
             ->get();
         $roles = Role::orderBy('name')->get();
 
-        return view('administracion.index', compact('canchas', 'reservas', 'bloqueos', 'precios', 'usuarios', 'roles'));
+        return view('administracion.index', compact('canchas', 'reservas', 'clientes', 'bloqueos', 'precios', 'usuarios', 'roles'));
     }
 
     /**
