@@ -2,17 +2,6 @@
 
 @section('content')
 
-<!-- HERO VERDE MODERNO -->
-<section class="w-full py-10 px-6 bg-green-700 text-white rounded-b-3xl shadow-lg">
-    <div class="container mx-auto flex justify-between items-center">
-
-        <div>
-            <h1 class="text-4xl font-bold">Estadios Deportivos</h1>
-            <p class="opacity-90 text-sm">Administración y reservaciones del sistema</p>
-        </div>
-    </div>
-</section>
-
 
 <!-- LIVEWIRE: LISTADO Y FILTROS -->
 <livewire:estadios />

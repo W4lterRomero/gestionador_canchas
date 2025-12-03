@@ -1,11 +1,11 @@
-<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+<div>
 
     <section class="container mx-auto pt-12 pb-6 px-6">
 
         <!-- Header Section -->
         <div class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 tracking-tight mb-2">Nuestras Canchas</h1>
-            <p class="text-gray-500 text-lg">Encuentra la cancha perfecta para tu partido</p>
+            <h1 class="text-4xl font-bold text-white tracking-tight mb-2">Nuestras Canchas</h1>
+            <p class="text-gray-200 text-lg">Encuentra la cancha perfecta para tu partido</p>
         </div>
 
         <!-- Filtros Container -->
@@ -147,13 +147,13 @@
         @empty
             <div class="col-span-full">
                 <div class="flex flex-col items-center justify-center py-20 px-6">
-                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-                        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm">
+                        <svg class="w-10 h-10 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">No se encontraron canchas</h3>
-                    <p class="text-gray-500">Intenta ajustar los filtros de búsqueda</p>
+                    <h3 class="text-xl font-semibold text-white mb-2">No se encontraron canchas</h3>
+                    <p class="text-gray-300">Intenta ajustar los filtros de búsqueda</p>
                 </div>
             </div>
         @endforelse
