@@ -8,6 +8,7 @@ use App\Http\Controllers\CanchaController;
 use App\Http\Controllers\CanchaPrecioController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ClienteController;
 
 // Página de Login (para usuarios no autenticados)
 Route::get('/', function () {
@@ -43,10 +44,16 @@ Route::middleware(['auth', 'role:empleado'])->group(function () {
     Route::get('/reservas', function () {
         return view('reservas.index');
     })->name('reservas.index');
-    
+
     Route::get('/reservas/editar', function () {
         return view('reservas.editar');
     })->name('reservas.editar');
+
+    // Clientes - acceso para empleados y admin
+    Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
+    Route::get('/clientes/{cliente}/historial', [ClienteController::class, 'historial'])->name('clientes.historial');
+    Route::post('/clientes/{cliente}/toggle-frecuente', [ClienteController::class, 'toggleFrecuente'])->name('clientes.toggle-frecuente');
+    Route::post('/clientes/{cliente}/actualizar-estadisticas', [ClienteController::class, 'actualizarEstadisticas'])->name('clientes.actualizar-estadisticas');
 });
 
 // ===== RUTAS SOLO PARA ADMIN =====
@@ -76,6 +83,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/usuarios', [AdminUserController::class, 'store'])->name('usuarios.store');
         Route::put('/usuarios/{usuario}', [AdminUserController::class, 'update'])->name('usuarios.update');
         Route::delete('/usuarios/{usuario}', [AdminUserController::class, 'destroy'])->name('usuarios.destroy');
+
+        Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
+        Route::put('/clientes/{cliente}', [ClienteController::class, 'update'])->name('clientes.update');
+        Route::delete('/clientes/{cliente}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
     });
 
     // Counter (opcional)
