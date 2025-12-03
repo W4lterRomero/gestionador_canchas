@@ -1,545 +1,706 @@
-# 🏟️ Gambeta - Sistema de Reservación de Canchas Deportivas
+# Gambeta - Sistema de Reservación de Canchas Deportivas
 
-Sistema de gestión de reservas para el complejo deportivo Gambeta.
+Sistema completo de gestión de reservas para complejos deportivos, desarrollado con las últimas tecnologías web.
 
-**Stack:** Laravel 12 + Livewire v3 + MySQL 8.0 + Docker
+## Descripción del Proyecto
+
+**Gambeta** es una aplicación web moderna diseñada para gestionar reservas de canchas deportivas de forma eficiente. Permite administrar canchas, clientes, reservas, pagos y generar comprobantes en PDF. El sistema incluye un calendario interactivo en tiempo real usando Livewire, sistema de roles (Administrador/Empleado), y gestión completa de precios por cancha.
+
+### Características Principales
+
+- **Gestión de Canchas**: CRUD completo con múltiples imágenes por cancha
+- **Sistema de Reservas**: Calendario interactivo con validación de choques horarios
+- **Gestión de Clientes**: Registro de clientes frecuentes con historial
+- **Generación de PDFs**: Comprobantes de reserva descargables
+- **Sistema de Roles**: Control de permisos con Spatie Permission
+- **Panel Administrativo**: Dashboard con estadísticas y reportes
+- **Bloqueo de Horarios**: Para mantenimiento o eventos especiales
+- **Gestión de Pagos**: Registro de adelantos y saldos
 
 ---
 
-## 📦 Requisitos Previos
+## Stack Tecnológico
 
-- **Docker Desktop** instalado y corriendo
-- **Git** instalado
-- **WSL2** (solo si usas Windows)
+| Componente | Tecnología | Versión |
+|------------|------------|---------|
+| **Framework Backend** | Laravel | 12.x |
+| **Frontend Reactivo** | Livewire | 3.7 |
+| **Base de Datos** | MySQL | 8.0 |
+| **Servidor Web** | Apache | 2.4 |
+| **Lenguaje** | PHP | 8.2 |
+| **Contenedores** | Docker + Docker Compose | Latest |
+| **UI Framework** | Laravel UI (Bootstrap) | 4.6 |
+| **Generador de PDFs** | barryvdh/laravel-dompdf | 3.1 |
+| **Roles y Permisos** | spatie/laravel-permission | 6.23 |
+| **Build Tool** | Vite | Latest |
 
 ---
 
-## 🚀 Instalación para Nuevos Miembros del Equipo
+## Requisitos Previos
 
-### Paso 1: Clonar el repositorio
+Antes de comenzar, asegúrate de tener instalado:
+
+- **Docker Desktop** (v20.10 o superior) - [Descargar aquí](https://www.docker.com/products/docker-desktop)
+- **Git** (v2.30 o superior) - [Descargar aquí](https://git-scm.com/)
+- **WSL2** (solo Windows) - [Guía de instalación](https://docs.microsoft.com/es-es/windows/wsl/install)
+- Al menos **4GB de RAM** disponible para Docker
+- Al menos **5GB de espacio** en disco
+
+### Verificar instalación
+
+```bash
+# Verificar Docker
+docker --version
+docker compose version
+
+# Verificar Git
+git --version
+
+# Verificar WSL2 (solo Windows)
+wsl --status
+```
+
+---
+
+## Instalación
+
+### Opción 1: Instalación Automática (Recomendado)
+
+Para una instalación en **un solo comando** que configura todo automáticamente:
+
+```bash
+# 1. Clonar el repositorio
+git clone <URL_DEL_REPOSITORIO>
+cd gestionador_canchas
+
+# 2. Ejecutar script de setup automático
+./setup.sh
+```
+
+El script `setup.sh` hará automáticamente:
+- ✅ Verificar Docker y dependencias
+- ✅ Crear archivo `.env.docker` con tu UID/GID
+- ✅ Construir imágenes Docker
+- ✅ Levantar contenedores
+- ✅ Crear archivo `.env` de Laravel desde `.env.example`
+- ✅ Instalar dependencias de Composer
+- ✅ Generar APP_KEY
+- ✅ Configurar permisos
+- ✅ Ejecutar migraciones
+- ✅ Instalar dependencias de Node y compilar assets
+
+**Tiempo estimado**: 10-15 minutos (dependiendo de tu conexión)
+
+Una vez completado, accede a:
+- **Aplicación**: [http://localhost:8080](http://localhost:8080)
+- **phpMyAdmin**: [http://localhost:8082](http://localhost:8082)
+
+---
+
+### Opción 2: Instalación Manual (Paso a Paso)
+
+Si prefieres instalar manualmente o el script automático falla, sigue estos pasos:
+
+#### 1. Clonar el repositorio
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
-cd proyectoTPI
+cd gestionador_canchas
 ```
 
-### Paso 2: Configurar tu UID y GID
+#### 2. Configurar permisos de Docker
 
-**¿Por qué?** Para que los archivos creados dentro del contenedor te pertenezcan y puedas editarlos sin problemas de permisos.
-
-```bash
-# Obtener tu UID y GID
-id -u  # Anota este número (ejemplo: 1000)
-id -g  # Anota este número (ejemplo: 1000)
-```
-
-### Paso 3: Crear tu archivo `.env.docker`
+**Linux/macOS/WSL:**
 
 ```bash
-# Copiar la plantilla
+# Crear archivo de configuración con tu UID/GID
 cp .env.docker.example .env.docker
 
-# Editar con tus valores
-nano .env.docker
+# Obtener tu UID y GID
+echo "UID=$(id -u)" >> .env.docker
+echo "GID=$(id -g)" >> .env.docker
+
+# Verificar
+cat .env.docker
 ```
 
-Actualiza el archivo con TUS valores:
+Este paso es crucial para evitar problemas de permisos. El archivo `.env.docker` NO debe subirse a Git (ya está en `.gitignore`).
+
+#### 3. Construir y levantar los contenedores
 
 ```bash
-UID=1000  # Reemplaza con el resultado de 'id -u'
-GID=1000  # Reemplaza con el resultado de 'id -g'
+# Construir imágenes Docker (primera vez, puede tardar 5-10 minutos)
+docker compose build
+
+# Levantar los contenedores en segundo plano
+docker compose up -d
+
+# Verificar que los 3 contenedores estén corriendo
+docker compose ps
 ```
 
-**Importante:** Este archivo es personal, NO lo subas a GitHub.
+Deberías ver:
+- `laravel_app` - Estado: Up
+- `mysql80` - Estado: Up (healthy)
+- `phpmyadmin` - Estado: Up
 
-### Paso 4: Construir y levantar los contenedores
-
-```bash
-# Construir las imágenes (primera vez, puede tardar 5-10 min)
-docker-compose build
-
-# Levantar los contenedores
-docker-compose up -d
-
-# Verificar que estén corriendo
-docker-compose ps
-```
-
-Deberías ver 3 contenedores: `laravel_app`, `mysql80`, `phpmyadmin`
-
-### Paso 5: Instalar dependencias de Laravel
+#### 4. Configurar Laravel
 
 ```bash
 # Instalar dependencias de Composer
-docker-compose exec app bash -c "cd gambeta && composer install"
+docker compose exec app bash -c "cd gambeta && composer install"
 
-# Configurar permisos (importante)
-docker-compose exec app chown -R www-data:www-data /var/www/html
+# Copiar archivo de entorno
+docker compose exec app bash -c "cd gambeta && cp .env.example .env"
 
-# Generar key de Laravel
-docker-compose exec app bash -c "cd gambeta && php artisan key:generate"
+# Generar clave de aplicación
+docker compose exec app bash -c "cd gambeta && php artisan key:generate"
+
+# Configurar permisos correctos
+docker compose exec app chown -R www-data:www-data /var/www/html
+docker compose exec app bash -c "cd gambeta && chmod -R 775 storage bootstrap/cache"
 ```
 
-**Nota:** El proyecto Laravel ya está en `proyectos/gambeta/` y Apache está configurado para apuntar automáticamente a `gambeta/public`.
+#### 5. Configurar base de datos
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Paso 7: Ejecutar migraciones
+El archivo `.env` de Laravel ya está configurado con los valores correctos para Docker, pero verifica que contenga:
 
 ```bash
-docker-compose exec app bash -c "cd gambeta && php artisan migrate"
+# Ver configuración actual
+docker compose exec app bash -c "cd gambeta && cat .env | grep DB_"
 ```
 
-**Nota:** Si te pregunta si quieres crear la base de datos, responde `yes`.
+Debería mostrar:
+```
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=appdb
+DB_USERNAME=appuser
+DB_PASSWORD=apppass
+```
 
-### ✅ ¡Listo! Ahora accede a:
+#### 6. Ejecutar migraciones
 
-- **Aplicación Laravel:** http://localhost:8080
-- **PhpMyAdmin:** http://localhost:8082
+```bash
+# Ejecutar migraciones y seeders
+docker compose exec app bash -c "cd gambeta && php artisan migrate --seed"
+```
+
+Si pregunta "Do you really wish to run this command?", responde `yes`.
+
+#### 7. Compilar assets frontend
+
+```bash
+# Instalar dependencias de Node
+docker compose exec app bash -c "cd gambeta && npm install"
+
+# Compilar assets (desarrollo)
+docker compose exec app bash -c "cd gambeta && npm run build"
+```
+
+#### 8. Acceder a la aplicación
+
+- **Aplicación Laravel**: [http://localhost:8080](http://localhost:8080)
+- **phpMyAdmin**: [http://localhost:8082](http://localhost:8082)
   - Usuario: `root`
   - Contraseña: `rootpass`
 
+**Credenciales de prueba** (si ejecutaste seeders):
+- Admin: `admin@gambeta.com` / `password`
+- Empleado: `empleado@gambeta.com` / `password`
+
 ---
 
-## 🛠️ Comandos del Día a Día
+## Estructura del Proyecto
 
-### Iniciar/Detener el proyecto
+```
+gestionador_canchas/
+├── dockerfile                      # Imagen Docker desarrollo
+├── Dockerfile.production           # Imagen Docker producción
+├── docker-compose.yml              # Orquestación de contenedores
+├── .env.docker.example             # Plantilla configuración Docker
+├── .env.docker                     # Tu configuración (NO en Git)
+├── .dockerignore                   # Exclusiones Docker
+├── .gitignore                      # Exclusiones Git
+├── uploads.ini                     # Configuración PHP uploads
+├── render.yaml                     # Deploy Render.com
+├── README.md                       # Este archivo
+├── GUIA_INSTALACION.md             # Guía detallada por SO
+├── DESPLIEGUE_RENDER.md            # Guía producción
+├── SOLUCION_PERMISOS_DOCKER.md     # Troubleshooting permisos
+│
+└── proyectos/
+    └── gambeta/                    # Aplicación Laravel 12
+        ├── app/
+        │   ├── Http/
+        │   │   ├── Controllers/    # 16 controladores
+        │   │   └── Middleware/     # Middleware custom
+        │   ├── Livewire/           # 7 componentes Livewire
+        │   ├── Models/             # 11 modelos Eloquent
+        │   ├── Providers/          # Service providers
+        │   └── View/               # View composers
+        │
+        ├── bootstrap/
+        ├── config/                 # Archivos de configuración
+        ├── database/
+        │   ├── migrations/         # 17 migraciones
+        │   ├── factories/          # Model factories
+        │   └── seeders/            # Datos de prueba
+        │
+        ├── public/                 # Assets públicos
+        │   ├── images/             # Imágenes de canchas
+        │   ├── css/                # Estilos compilados
+        │   └── js/                 # Scripts compilados
+        │
+        ├── resources/
+        │   ├── views/              # 32+ vistas Blade
+        │   │   ├── layouts/        # Layouts principales
+        │   │   ├── livewire/       # Vistas Livewire
+        │   │   ├── administracion/ # Panel admin
+        │   │   ├── estadios/       # Gestión canchas
+        │   │   ├── reservas/       # Sistema reservas
+        │   │   ├── clientes/       # Gestión clientes
+        │   │   ├── pdf/            # Plantillas PDF
+        │   │   └── auth/           # Autenticación
+        │   ├── css/                # Estilos fuente
+        │   └── js/                 # Scripts fuente
+        │
+        ├── routes/
+        │   ├── web.php             # Rutas principales
+        │   ├── api.php             # API routes
+        │   └── console.php         # Comandos artisan
+        │
+        ├── storage/
+        │   ├── app/                # Archivos aplicación
+        │   ├── framework/          # Caché, sesiones, vistas
+        │   └── logs/               # Logs de Laravel
+        │
+        ├── tests/                  # Tests PHPUnit
+        ├── vendor/                 # Dependencias Composer
+        ├── .env                    # Variables entorno Laravel
+        ├── .env.example            # Plantilla .env
+        ├── artisan                 # CLI Laravel
+        ├── composer.json           # Dependencias PHP
+        ├── composer.lock           # Lock dependencias
+        ├── package.json            # Dependencias NPM
+        ├── vite.config.js          # Configuración Vite
+        └── phpunit.xml             # Configuración tests
+```
+
+---
+
+## Base de Datos
+
+### Tablas Principales
+
+| Tabla | Descripción | Campos Clave |
+|-------|-------------|--------------|
+| **users** | Usuarios del sistema | id, name, email, password, activo |
+| **roles** | Roles de usuario (Spatie) | id, name, guard_name |
+| **permissions** | Permisos (Spatie) | id, name, guard_name |
+| **canchas** | Canchas deportivas | id, nombre, tipo, precio_hora, activa |
+| **cancha_imagenes** | Imágenes de canchas | id, cancha_id, imagen_url |
+| **cancha_precios** | Histórico de precios | id, cancha_id, precio, vigencia_desde |
+| **bloqueos_horarios** | Bloqueos de tiempo | id, cancha_id, fecha_inicio, fecha_fin |
+| **clientes** | Clientes del complejo | id, nombre, telefono, email, frecuente |
+| **reservas** | Reservas realizadas | id, cancha_id, cliente_id, fecha_inicio, estado |
+| **pagos** | Pagos y adelantos | id, reserva_id, monto, tipo_pago |
+| **reservas_estados_historial** | Auditoría de cambios | id, reserva_id, estado_anterior, estado_nuevo |
+
+### Diagrama de Relaciones
+
+```
+users (1) ─── (N) reservas (creador)
+roles (1) ─── (N) users
+canchas (1) ─── (N) reservas
+canchas (1) ─── (N) cancha_imagenes
+canchas (1) ─── (N) cancha_precios
+canchas (1) ─── (N) bloqueos_horarios
+clientes (1) ─── (N) reservas
+reservas (1) ─── (N) pagos
+reservas (1) ─── (N) reservas_estados_historial
+```
+
+---
+
+## Comandos Útiles
+
+### Docker
 
 ```bash
 # Levantar contenedores
-docker-compose up -d
+docker compose up -d
 
 # Detener contenedores
-docker-compose down
+docker compose down
 
 # Ver logs en tiempo real
-docker-compose logs -f app
+docker compose logs -f app
+
+# Ver logs de MySQL
+docker compose logs -f db
+
+# Reiniciar un servicio específico
+docker compose restart app
+
+# Reconstruir imágenes
+docker compose build --no-cache
+
+# Eliminar contenedores y volúmenes (CUIDADO: borra BD)
+docker compose down -v
+
+# Entrar al contenedor de Laravel
+docker compose exec app bash
+
+# Ver estado de contenedores
+docker compose ps
 ```
 
-### Trabajar con Laravel
+### Laravel (Artisan)
 
 ```bash
-# Ejecutar comandos artisan (desde fuera del contenedor)
-docker-compose exec app bash -c "cd gambeta && php artisan make:model Cancha -m"
-docker-compose exec app bash -c "cd gambeta && php artisan migrate"
-docker-compose exec app bash -c "cd gambeta && php artisan route:list"
+# Ejecutar comandos artisan (desde el host)
+docker compose exec app bash -c "cd gambeta && php artisan [comando]"
 
-# O entrar al contenedor y trabajar dentro
-docker-compose exec app bash
+# O entrar al contenedor primero
+docker compose exec app bash
 cd gambeta
-php artisan make:controller ReservaController
-php artisan make:livewire CalendarioReservas
-exit
+
+# Crear modelo con migración
+php artisan make:model NombreModelo -m
+
+# Crear controlador
+php artisan make:controller NombreController
+
+# Crear componente Livewire
+php artisan make:livewire NombreComponente
+
+# Ejecutar migraciones
+php artisan migrate
+
+# Rollback última migración
+php artisan migrate:rollback
+
+# Refrescar base de datos (CUIDADO: borra datos)
+php artisan migrate:fresh --seed
+
+# Limpiar cachés
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+
+# Ver rutas registradas
+php artisan route:list
+
+# Ver configuración actual
+php artisan config:show database
+
+# Ejecutar tinker (REPL)
+php artisan tinker
 ```
 
-### Trabajar con Composer
+### Composer
 
 ```bash
-# Instalar paquetes
-docker-compose exec app bash -c "cd gambeta && composer require paquete/nombre"
+# Instalar dependencia
+docker compose exec app bash -c "cd gambeta && composer require vendor/package"
 
 # Actualizar dependencias
-docker-compose exec app bash -c "cd gambeta && composer update"
+docker compose exec app bash -c "cd gambeta && composer update"
+
+# Actualizar autoload
+docker compose exec app bash -c "cd gambeta && composer dump-autoload"
 
 # Ver paquetes instalados
-docker-compose exec app bash -c "cd gambeta && composer show"
+docker compose exec app bash -c "cd gambeta && composer show"
+
+# Buscar paquetes
+docker compose exec app bash -c "cd gambeta && composer search keyword"
 ```
 
-### Limpiar caché de Laravel
+### NPM / Vite
 
 ```bash
-docker-compose exec app bash -c "cd gambeta && php artisan cache:clear"
-docker-compose exec app bash -c "cd gambeta && php artisan config:clear"
-docker-compose exec app bash -c "cd gambeta && php artisan view:clear"
-docker-compose exec app bash -c "cd gambeta && php artisan route:clear"
+# Instalar dependencias
+docker compose exec app bash -c "cd gambeta && npm install"
+
+# Compilar assets (desarrollo)
+docker compose exec app bash -c "cd gambeta && npm run dev"
+
+# Compilar assets (producción)
+docker compose exec app bash -c "cd gambeta && npm run build"
+
+# Watch mode (auto-recompilación)
+docker compose exec app bash -c "cd gambeta && npm run dev --watch"
+```
+
+### Base de Datos
+
+```bash
+# Backup de base de datos
+docker compose exec db mysqldump -u appuser -papppass appdb > backup_$(date +%Y%m%d).sql
+
+# Restaurar backup
+docker compose exec -T db mysql -u appuser -papppass appdb < backup_20250101.sql
+
+# Entrar a MySQL CLI
+docker compose exec db mysql -u root -prootpass
+
+# Ver bases de datos
+docker compose exec db mysql -u root -prootpass -e "SHOW DATABASES;"
 ```
 
 ---
 
-## ⚙️ Cómo Funciona la Solución de Permisos
+## Solución de Problemas Comunes
 
-### El Problema
+### Error: "Permission denied" al editar archivos
 
-Cuando usas Docker, normalmente los archivos creados dentro del contenedor pertenecen a un usuario diferente (root o www-data con UID 33). Esto causa que no puedas editarlos desde tu editor de código sin hacer `chmod -R 777` (lo cual es inseguro).
+**Causa**: Los archivos pertenecen a un usuario diferente (root o www-data:33)
 
-### La Solución
-
-Este proyecto configura el usuario `www-data` dentro del contenedor para que tenga **el mismo UID y GID que tu usuario** en tu máquina.
-
-```
-Tu máquina (host)          Contenedor Docker
-─────────────────          ─────────────────
-Usuario: Walter            Usuario: www-data
-UID: 1000          ════>   UID: 1000 (¡mismo!)
-GID: 1000                  GID: 1000 (¡mismo!)
-
-Resultado: Los archivos te pertenecen en ambos lados ✅
-```
-
-### ¿Qué hace el sistema automáticamente?
-
-1. Lee tu `UID` y `GID` desde `.env.docker`
-2. Construye la imagen Docker con esos valores
-3. Modifica el usuario `www-data` para que use tu UID/GID
-4. Apache ejecuta como `www-data` (que ahora tiene tus permisos)
-5. Todos los archivos creados tienen el dueño correcto
-
-### Beneficios
-
-- ✅ Puedes editar cualquier archivo sin `sudo` o `chmod`
-- ✅ No hay conflictos de permisos entre el contenedor y tu máquina
-- ✅ Cada miembro del equipo configura su propio UID/GID
-- ✅ Funciona en Windows (WSL), macOS y Linux
-- ✅ Compatible con Apache, Nginx, y cualquier servidor web
-
----
-
-## 🔧 Solución de Problemas Comunes
-
-### Problema 1: "Permission denied" al editar archivos en VSCode
-
-**Causa:** Los archivos dentro de `proyectos/` pertenecen a `root` en lugar de a tu usuario.
-
-**Esto pasa si:** Creaste el proyecto Laravel ANTES de reconstruir el contenedor con `.env.docker`.
-
-**Solución:**
+**Solución**:
 
 ```bash
-# Desde tu terminal, fuera del contenedor:
-# Cambiar dueño de todos los archivos
-docker-compose exec app chown -R www-data:www-data /var/www/html
-
-# Verificar que ahora pertenecen a tu usuario
-ls -la proyectos/gambeta/
-# Deberías ver tu usuario (ej: Walter) como dueño
-```
-
-**Prevención:** Siempre sigue este orden:
-1. Crear `.env.docker`
-2. Ejecutar `docker-compose build`
-3. Ejecutar `docker-compose up -d`
-4. **LUEGO** crear el proyecto Laravel
-
----
-
-### Problema 2: ".env.docker con UID/GID incorrecto"
-
-**Síntoma:** Archivos nuevos no tienen el dueño correcto.
-
-**Solución:**
-
-```bash
-# Verificar tus valores reales
+# Verificar UID/GID actual
 id -u
 id -g
 
-# Verificar lo que tiene .env.docker
+# Verificar .env.docker
 cat .env.docker
 
-# Si son diferentes, editar
-nano .env.docker
+# Si no coinciden, actualizar y reconstruir
+nano .env.docker  # Editar con valores correctos
+docker compose down
+docker compose build --no-cache
+docker compose up -d
 
-# Reconstruir contenedores
-docker-compose down
-docker-compose build --no-cache
-docker-compose up -d
+# Arreglar permisos existentes
+docker compose exec app chown -R www-data:www-data /var/www/html
 ```
 
-### Problema 3: Puerto 8080 ya está en uso
+### Error: "Port already in use"
 
-**Síntoma:**
-
-```
-Error: bind: address already in use
-```
-
-**Solución:**
-
-Edita `docker-compose.yml` y cambia el puerto:
+**Solución 1**: Cambiar puertos en `docker-compose.yml`
 
 ```yaml
-ports:
-  - "8081:80"  # Cambiar 8080 por 8081
+services:
+  app:
+    ports:
+      - "8081:80"  # Cambiar 8080 a 8081
 ```
 
-### Problema 4: MySQL no conecta
-
-**Síntoma:**
-
-```
-SQLSTATE[HY000] [2002] Connection refused
-```
-
-**Solución:**
+**Solución 2**: Detener proceso que usa el puerto
 
 ```bash
-# Verificar que MySQL esté healthy
-docker-compose ps
+# Linux/macOS
+sudo lsof -i :8080
+sudo kill -9 [PID]
 
-# Si no está healthy, espera 30 segundos y vuelve a verificar
-# O revisa los logs
-docker-compose logs db
-
-# Si persiste, recrear desde cero
-docker-compose down -v
-docker-compose up -d
+# Windows (PowerShell)
+netstat -ano | findstr :8080
+taskkill /PID [PID] /F
 ```
 
-### Problema 5: Composer muy lento
+### Error: "Connection refused" MySQL
 
-**Solución:**
+**Causa**: MySQL no está listo o tiene problemas
+
+**Solución**:
+
+```bash
+# Verificar estado
+docker compose ps
+
+# Ver logs
+docker compose logs db
+
+# Esperar a que esté healthy
+watch docker compose ps
+
+# Si persiste, recrear
+docker compose down -v
+docker compose up -d
+```
+
+### Error: "Class not found"
+
+**Solución**:
+
+```bash
+# Regenerar autoload
+docker compose exec app bash -c "cd gambeta && composer dump-autoload"
+
+# Limpiar caché
+docker compose exec app bash -c "cd gambeta && php artisan cache:clear"
+docker compose exec app bash -c "cd gambeta && php artisan config:clear"
+```
+
+### Error: "SQLSTATE[HY000] [2002]"
+
+**Causa**: Laravel intenta conectar antes de que MySQL esté listo
+
+**Solución**:
+
+```bash
+# Esperar 30 segundos y reintentar
+docker compose restart app
+
+# Verificar configuración .env
+docker compose exec app bash -c "cd gambeta && cat .env | grep DB_"
+```
+
+### Composer muy lento
+
+**Solución**:
 
 ```bash
 # Habilitar cache de Composer
-docker-compose exec app composer global config cache-files-maxsize 2048MiB
+docker compose exec app composer config -g cache-files-maxsize 2048MiB
+
+# Usar mirror de Packagist
+docker compose exec app composer config -g repos.packagist composer https://packagist.org
 ```
 
-### Problema 6: No puedo editar archivos desde VSCode (Windows)
+### Error 500 en Laravel
 
-**Causa:** El proyecto está en el sistema de archivos de Windows, no de WSL.
-
-**Solución:**
-
-El proyecto DEBE estar en WSL, no en `/mnt/c/`:
+**Pasos de diagnóstico**:
 
 ```bash
-# ✅ Correcto (dentro de WSL)
-/home/tu-usuario/proyectos/gambeta
+# Ver logs de Laravel
+docker compose exec app bash -c "cd gambeta && tail -f storage/logs/laravel.log"
 
-# ❌ Incorrecto (en Windows)
-/mnt/c/Users/tu-usuario/proyectos/gambeta
-```
+# Ver logs de Apache
+docker compose logs app
 
-Si está en Windows, muévelo a WSL:
+# Verificar permisos
+docker compose exec app bash -c "cd gambeta && ls -la storage/"
 
-```bash
-cd ~
-mkdir -p proyectos
-mv /mnt/c/Users/tu-usuario/proyectos/gambeta ~/proyectos/
-```
-
----
-
-## 📁 Estructura del Proyecto
-
-```
-proyectoTPI/
-├── dockerfile                  # Imagen Docker para desarrollo
-├── Dockerfile.production       # Imagen Docker para producción
-├── docker-compose.yml          # Orquestación de contenedores
-├── .env.docker.example         # Plantilla de configuración (✅ en Git)
-├── .env.docker                 # Tu configuración personal (❌ NO en Git)
-├── .gitignore                  # Archivos ignorados por Git
-├── README.md                   # Este archivo
-├── GUIA_INSTALACION.md         # Guía detallada por sistema operativo
-├── DESPLIEGUE_RENDER.md        # Guía para desplegar en producción
-└── proyectos/                  # Proyecto Laravel 12
-    ├── app/
-    ├── resources/
-    ├── routes/
-    ├── database/
-    └── ...
+# Arreglar permisos
+docker compose exec app bash -c "cd gambeta && chmod -R 775 storage bootstrap/cache"
+docker compose exec app chown -R www-data:www-data /var/www/html
 ```
 
 ---
 
-## 📚 Requerimientos del Proyecto Gambeta
-
-### Funcionalidades a Implementar
-
-1. **Gestión de canchas**
-   - Registrar canchas (nombre, tipo, precio/hora)
-   - Subir fotografías de canchas
-   - Editar y eliminar canchas
-
-2. **Calendario de reservas**
-   - Vista de calendario interactiva con Livewire
-   - Mostrar horarios disponibles
-   - Selección de fecha, hora y duración
-   - Validación automática de choques de horario
-
-3. **Gestión de reservas**
-   - Registrar cliente (nombre, teléfono, equipo/grupo)
-   - Crear reserva con precio total calculado
-   - Cambiar estados:
-     - Pendiente
-     - Confirmada
-     - Cancelada
-     - Finalizada
-
-4. **Pago y comprobantes**
-   - Registrar pagos o adelantos
-   - Generar comprobantes en PDF descargables
-
-5. **Panel de administración**
-   - Ver todas las reservas por fecha y cancha
-   - Bloquear horarios para mantenimiento/eventos
-   - Gestionar precios de canchas
-
-6. **Sistema de roles**
-   - **Administrador:** Acceso total
-   - **Empleado de recepción:** Crear reservas, ver calendario, cambiar estados. NO puede eliminar canchas ni cambiar precios.
-
-7. **Historial**
-   - Todas las reservas de cada cancha
-   - Registro de clientes frecuentes
-
-### Stack Tecnológico
-
-| Componente | Tecnología |
-|------------|------------|
-| Framework Backend | Laravel 12 |
-| Frontend Reactivo | Livewire v3 |
-| Base de Datos | MySQL 8.0 |
-| Servidor Web | Apache 2.4 |
-| PHP | 8.2 |
-| Contenedores | Docker + Docker Compose |
-| Autenticación | Laravel Breeze/Jetstream |
-| PDFs | barryvdh/laravel-dompdf |
-| Permisos/Roles | spatie/laravel-permission |
-
----
-
-## 🎯 Convenciones del Equipo
+## Desarrollo y Contribución
 
 ### Git Workflow
 
 ```bash
-# 1. Antes de empezar a trabajar, actualiza
+# 1. Actualizar main
+git checkout main
 git pull origin main
 
-# 2. Crea una rama para tu feature
-git checkout -b feature/calendario-reservas
+# 2. Crear rama feature
+git checkout -b feature/nombre-feature
 
-# 3. Haz commits descriptivos
+# 3. Hacer cambios y commits
 git add .
-git commit -m "Add: Vista de calendario con Livewire"
+git commit -m "Add: descripción del cambio"
 
 # 4. Push a tu rama
-git push origin feature/calendario-reservas
+git push origin feature/nombre-feature
 
-# 5. Crea Pull Request en GitHub
+# 5. Crear Pull Request en GitHub
 ```
 
-### Nombres de Commits
+### Convención de Commits
 
 - `Add:` - Nueva funcionalidad
 - `Fix:` - Corrección de bugs
-- `Update:` - Actualización de funcionalidad existente
-- `Refactor:` - Refactorización de código
+- `Update:` - Actualización de feature existente
+- `Refactor:` - Refactorización sin cambiar funcionalidad
 - `Docs:` - Cambios en documentación
+- `Test:` - Agregar o modificar tests
+- `Style:` - Cambios de formato (no afectan lógica)
 
-### Estructura de Base de Datos
+### Buenas Prácticas
 
-**Tablas principales:**
-
-- `canchas` - Información de canchas
-- `reservas` - Reservas realizadas
-- `clientes` - Datos de clientes
-- `pagos` - Registro de pagos
-- `users` - Usuarios del sistema (admin/empleados)
-
----
-
-## 🚫 Qué NO Hacer
-
-- ❌ NO subir `.env.docker` a GitHub (es personal)
-- ❌ NO ejecutar `chmod -R 777` (el sistema maneja permisos automáticamente)
-- ❌ NO hacer `git push --force` en `main`
-- ❌ NO commitear archivos `vendor/` o `node_modules/`
-- ❌ NO trabajar directo en `main`, usar ramas
-- ❌ NO modificar `docker-compose.yml` sin avisar al equipo
+- **NO** commitear `.env` o `.env.docker`
+- **NO** commitear `vendor/` o `node_modules/`
+- **NO** hacer `chmod -R 777` (usar permisos correctos)
+- **NO** usar `git push --force` en `main`
+- **SÍ** escribir tests para nuevas funcionalidades
+- **SÍ** documentar cambios importantes
+- **SÍ** revisar código antes de hacer PR
 
 ---
 
-## ✅ Checklist de Primera Vez
-
-Usa esto para verificar que todo está correcto:
-
-- [ ] Docker Desktop instalado y corriendo
-- [ ] WSL2 configurado (solo Windows)
-- [ ] Repositorio clonado
-- [ ] `.env.docker` creado con MI UID/GID
-- [ ] `docker-compose build` ejecutado sin errores
-- [ ] `docker-compose up -d` levanta 3 contenedores
-- [ ] Laravel 12 instalado en `proyectos/gambeta/`
-- [ ] `proyectos/gambeta/.env` configurado con credenciales de DB
-- [ ] Livewire v3 instalado
-- [ ] Migraciones ejecutadas sin errores
-- [ ] http://localhost:8080 muestra Laravel
-- [ ] http://localhost:8082 muestra phpMyAdmin
-- [ ] Puedo crear archivos desde el contenedor y editarlos sin problemas
-
----
-
-## 📞 ¿Necesitas Ayuda?
-
-### Documentación adicional
-
-- **[GUIA_INSTALACION.md](GUIA_INSTALACION.md)** - Instalación paso a paso para Windows/macOS/Linux
-- **[DESPLIEGUE_RENDER.md](DESPLIEGUE_RENDER.md)** - Cómo desplegar en producción
-
-### Comandos de ayuda
+## Testing
 
 ```bash
-# Ver estado de contenedores
-docker-compose ps
+# Ejecutar todos los tests
+docker compose exec app bash -c "cd gambeta && php artisan test"
 
-# Ver logs de la aplicación
-docker-compose logs -f app
+# Ejecutar test específico
+docker compose exec app bash -c "cd gambeta && php artisan test --filter=NombreTest"
 
-# Ver logs de MySQL
-docker-compose logs -f db
+# Con coverage
+docker compose exec app bash -c "cd gambeta && php artisan test --coverage"
 
-# Reiniciar todo desde cero
-docker-compose down -v
-docker-compose build --no-cache
-docker-compose up -d
+# Tests en paralelo
+docker compose exec app bash -c "cd gambeta && php artisan test --parallel"
 ```
 
-### Contacto
+---
 
-Si tienes problemas que no puedes resolver:
+## Deployment (Producción)
 
-1. Revisa la sección de [Solución de Problemas](#solución-de-problemas-comunes)
-2. Consulta [GUIA_INSTALACION.md](GUIA_INSTALACION.md)
-3. Busca el error en los logs: `docker-compose logs app`
-4. Contacta al equipo
+Ver documentación detallada en:
+
+- [DESPLIEGUE_RENDER.md](DESPLIEGUE_RENDER.md) - Deploy en Render.com
+- [Dockerfile.production](Dockerfile.production) - Imagen optimizada para producción
+
+**Checklist producción**:
+
+- [ ] `APP_ENV=production` en `.env`
+- [ ] `APP_DEBUG=false` en `.env`
+- [ ] Generar `APP_KEY` nueva
+- [ ] Configurar base de datos de producción
+- [ ] Ejecutar `composer install --optimize-autoloader --no-dev`
+- [ ] Ejecutar `npm run build`
+- [ ] Configurar HTTPS/SSL
+- [ ] Configurar backups automáticos
+- [ ] Configurar logs y monitoreo
 
 ---
 
-## 🎓 Recursos de Aprendizaje
+## Documentación Adicional
 
-### Laravel 12
-- [Documentación Oficial](https://laravel.com/docs/12.x)
+- **[GUIA_INSTALACION.md](GUIA_INSTALACION.md)** - Guía detallada por sistema operativo
+- **[SOLUCION_PERMISOS_DOCKER.md](SOLUCION_PERMISOS_DOCKER.md)** - Troubleshooting de permisos
+- **[DESPLIEGUE_RENDER.md](DESPLIEGUE_RENDER.md)** - Deploy en Render.com
+
+### Recursos Externos
+
+- [Documentación Laravel 12](https://laravel.com/docs/12.x)
+- [Documentación Livewire v3](https://livewire.laravel.com/docs)
+- [Spatie Permission Docs](https://spatie.be/docs/laravel-permission/v6)
+- [Docker Compose Reference](https://docs.docker.com/compose/)
 - [Laravel Bootcamp](https://bootcamp.laravel.com)
 
-### Livewire v3
-- [Documentación Oficial](https://livewire.laravel.com/docs)
-- [Screencasts](https://laracasts.com/series/livewire-uncovered)
+---
 
-### Docker
-- [Docker para Desarrolladores](https://docs.docker.com/get-started/)
-- [Docker Compose](https://docs.docker.com/compose/)
+## Licencia
+
+Este proyecto es parte de un Trabajo Práctico Integrador (TPI) con fines educativos.
 
 ---
+
+## Soporte
+
+Si encuentras problemas:
+
+1. Revisa la sección [Solución de Problemas](#solución-de-problemas-comunes)
+2. Consulta los logs: `docker compose logs app`
+3. Revisa la documentación adicional
+4. Contacta al equipo de desarrollo
+
+---
+
+**Última actualización**: Diciembre 2025
+**Versión Laravel**: 12.x
+**Versión Livewire**: 3.7
+**Versión PHP**: 8.2
