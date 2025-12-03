@@ -57,37 +57,16 @@
         <div>
             <label class="font-semibold text-gray-700">Cancha</label>
 
-<div x-data="{ abierto: false }" class="relative">
+            <select
+                wire:model.live="cancha"
+                class="w-full bg-gray-100 rounded-xl px-4 py-2
+                    {{ $errors->has('cancha') ? 'border-red-500' : 'border-green-600' }}">
+                <option value="">-- Seleccionar --</option>
 
-    {{-- Botón --}}
-    <div 
-        class="w-full bg-white border border-green-300 rounded-xl px-4 py-3 shadow flex justify-between items-center cursor-pointer"
-        @click="abierto = !abierto"
-    >
-        <span class="text-gray-800">
-            {{ $canchaTitulo ?: 'Seleccione una cancha…' }}
-        </span>
-        <i class="fa-solid fa-chevron-down text-green-700"></i>
-    </div>
-
-    {{-- Lista --}}
-    <div 
-        x-show="abierto"
-        @click.outside="abierto = false"
-        class="absolute mt-2 w-full bg-white border border-green-300 rounded-xl shadow-xl z-50"
-    >
-        @foreach ($canchas as $c)
-            <div 
-                wire:click="$set('cancha', {{ $c->id }}); abierto = false"
-                class="px-4 py-2 cursor-pointer hover:bg-green-100 text-gray-800"
-            >
-                {{ $c->nombre }}
-            </div>
-        @endforeach
-    </div>
-
-</div>
-
+                @foreach($canchas as $c)
+                    <option value="{{ $c->id }}">{{ $c->nombre }}</option>
+                @endforeach
+            </select>
 
             @error('cancha')
                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -153,7 +132,7 @@
                     @enderror
                 </div>
 
-                {{-- Total --}}
+                <!-- TOTAL -->
                 <div class="p-4 bg-green-100 rounded-xl border border-green-300">
                     <p class="text-gray-700 font-semibold">Total:</p>
                     <p class="text-3xl font-bold text-green-700">
@@ -181,7 +160,6 @@
 
     <h2 class="text-2xl font-bold text-green-700">Datos del cliente</h2>
 
-    {{-- Buscador --}}
     <div class="relative">
 
         <i class="fa-solid fa-magnifying-glass text-green-700 absolute left-3 top-3"></i>
@@ -209,7 +187,7 @@
 
     </div>
 
-    {{-- Datos del cliente --}}
+    <!-- INPUTS DE CLIENTE -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         <input type="text" wire:model.live="nombre"
@@ -243,96 +221,106 @@
 
 
 
-    @if ($pasoActual == 3)
-    <div class="space-y-6">
+@if ($pasoActual == 3)
+<div class="space-y-6">
 
-        @if ($errors->any())
-            <div class="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-                ⚠️ Revisa los datos antes de continuar.
-            </div>
-        @endif
+    @if ($errors->any())
+        <div class="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            Debes completar los campos requeridos antes continuar.
+        </div>
+    @endif
 
-        <h2 class="text-2xl font-bold text-green-700">Pago del cliente</h2>
+    <h2 class="text-2xl font-bold text-green-700">Pago del cliente</h2>
 
-        <div class="space-y-4">
+    <div class="space-y-4">
 
-            <div>
-                <label class="font-semibold text-gray-700">Estado del pago</label>
-                <select wire:model="estadoPago"
-                    class="w-full bg-gray-100 rounded-xl px-4 py-2
-                        {{ $errors->has('estadoPago') ? 'border-red-500' : 'border-green-600' }}">
-                    <option value="">-- Seleccionar --</option>
-                    <option value="pagado">Pagado completo</option>
-                    <option value="adelanto">Dejó adelanto</option>
-                    <option value="nopago">No pagó</option>
-                </select>
+        {{-- ESTADO DEL PAGO --}}
+        <div>
+            <label class="font-semibold text-gray-700">Estado del pago</label>
+            <select wire:model="estadoPago"
+                wire:change="actualizarEstadoPago"
+                class="w-full bg-gray-100 rounded-xl px-4 py-2
+                    {{ $errors->has('estadoPago') ? 'border-red-500' : 'border-green-600' }}">
+                <option value="">-- Seleccionar --</option>
+                <option value="pagado">Pagado completo</option>
+                <option value="adelanto">Dejó adelanto</option>
+                <option value="nopago">No pagó</option>
+            </select>
 
-                @error('estadoPago')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            @if ($estadoPago === 'adelanto')
-            <div>
-                <label class="font-semibold text-gray-700">Monto del adelanto</label>
-                <input type="number"
-                    wire:model="adelanto"
-                    step="0.01"
-                    class="w-full bg-gray-100 rounded-xl px-4 py-2
-                        {{ $errors->has('adelanto') ? 'border-red-500' : 'border-green-600' }}">
-
-                @error('adelanto')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-            @endif
-
-            <div>
-                <label class="font-semibold text-gray-700">Método de pago</label>
-                <select wire:model="metodoPago"
-                    class="w-full bg-gray-100 rounded-xl px-4 py-2
-                        {{ $errors->has('metodoPago') ? 'border-red-500' : 'border-green-600' }}">
-                    <option value="">-- Seleccionar --</option>
-                    <option value="efectivo">Efectivo</option>
-                    <option value="tarjeta">Tarjeta</option>
-                    <option value="transferencia">Transferencia</option>
-                </select>
-
-                @error('metodoPago')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="text-center pt-4">
-                <button wire:click="generarComprobante"
-                    class="bg-green-600 hover:bg-green-500 text-white px-8 py-2 rounded-full font-bold shadow">
-                    Generar comprobante PDF
-                </button>
-            </div>
-
-            @if ($comprobantePdf)
-            <div class="mt-6 p-4 bg-green-50 border border-green-300 rounded-xl text-center">
-                <p class="font-semibold text-green-700">Comprobante generado correctamente</p>
-
-                <a href="{{ asset($comprobantePdf) }}" download
-                    class="mt-3 inline-block bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-full font-bold shadow">
-                    Descargar comprobante
-                </a>
-            </div>
-            @endif
-
+            @error('estadoPago')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div class="flex justify-between mt-6">
-            <button wire:click="anterior" class="text-green-600 font-bold">← Volver</button>
-            <button wire:click="siguiente"
+        {{-- TOTAL A PAGAR --}}
+        <div>
+            <label class="font-semibold text-gray-700">Total a pagar</label>
+        <input type="text"
+            wire:model="totalPagar"
+            wire:input="validarTotalPagar"
+
+            @if($estadoPago === 'pagado' || $estadoPago === 'nopago')
+                disabled
+            @endif
+
+            class="w-full bg-gray-100 rounded-xl px-4 py-2"
+                    {{ $errors->has('totalPagar') ? 'border-red-500' : 'border-green-600' }}"
+            >
+
+
+            @error('totalPagar')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        {{-- METODO DE PAGO --}}
+        <div>
+            <label class="font-semibold text-gray-700">Método de pago</label>
+            <select wire:model="metodoPago"
+                class="w-full bg-gray-100 rounded-xl px-4 py-2
+                    {{ $errors->has('metodoPago') ? 'border-red-500' : 'border-green-600' }}">
+                <option value="">-- Seleccionar --</option>
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta</option>
+                <option value="transferencia">Transferencia</option>
+            </select>
+
+            @error('metodoPago')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="text-center pt-4">
+            <button wire:click="generarComprobante"
                 class="bg-green-600 hover:bg-green-500 text-white px-8 py-2 rounded-full font-bold shadow">
-                Continuar
+                Generar comprobante PDF
             </button>
         </div>
 
+        @if ($comprobantePdf)
+        <div class="mt-6 p-4 bg-green-50 border border-green-300 rounded-xl text-center">
+            <p class="font-semibold text-green-700">Comprobante generado correctamente</p>
+
+            <a href="{{ asset($comprobantePdf) }}" download
+                class="mt-3 inline-block bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-full font-bold shadow">
+                Descargar comprobante
+            </a>
+        </div>
+        @endif
+
     </div>
-    @endif
+
+    <div class="flex justify-between mt-6">
+        <button wire:click="anterior" class="text-green-600 font-bold">← Volver</button>
+        <button wire:click="siguiente"
+            class="bg-green-600 hover:bg-green-500 text-white px-8 py-2 rounded-full font-bold shadow">
+            Continuar
+        </button>
+    </div>
+
+</div>
+@endif
+
 
     @if ($pasoActual == 4)
     <div class="space-y-8">
@@ -341,7 +329,9 @@
             Detalles de la reserva
         </h2>
 
-        {{-- Cancha --}}
+        {{-- ======================= --}}
+        {{-- SECCIÓN CANCHA --}}
+        {{-- ======================= --}}
         <div class="space-y-2">
             <h3 class="text-xl font-bold text-green-600">Detalles de la cancha</h3>
 
@@ -352,7 +342,9 @@
             <p><b>Duración:</b> {{ $duracion }} h</p>
         </div>
 
-        {{-- Cliente --}}
+        {{-- ======================= --}}
+        {{-- SECCIÓN CLIENTE --}}
+        {{-- ======================= --}}
         <div class="space-y-2 pt-4">
             <h3 class="text-xl font-bold text-green-600">Detalles del cliente</h3>
 
@@ -363,7 +355,9 @@
             <p><b>Equipo:</b> {{ $equipo ?: '—' }}</p>
         </div>
 
-        {{-- Pago y estado --}}
+        {{-- ======================= --}}
+        {{-- SECCIÓN PAGO Y ESTADO --}}
+        {{-- ======================= --}}
         <div class="space-y-2 pt-4">
             <h3 class="text-xl font-bold text-green-600">Detalles del pago y estado</h3>
 

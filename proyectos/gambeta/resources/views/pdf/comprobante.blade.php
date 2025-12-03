@@ -74,14 +74,16 @@
     }
 
     .total-box {
-        text-align: right;
         margin-top: 25px;
-        padding: 12px;
+        padding: 15px;
         background: #e8f5ee;
         border-left: 4px solid #056839;
-        font-size: 18px;
-        font-weight: bold;
+        font-size: 16px;
         color: #056839;
+    }
+
+    .total-box div {
+        margin-bottom: 6px;
     }
 
     .footer {
@@ -132,8 +134,26 @@
     </tr>
 </table>
 
+<h2>Resumen de Pago</h2>
 <div class="total-box">
-    Total Pagado: ${{ number_format($total, 2) }}
+
+    <div><strong>Estado del Pago:</strong> {{ ucfirst($estadoPago) }}</div>
+
+    <div><strong>Total de la Reserva:</strong> ${{ number_format($total, 2) }}</div>
+
+    <div>
+        <strong>Adelanto Recibido:</strong>
+        @if($estadoPago === 'pagado')
+            ${{ number_format($total, 2) }}
+        @elseif($estadoPago === 'adelanto')
+            ${{ number_format($adelanto, 2) }}
+        @else
+            $0.00
+        @endif
+    </div>
+
+    <div><strong>Total a Pagar (Factura):</strong> ${{ number_format($totalPagar, 2) }}</div>
+
 </div>
 
 <div class="footer">
