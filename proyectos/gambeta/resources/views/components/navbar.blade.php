@@ -30,9 +30,16 @@
         </li>
 
         <li>
-            <a href="{{ route('reservas.index') }}" 
+            <a href="{{ route('reservas.index') }}"
                class="hover:text-green-300 hover:underline decoration-green-300 underline-offset-8 transition">
                 Reservas
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ route('clientes.index') }}"
+               class="hover:text-green-300 hover:underline decoration-green-300 underline-offset-8 transition">
+                Clientes
             </a>
         </li>
 
@@ -63,6 +70,7 @@
                 <li><a href="{{ route('inicio') }}" class="hover:bg-[#0b5c41] rounded-lg">Inicio</a></li>
                 <li><a href="{{ route('estadios.index') }}" class="hover:bg-[#0b5c41] rounded-lg">Estadios</a></li>
                 <li><a href="{{ route('reservas.index') }}" class="hover:bg-[#0b5c41] rounded-lg">Reservas</a></li>
+                <li><a href="{{ route('clientes.index') }}" class="hover:bg-[#0b5c41] rounded-lg">Clientes</a></li>
 
                 @if(auth()->user()->isAdmin())
                 <li><a href="{{ route('admin.index') }}" class="hover:bg-[#0b5c41] rounded-lg">Administración</a></li>

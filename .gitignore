@@ -30,3 +30,7 @@ proyectos/gambeta/.phpunit.result.cache
 !proyectos/gambeta/storage/app/.gitkeep
 !proyectos/gambeta/storage/framework/.gitkeep
 !proyectos/gambeta/storage/logs/.gitkeep
+
+
+IMPLEMENTACION_CLIENTES_FRECUENTES.md
+MANUAL_clientes_frecuentes.sql
