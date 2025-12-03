@@ -350,7 +350,6 @@
                         @php
                             $imagenPath = $cancha->imagen_url ? ltrim($cancha->imagen_url, '/') : null;
                         @endphp
-                        <div class="bg-white border border-green-100 rounded-xl p-4 shadow-lg hover:shadow-xl hover:border-green-200 transition-all">
                         <div class="bg-emerald-950/60 border border-emerald-800 rounded-xl p-4 shadow-xl"
                             data-cancha-card
                             data-cancha-nombre="{{ mb_strtolower($cancha->nombre ?? '') }}"
@@ -358,9 +357,9 @@
                             <div class="flex items-start gap-4">
                                 @if ($imagenPath)
                                     <img src="{{ asset($imagenPath) }}" alt="Imagen de {{ $cancha->nombre }}"
-                                        class="h-20 w-28 rounded-lg border border-slate-800 object-cover shadow flex-shrink-0">
+                                        class="h-20 w-28 rounded-lg border border-emerald-800 object-cover shadow flex-shrink-0">
                                 @else
-                                    <div class="h-20 w-28 rounded-lg border border-slate-800 bg-slate-900 flex items-center justify-center flex-shrink-0">
+                                    <div class="h-20 w-28 rounded-lg border border-emerald-800 bg-emerald-900 flex items-center justify-center flex-shrink-0">
                                         <span class="text-xs text-emerald-500">Sin imagen</span>
                                     </div>
                                 @endif
@@ -389,7 +388,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-800">
+                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-emerald-800">
                                 <div class="font-semibold text-emerald-400">
                                     ${{ number_format($cancha->precio_hora, 2, '.', ',') }}<span class="text-xs text-emerald-400">/hora</span>
                                 </div>
@@ -424,7 +423,7 @@
                         </div>
                     @endforelse
                     @if ($canchas->isNotEmpty())
-                        <div class="hidden rounded-xl border border-slate-800 bg-slate-950/60 p-6 text-center text-emerald-400"
+                        <div class="hidden rounded-xl border border-emerald-800 bg-emerald-950/60 p-6 text-center text-emerald-400"
                             data-cancha-empty-mobile>
                             No se encontraron canchas que coincidan con los filtros aplicados.
                         </div>
@@ -437,7 +436,7 @@
         <div id="modal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-4 sm:py-8">
             <div
-                class="relative w-full max-w-5xl border border-slate-800 bg-slate-950/95 p-4 sm:p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+                class="relative w-full max-w-5xl border border-emerald-800 bg-emerald-950/95 p-4 sm:p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
                 <button type="button" data-modal-close
                     class="absolute top-2 right-2 sm:top-4 sm:right-4 bg-blue-500 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full shadow-lg flex items-center justify-center text-xl sm:text-2xl font-bold hover:bg-red-500 transition">
                     ✕
@@ -445,7 +444,7 @@
 
                 <div class="space-y-4 sm:space-y-6 text-white">
                     <div>
-                        <p class="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-blue-300">Nueva cancha</p>
+                        <p class="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-emerald-300">Nueva cancha</p>
                         <h2 class="text-xl sm:text-2xl font-semibold">Registrar una cancha</h2>
                         <p class="text-emerald-400 text-xs sm:text-sm">Configura los datos básicos para que pueda reservarse en el
                             sistema.</p>
@@ -550,7 +549,7 @@
                 class="edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-4 sm:py-8"
                 data-edit-modal data-open-default="{{ $rowIsEditing ? 'true' : 'false' }}">
                 <div
-                    class="relative w-full max-w-5xl border border-slate-800 bg-slate-950/95 p-4 sm:p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                    class="relative w-full max-w-5xl border border-emerald-800 bg-emerald-950/95 p-4 sm:p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                     <button type="button" data-edit-modal-close
                         class="absolute top-2 right-2 sm:top-4 sm:right-4 bg-blue-500 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full shadow-lg flex items-center justify-center text-xl sm:text-2xl font-bold hover:bg-red-500 transition">
                         ✕
@@ -558,7 +557,7 @@
 
                     <div class="space-y-4 sm:space-y-6">
                         <div>
-                            <p class="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-blue-300">Editar cancha</p>
+                            <p class="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-emerald-300">Editar cancha</p>
                             <h2 class="text-xl sm:text-2xl font-semibold">Actualizar {{ $cancha->nombre }}</h2>
                             <p class="text-emerald-400 text-xs sm:text-sm">Modifica la información y guarda los cambios.</p>
                         </div>
@@ -625,8 +624,8 @@
                                 @endif
                             </div>
 
-                            <div class="md:col-span-2 border-t border-slate-800 pt-4 mt-2">
-                                <h3 class="text-sm font-semibold mb-3 text-blue-300 uppercase tracking-widest">Galería de Imágenes</h3>
+                            <div class="md:col-span-2 border-t border-emerald-800 pt-4 mt-2">
+                                <h3 class="text-sm font-semibold mb-3 text-emerald-300 uppercase tracking-widest">Galería de Imágenes</h3>
 
                                 @if($cancha->imagenes->count() > 0)
                                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
@@ -850,7 +849,7 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800 bg-emerald-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-emerald-400 tracking-wide">
@@ -873,7 +872,7 @@
                                     $estadoColors = [
                                         'pendiente' => 'bg-amber-500/15 text-amber-300',
                                         'confirmada' => 'bg-emerald-500/15 text-emerald-300',
-                                        'finalizada' => 'bg-blue-500/15 text-blue-300',
+                                        'finalizada' => 'bg-blue-500/15 text-emerald-300',
                                         'cancelada' => 'bg-rose-500/15 text-rose-300',
                                     ];
                                     $estadoClass = $estadoColors[$reserva->estado] ?? 'bg-slate-500/20 text-slate-200';
@@ -948,7 +947,7 @@
                                     <td class="px-6 py-4">
                                         <div class="flex items-center justify-end gap-3 text-lg">
                                             <button type="button"
-                                                class="hover:text-blue-300 transition-colors"
+                                                class="hover:text-emerald-300 transition-colors"
                                                 data-reserva-edit-target="reserva-edit-modal-{{ $reserva->id }}"
                                                 title="Editar reserva">
                                                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -1013,15 +1012,15 @@
             <div id="reserva-edit-modal-{{ $reserva->id }}"
                 class="reserva-edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
                 data-reserva-edit-modal data-open-default="{{ $reservaRowEditing ? 'true' : 'false' }}">
-                <div class="relative w-full max-w-4xl border border-blue-500/30 bg-slate-950/95 p-6 md:p-8 shadow-2xl text-white max-h-[90vh] overflow-y-auto">
+                <div class="relative w-full max-w-4xl border border-emerald-800 bg-emerald-950/95 p-6 md:p-8 shadow-2xl text-white max-h-[90vh] overflow-y-auto">
                     <button type="button" data-reserva-edit-modal-close
-                        class="absolute top-3 right-3 bg-blue-600 hover:bg-red-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold transition">
+                        class="absolute top-3 right-3 bg-emerald-600 hover:bg-red-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold transition">
                         ✕
                     </button>
 
                     <div class="space-y-6">
                         <div>
-                            <p class="text-xs uppercase tracking-[0.3em] text-blue-300">Editar reserva</p>
+                            <p class="text-xs uppercase tracking-[0.3em] text-emerald-300">Editar reserva</p>
                             <h2 class="text-2xl font-semibold">Actualizar reserva #{{ $reserva->id }}</h2>
                             <p class="text-emerald-400 text-sm">Modifica las fechas, importes o el estado cuando sea necesario.</p>
                         </div>
@@ -1209,7 +1208,7 @@
                         </div>
                     </div>
 
-                    <div class="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+                    <div class="rounded-lg border border-emerald-800 bg-emerald-900/60 p-4">
                         <p class="text-sm text-emerald-400">Cliente</p>
                         <p class="text-lg font-semibold text-white" data-reserva-delete-name>—</p>
                         <p class="text-xs text-emerald-500" data-reserva-delete-id></p>
@@ -1282,7 +1281,7 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800 bg-emerald-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-emerald-400 tracking-wide">
@@ -1379,7 +1378,7 @@
         <div id="bloqueo-modal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-4 sm:py-8">
             <div
-                class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-4 sm:p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                class="relative w-full max-w-3xl border border-emerald-800 bg-emerald-950/95 p-4 sm:p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                 <button type="button" data-bloqueo-modal-close
                     class="absolute top-2 right-2 sm:top-4 sm:right-4 bg-emerald-500 text-slate-950 w-8 h-8 sm:w-10 sm:h-10 rounded-full shadow-lg flex items-center justify-center text-xl sm:text-2xl font-bold hover:bg-red-500 hover:text-white transition">
                     ✕
@@ -1481,7 +1480,7 @@
                 class="bloqueo-edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-4 sm:py-8"
                 data-bloqueo-edit-modal data-open-default="{{ $rowIsEditingBloqueo ? 'true' : 'false' }}">
                 <div
-                    class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-4 sm:p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                    class="relative w-full max-w-3xl border border-emerald-800 bg-emerald-950/95 p-4 sm:p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                     <button type="button" data-bloqueo-edit-modal-close
                         class="absolute top-2 right-2 sm:top-4 sm:right-4 bg-emerald-500 text-slate-950 w-8 h-8 sm:w-10 sm:h-10 rounded-full shadow-lg flex items-center justify-center text-xl sm:text-2xl font-bold hover:bg-red-500 hover:text-white transition">
                         ✕
@@ -1667,7 +1666,7 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800 bg-emerald-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-emerald-400 tracking-wide">
@@ -1794,7 +1793,7 @@
         <div id="precio-modal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div
-                class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                class="relative w-full max-w-3xl border border-emerald-800 bg-emerald-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                 <button type="button" data-precio-modal-close
                     class="absolute top-4 right-4 bg-amber-500 text-slate-950 w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 hover:text-white transition">
                     ✕
@@ -1903,7 +1902,7 @@
                 class="precio-edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
                 data-precio-edit-modal data-open-default="{{ $rowIsEditingPrecio ? 'true' : 'false' }}">
                 <div
-                    class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                    class="relative w-full max-w-3xl border border-emerald-800 bg-emerald-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                     <button type="button" data-precio-edit-modal-close
                         class="absolute top-4 right-4 bg-amber-500 text-slate-950 w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 hover:text-white transition">
                         ✕
@@ -2096,7 +2095,7 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800 bg-emerald-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-emerald-400 tracking-wide">
@@ -2202,7 +2201,7 @@
         <div id="usuario-modal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div
-                class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+                class="relative w-full max-w-3xl border border-emerald-800 bg-emerald-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
                 <button type="button" data-usuario-modal-close
                     class="absolute top-4 right-4 bg-emerald-600 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
                     ✕
@@ -2312,7 +2311,7 @@
                 class="usuario-edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
                 data-usuario-edit-modal data-open-default="{{ $usuarioRowEditing ? 'true' : 'false' }}">
                 <div
-                    class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                    class="relative w-full max-w-3xl border border-emerald-800 bg-emerald-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                     <button type="button" data-usuario-edit-modal-close
                         class="absolute top-4 right-4 bg-emerald-600 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
                         ✕
@@ -2444,7 +2443,7 @@
                         </div>
                     </div>
 
-                    <div class="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+                    <div class="rounded-lg border border-emerald-800 bg-emerald-900/60 p-4">
                         <p class="text-sm text-emerald-400">Usuario</p>
                         <p class="text-lg font-semibold text-white" data-usuario-delete-name>—</p>
                         <p class="text-xs text-emerald-500" data-usuario-delete-email>—</p>
