@@ -57,16 +57,37 @@
         <div>
             <label class="font-semibold text-gray-700">Cancha</label>
 
-            <select
-                wire:model.live="cancha"
-                class="w-full bg-gray-100 rounded-xl px-4 py-2
-                    {{ $errors->has('cancha') ? 'border-red-500' : 'border-green-600' }}">
-                <option value="">-- Seleccionar --</option>
+<div x-data="{ abierto: false }" class="relative">
 
-                @foreach($canchas as $c)
-                    <option value="{{ $c->id }}">{{ $c->nombre }}</option>
-                @endforeach
-            </select>
+    <!-- BOTÓN -->
+    <div 
+        class="w-full bg-white border border-green-300 rounded-xl px-4 py-3 shadow flex justify-between items-center cursor-pointer"
+        @click="abierto = !abierto"
+    >
+        <span class="text-gray-800">
+            {{ $canchaTitulo ?: 'Seleccione una cancha…' }}
+        </span>
+        <i class="fa-solid fa-chevron-down text-green-700"></i>
+    </div>
+
+    <!-- LISTA -->
+    <div 
+        x-show="abierto"
+        @click.outside="abierto = false"
+        class="absolute mt-2 w-full bg-white border border-green-300 rounded-xl shadow-xl z-50"
+    >
+        @foreach ($canchas as $c)
+            <div 
+                wire:click="$set('cancha', {{ $c->id }}); abierto = false"
+                class="px-4 py-2 cursor-pointer hover:bg-green-100 text-gray-800"
+            >
+                {{ $c->nombre }}
+            </div>
+        @endforeach
+    </div>
+
+</div>
+
 
             @error('cancha')
                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>

@@ -35,8 +35,7 @@
 
 </head>
 
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
-
+<body class="text-gray-900 min-h-screen flex flex-col  bg-gradient-to-b from-[#063b2b] via-[#0b5c41] to-[#167a52]">    
     <!-- NAVBAR -->
     @include('components.navbar')
 
@@ -46,10 +45,26 @@
         {{ $slot ?? '' }}
     </main>
 
-    <!-- FOOTER -->
-    <footer class="mt-16 bg-green-700 text-white text-center py-4">
-        &copy; 2025 Sistema Nacional de Estadios Deportivos — Todos los derechos reservados
-    </footer>
+<!-- FOOTER -->
+<footer class="mt-16 text-white py-6
+    bg-gradient-to-r from-[#01150f] via-[#022019] to-[#01150f]">
+
+    <div class="container mx-auto px-6 text-center">
+
+        <p class="text-sm opacity-90 font-semibold">
+            &copy; 2025 Sistema Nacional de Estadios Deportivos
+        </p>
+
+        <div class="w-24 h-[1px] bg-white/20 mx-auto my-4"></div>
+
+        <p class="text-xs opacity-70 tracking-wide uppercase">
+            Todos los derechos reservados
+        </p>
+
+    </div>
+</footer>
+
+
 
     <!-- SCRIPTS LIVEWIRE -->
     @livewireScripts

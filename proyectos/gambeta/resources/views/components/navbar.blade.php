@@ -1,4 +1,6 @@
-<nav class="navbar px-6 py-4 shadow-xl bg-green-700 backdrop-blur-xl border-b border-green-500/40">
+<nav class="navbar px-6 py-4 shadow-xl 
+            bg-gradient-to-r from-[#022019] via-[#063b2b] to-[#0b5c41]
+            backdrop-blur-xl border-b border-green-500/20">
 
     <!-- LOGO -->
     <div class="flex items-center gap-3">
@@ -34,7 +36,6 @@
             </a>
         </li>
 
-        {{-- Solo mostrar Administración si el usuario es admin --}}
         @if(auth()->user()->isAdmin())
         <li>
             <a href="{{ route('admin.index') }}" 
@@ -49,20 +50,22 @@
     <!-- MENÚ RESPONSIVE -->
     <div class="md:hidden">
         <div class="dropdown dropdown-end">
-            <label tabindex="0" class="mary-btn mary-btn-sm shadow-md bg-green-600 border-none hover:bg-green-500 text-white">
+            <label tabindex="0" 
+                class="mary-btn mary-btn-sm shadow-md 
+                       bg-[#0b5c41] hover:bg-[#167a52] border-none text-white transition">
                 <i class="fa-solid fa-bars text-xl"></i>
             </label>
 
             <ul tabindex="0" 
-                class="dropdown-content menu p-4 mt-3 shadow-xl bg-green-700 text-white rounded-xl w-52 z-[9999]">
+                class="dropdown-content menu p-4 mt-3 shadow-xl
+                       bg-[#063b2b] text-white rounded-xl w-52 z-[9999]">
 
-                <li><a href="{{ route('inicio') }}" class="hover:bg-green-500 rounded-lg">Inicio</a></li>
-                <li><a href="{{ route('estadios.index') }}" class="hover:bg-green-500 rounded-lg">Estadios</a></li>
-                <li><a href="{{ route('reservas.index') }}" class="hover:bg-green-500 rounded-lg">Reservas</a></li>
-                
-                {{-- Solo mostrar Administración si el usuario es admin --}}
+                <li><a href="{{ route('inicio') }}" class="hover:bg-[#0b5c41] rounded-lg">Inicio</a></li>
+                <li><a href="{{ route('estadios.index') }}" class="hover:bg-[#0b5c41] rounded-lg">Estadios</a></li>
+                <li><a href="{{ route('reservas.index') }}" class="hover:bg-[#0b5c41] rounded-lg">Reservas</a></li>
+
                 @if(auth()->user()->isAdmin())
-                <li><a href="{{ route('admin.index') }}" class="hover:bg-green-500 rounded-lg">Administración</a></li>
+                <li><a href="{{ route('admin.index') }}" class="hover:bg-[#0b5c41] rounded-lg">Administración</a></li>
                 @endif
 
             </ul>
@@ -74,7 +77,10 @@
         <span class="text-white text-sm">{{ auth()->user()->name }}</span>
         <form action="{{ route('admin.logout') }}" method="POST" class="inline">
             @csrf
-            <button type="submit" class="mary-btn mary-btn-circle shadow-lg bg-red-600 border-none hover:bg-red-500 hover:scale-110 transition" title="Cerrar sesión">
+            <button type="submit" 
+                class="mary-btn mary-btn-circle shadow-lg 
+                    bg-[#0b5c41] border-none hover:bg-[#167a52] hover:scale-110 transition"
+                title="Cerrar sesión">
                 <i class="fa-solid fa-sign-out-alt text-white text-xl"></i>
             </button>
         </form>
@@ -82,10 +88,11 @@
     @endauth
 
     @guest
-    <!-- ICONO USUARIO (para no logueados) -->
+    <!-- Usuario no logueado -->
     <div class="ml-6 hidden md:block">
         <a href="{{ route('login') }}">
-            <button class="mary-btn mary-btn-circle shadow-lg bg-green-600 border-none hover:bg-green-500 hover:scale-110 transition">
+            <button class="mary-btn mary-btn-circle shadow-lg
+                           bg-[#0b5c41] border-none hover:bg-[#167a52] hover:scale-110 transition">
                 <i class="fa-solid fa-user text-white text-xl"></i>
             </button>
         </a>
