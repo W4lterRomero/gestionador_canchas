@@ -79,7 +79,7 @@ class ReservaFlow extends Component
         if ($this->canchaObj) {
             $this->canchaTitulo = $this->canchaObj->nombre;
             $this->canchaImagen = asset($this->canchaObj->imagen_url);
-            $this->precioHora   = $this->canchaObj->precio_hora;
+            $this->precioHora   = $this->canchaObj->precioHoraVigente();
             $this->hora = null;
 
             $this->dispatch('reset-calendario');
