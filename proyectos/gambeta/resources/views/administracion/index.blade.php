@@ -31,9 +31,9 @@
 @endphp
 
 @section('content')
-<header class="bg-gradient-to-r from-slate-900 via-blue-800 to-blue-500 text-white p-8 shadow-xl">
+<header class="bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-600 text-white p-8 shadow-xl">
     <div class="flex flex-col gap-2">
-        <p class="text-sm uppercase tracking-[0.3em] text-blue-200">PANEL DE ADMINISTRADOR</p>
+        <p class="text-sm uppercase tracking-[0.3em] text-green-100">PANEL DE ADMINISTRADOR</p>
     </div>
 </header>
 {{-- NAVBAR --}}
@@ -48,7 +48,7 @@
                 data-default="true"
                 class="panel-tab flex items-center h-9 sm:h-10 leading-10 px-2 sm:px-4 rounded-md sm:mx-1 cursor-pointer
                            transition-colors duration-100
-                           bg-indigo-200 text-gray-900 shadow hover:bg-indigo-300">
+                           bg-emerald-200 text-emerald-900 shadow hover:bg-emerald-300">
                 <span class="text-xl">
                     {{-- Icono cancha --}}
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-900" viewBox="0 0 24 24"
@@ -176,7 +176,7 @@
 <div>
     <!-- SECCIÓN CANCHAS -->
     <section id="canchas" data-section="canchas" class="scroll-mt-32">
-        <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
+        <div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-5xl space-y-4">
                 <!-- ENCABEZADO + BOTÓN -->
                 <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
@@ -185,7 +185,7 @@
                     </div>
 
                     <button id="abrirModal" type="button"
-                        class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition whitespace-nowrap">
+                        class="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition whitespace-nowrap">
                         <span class="text-xl font-bold">+</span>
                         <span class="hidden xs:inline">AGREGAR</span>
                         <span class="xs:hidden">NUEVA</span>
@@ -193,9 +193,9 @@
                 </div>
 
                 <!-- VISTA DE TABLA (Desktop) -->
-                <div class="hidden md:block overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="hidden md:block overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
-                        <thead class="bg-slate-900/80">
+                        <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-slate-400 tracking-wide">
                                 <th class="px-6 py-3">Nombre</th>
                                 <th class="px-6 py-3">Tipo</th>
@@ -207,23 +207,23 @@
                             </tr>
                         </thead>
 
-                        <tbody class="divide-y divide-slate-800">
+                        <tbody class="divide-y divide-emerald-900/50">
                             @forelse ($canchas as $cancha)
                                 @php
                                     $rowIsEditing = (int) $editarCanchaId === $cancha->id;
                                     $imagenPath = $cancha->imagen_url ? ltrim($cancha->imagen_url, '/') : null;
                                 @endphp
-                                <tr class="hover:bg-slate-900/70 transition-colors">
-                                    <td class="px-6 py-4 font-semibold text-white">
+                                <tr class="hover:bg-emerald-900/40 transition-colors">
+                                    <td class="px-6 py-4 font-semibold text-gray-900">
                                         {{ $cancha->nombre }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="inline-flex items-center rounded-full bg-sky-500/10 text-sky-300 px-3 py-1 text-xs font-medium">
+                                        <span class="inline-flex items-center rounded-full bg-emerald-500/15 text-emerald-200 px-3 py-1 text-xs font-medium">
                                             {{ $cancha->tipo }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 max-w-xs">
-                                        <p class="text-sm text-slate-300">
+                                        <p class="text-sm text-gray-600">
                                             {{ $cancha->descripcion ?: 'Sin descripción registrada' }}
                                         </p>
                                     </td>
@@ -233,28 +233,28 @@
                                     <td class="px-6 py-4">
                                         @if ($imagenPath)
                                             <img src="{{ asset($imagenPath) }}" alt="Imagen de {{ $cancha->nombre }}"
-                                                class="h-16 w-24 rounded-lg border border-slate-800 object-cover shadow">
+                                                class="h-16 w-24 rounded-lg border border-gray-300 object-cover shadow">
                                         @else
-                                            <span class="text-xs font-mono text-slate-400">
+                                            <span class="text-xs font-mono text-gray-400">
                                                 Sin imagen
                                             </span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         @if ($cancha->activa)
-                                            <span class="inline-flex items-center justify-center bg-green-500/15 text-green-400 px-3 py-1 rounded-full text-xs font-medium">
+                                            <span class="inline-flex items-center justify-center bg-emerald-500/15 text-emerald-200 px-3 py-1 rounded-full text-xs font-medium">
                                                 Disponible
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center justify-center bg-red-500/10 text-red-300 px-3 py-1 rounded-full text-xs font-medium">
+                                            <span class="inline-flex items-center justify-center bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-medium">
                                                 Inactiva
                                             </span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="flex items-center justify-end gap-3 text-lg">
+                                        <div class="flex items-center justify-end gap-3 text-lg text-gray-600">
                                             <button type="button"
-                                                class="hover:text-blue-400 transition-colors edit-toggle"
+                                                class="hover:text-green-600 transition-colors edit-toggle"
                                                 data-edit-target="edit-modal-{{ $cancha->id }}"
                                                 title="Editar cancha">
                                                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -265,7 +265,7 @@
                                                 action="{{ route('admin.canchas.destroy', $cancha) }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="hover:text-red-400 transition-colors"
+                                                <button type="button" class="hover:text-red-600 transition-colors"
                                                     data-delete-target="delete-form-{{ $cancha->id }}" title="Eliminar">
                                                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                                                         <path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zm3-9h2v7H9V10zm4 0h2v7h-2v-7z" />
@@ -278,7 +278,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-6 py-10 text-center text-slate-400">
+                                    <td colspan="7" class="px-6 py-10 text-center text-gray-500">
                                         Aún no hay canchas registradas.
                                     </td>
                                 </tr>
@@ -293,7 +293,7 @@
                         @php
                             $imagenPath = $cancha->imagen_url ? ltrim($cancha->imagen_url, '/') : null;
                         @endphp
-                        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 shadow-xl">
+                        <div class="bg-white border border-green-100 rounded-xl p-4 shadow-lg hover:shadow-xl hover:border-green-200 transition-all">
                             <div class="flex items-start gap-4">
                                 @if ($imagenPath)
                                     <img src="{{ asset($imagenPath) }}" alt="Imagen de {{ $cancha->nombre }}"
@@ -456,7 +456,7 @@
                             <button type="button" data-modal-close
                                 class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">Cancelar</button>
                             <button type="submit"
-                                class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">Guardar
+                                class="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold transition">Guardar
                                 cancha</button>
                         </div>
                     </form>
@@ -594,7 +594,7 @@
                                 <button type="button" data-edit-modal-close
                                     class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">Cancelar</button>
                                 <button type="submit"
-                                    class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
+                                    class="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold transition">
                                     Guardar cambios
                                 </button>
                             </div>
@@ -651,7 +651,7 @@
                             Cancelar
                         </button>
                         <button type="button" data-feedback-close
-                            class="px-5 py-2 rounded-lg font-semibold transition bg-emerald-500 hover:bg-emerald-600 text-slate-900 {{ $isErrorFeedback ? 'hidden' : '' }}">
+                            class="px-5 py-2 rounded-lg font-semibold transition bg-green-600 hover:bg-green-700 text-slate-900 {{ $isErrorFeedback ? 'hidden' : '' }}">
                             Aceptar
                         </button>
                     </div>
@@ -701,7 +701,7 @@
 
     <!-- SECCIÓN CALENDARIO -->
     <section id="calendario" data-section="calendario" class="scroll-mt-32 hidden">
-        <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
+        <div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-6xl space-y-6">
                 <livewire:admin-calendar />
             </div>
@@ -710,21 +710,21 @@
 
     <!-- SECCIÓN RESERVAS -->
     <section id="reservas" data-section="reservas" class="scroll-mt-32 hidden">
-        <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
+        <div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-6xl space-y-4">
                 <div class="flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between">
                     <div>
                         <h1 class="text-lg sm:text-xl font-bold text-white">Reservas registradas</h1>
-                        <p class="text-xs sm:text-sm text-slate-400">Consulta el detalle de cada reserva creada en el sistema.</p>
+                        <p class="text-xs sm:text-sm text-gray-600">Consulta el detalle de cada reserva creada en el sistema.</p>
                     </div>
                     <div class="text-xs sm:text-sm text-slate-400">
                         Total: <span class="font-semibold text-white">{{ $reservas->count() }}</span>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
-                        <thead class="bg-slate-900/80">
+                        <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-slate-400 tracking-wide">
                                 <th class="px-6 py-3">Cancha</th>
                                 <th class="px-6 py-3">Cliente</th>
@@ -739,7 +739,7 @@
                                 <th class="px-6 py-3 text-right">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800">
+                        <tbody class="divide-y divide-emerald-900/50">
                             @forelse ($reservas as $reserva)
                                 @php
                                     $estadoColors = [
@@ -750,7 +750,7 @@
                                     ];
                                     $estadoClass = $estadoColors[$reserva->estado] ?? 'bg-slate-500/20 text-slate-200';
                                 @endphp
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-emerald-900/40 transition-colors">
                                     <td class="px-6 py-4">
                                         <p class="font-semibold text-white">
                                             {{ optional($reserva->cancha)->nombre ?? 'Cancha eliminada' }}
@@ -898,24 +898,24 @@
 
     <!-- SECCIÓN BLOQUEOS -->
     <section id="bloqueos" data-section="bloqueos" class="scroll-mt-32 hidden">
-        <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
+        <div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-5xl space-y-4">
                 <div class="flex flex-col gap-3 sm:gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 class="text-lg sm:text-xl font-bold text-white">Bloqueos programados</h1>
-                        <p class="text-xs sm:text-sm text-slate-400">Controla los horarios donde las canchas no estarán disponibles.</p>
+                        <p class="text-xs sm:text-sm text-gray-600">Controla los horarios donde las canchas no estarán disponibles.</p>
                     </div>
                     <button id="abrirBloqueoModal" type="button"
-                        class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold px-4 py-2 rounded-lg shadow-md transition whitespace-nowrap">
+                        class="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-slate-950 font-semibold px-4 py-2 rounded-lg shadow-md transition whitespace-nowrap">
                         <span class="text-xl font-bold">+</span>
                         <span class="hidden xs:inline">NUEVO BLOQUEO</span>
                         <span class="xs:hidden">NUEVO</span>
                     </button>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
-                        <thead class="bg-slate-900/80">
+                        <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-slate-400 tracking-wide">
                                 <th class="px-6 py-3">Cancha</th>
                                 <th class="px-6 py-3">Inicio</th>
@@ -925,9 +925,9 @@
                                 <th class="px-6 py-3 text-right">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800">
+                        <tbody class="divide-y divide-emerald-900/50">
                             @forelse ($bloqueos as $bloqueo)
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-emerald-900/40 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-white">{{ optional($bloqueo->cancha)->nombre ?? 'Cancha eliminada' }}</div>
                                         <div class="text-xs text-slate-500">ID #{{ $bloqueo->cancha_id }}</div>
@@ -1080,7 +1080,7 @@
                                 Cancelar
                             </button>
                             <button type="submit"
-                                class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold transition">
+                                class="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-slate-950 font-semibold transition">
                                 Guardar bloqueo
                             </button>
                         </div>
@@ -1184,7 +1184,7 @@
                                     Cancelar
                                 </button>
                                 <button type="submit"
-                                    class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold transition">
+                                    class="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-slate-950 font-semibold transition">
                                     Guardar cambios
                                 </button>
                             </div>
@@ -1238,24 +1238,24 @@
 
     <!-- SECCIÓN PRECIOS -->
     <section id="precios" data-section="precios" class="scroll-mt-32 hidden">
-        <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
+        <div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-5xl space-y-4">
                 <div class="flex flex-col gap-3 sm:gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 class="text-lg sm:text-xl font-bold text-white">Historial de precios por cancha</h1>
-                        <p class="text-xs sm:text-sm text-slate-400">Registra, edita o finaliza periodos de vigencia para cada cancha.</p>
+                        <p class="text-xs sm:text-sm text-gray-600">Registra, edita o finaliza periodos de vigencia para cada cancha.</p>
                     </div>
                     <button id="abrirPrecioModal" type="button"
-                        class="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold px-4 py-2 rounded-lg shadow-md transition whitespace-nowrap">
+                        class="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-slate-950 font-semibold px-4 py-2 rounded-lg shadow-md transition whitespace-nowrap">
                         <span class="text-xl font-bold">+</span>
                         <span class="hidden xs:inline">NUEVO PRECIO</span>
                         <span class="xs:hidden">NUEVO</span>
                     </button>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
-                        <thead class="bg-slate-900/80">
+                        <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-slate-400 tracking-wide">
                                 <th class="px-6 py-3">Cancha</th>
                                 <th class="px-6 py-3 text-right">Precio/Hora</th>
@@ -1265,7 +1265,7 @@
                                 <th class="px-6 py-3 text-right">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800">
+                        <tbody class="divide-y divide-emerald-900/50">
                             @forelse ($precios as $precio)
                                 @php
                                     $rowIsEditingPrecio = (int) $editarPrecioId === $precio->id;
@@ -1297,7 +1297,7 @@
                                         ];
                                     }
                                 @endphp
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-emerald-900/40 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-white">{{ optional($precio->cancha)->nombre ?? 'Cancha no disponible' }}</div>
                                         <div class="text-xs text-slate-500">ID #{{ $precio->cancha_id }}</div>
@@ -1455,7 +1455,7 @@
                                 Cancelar
                             </button>
                             <button type="submit"
-                                class="px-5 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold transition">
+                                class="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-slate-950 font-semibold transition">
                                 Guardar precio
                             </button>
                         </div>
@@ -1568,7 +1568,7 @@
                                     Cancelar
                                 </button>
                                 <button type="submit"
-                                    class="px-5 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold transition">
+                                    class="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-slate-950 font-semibold transition">
                                     Guardar cambios
                                 </button>
                             </div>
@@ -1622,7 +1622,7 @@
 
     <!-- SECCIÓN USUARIOS -->
     <section id="usuarios" data-section="usuarios" class="scroll-mt-32 hidden">
-        <div class="bg-slate-900 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
+        <div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 min-h-screen flex justify-center p-4 sm:p-6 md:p-10">
             <div class="w-full max-w-5xl space-y-4">
                 <div class="flex flex-col gap-3 sm:gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
@@ -1630,16 +1630,16 @@
                         <p class="text-xs sm:text-sm text-slate-400">Administra cuentas, roles y estados de acceso.</p>
                     </div>
                     <button id="abrirUsuarioModal" type="button"
-                        class="flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition whitespace-nowrap">
+                        class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition whitespace-nowrap">
                         <span class="text-xl font-bold">+</span>
                         <span class="hidden xs:inline">NUEVO USUARIO</span>
                         <span class="xs:hidden">NUEVO</span>
                     </button>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
-                        <thead class="bg-slate-900/80">
+                        <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-slate-400 tracking-wide">
                                 <th class="px-6 py-3">Usuario</th>
                                 <th class="px-6 py-3">Rol</th>
@@ -1648,19 +1648,19 @@
                                 <th class="px-6 py-3 text-right">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800">
+                        <tbody class="divide-y divide-emerald-900/50">
                             @forelse ($usuarios as $usuario)
                                 @php
                                     $rolLabel = optional($usuario->role)->description ?? optional($usuario->role)->name ?? 'Sin rol asignado';
                                     $isCurrentUser = auth()->id() === $usuario->id;
                                 @endphp
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-emerald-900/40 transition-colors">
                                     <td class="px-6 py-4">
                                         <p class="font-semibold text-white">{{ $usuario->name }}</p>
                                         <p class="text-xs text-slate-400">{{ $usuario->email }}</p>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="inline-flex items-center rounded-full bg-indigo-500/10 text-indigo-200 px-3 py-1 text-xs font-medium">
+                                        <span class="inline-flex items-center rounded-full bg-emerald-500/10 text-emerald-200 px-3 py-1 text-xs font-medium">
                                             {{ ucfirst($rolLabel) }}
                                         </span>
                                     </td>
@@ -1684,7 +1684,7 @@
                                     <td class="px-6 py-4">
                                         <div class="flex items-center justify-end gap-3 text-lg">
                                             <button type="button"
-                                                class="hover:text-indigo-300 transition-colors"
+                                                class="hover:text-emerald-300 transition-colors"
                                                 data-usuario-edit-target="usuario-edit-modal-{{ $usuario->id }}"
                                                 title="Editar usuario">
                                                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -1734,13 +1734,13 @@
             <div
                 class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
                 <button type="button" data-usuario-modal-close
-                    class="absolute top-4 right-4 bg-indigo-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
+                    class="absolute top-4 right-4 bg-emerald-600 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
                     ✕
                 </button>
 
                 <div class="space-y-6 text-white">
                     <div>
-                        <p class="text-sm uppercase tracking-[0.3em] text-indigo-300">Nuevo usuario</p>
+                        <p class="text-sm uppercase tracking-[0.3em] text-emerald-300">Nuevo usuario</p>
                         <h2 class="text-2xl font-semibold">Registrar cuenta</h2>
                         <p class="text-slate-400 text-sm">Define los datos básicos y el rol que tendrá dentro del sistema.</p>
                     </div>
@@ -1751,7 +1751,7 @@
                         <div>
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre completo</label>
                             <input type="text" name="name" value="{{ old('name') }}"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                             @error('name', 'crearUsuario')
                                 <p class="text-xs text-rose-300 mt-1">{{ $message }}</p>
@@ -1762,7 +1762,7 @@
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Correo electrónico</label>
                             <input type="email" name="email" value=""
                                 autocomplete="off"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                             @error('email', 'crearUsuario')
                                 <p class="text-xs text-rose-300 mt-1">{{ $message }}</p>
@@ -1772,7 +1772,7 @@
                         <div>
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Rol</label>
                             <select name="role_id"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                                 <option value="">Selecciona un rol</option>
                                 @foreach ($roles as $rol)
@@ -1790,7 +1790,7 @@
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Contraseña</label>
                             <input type="password" name="password"
                                 autocomplete="new-password"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                             @error('password', 'crearUsuario')
                                 <p class="text-xs text-rose-300 mt-1">{{ $message }}</p>
@@ -1803,7 +1803,7 @@
                         <div class="md:col-span-2 flex items-center gap-3">
                             <input type="hidden" name="activo" value="0">
                             <input type="checkbox" id="usuario_activo_create" name="activo" value="1"
-                                class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-indigo-500 focus:ring-indigo-500"
+                                class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-emerald-500 focus:ring-emerald-500"
                                 {{ old('activo', 1) ? 'checked' : '' }}>
                             <label for="usuario_activo_create" class="text-xs uppercase tracking-widest text-slate-400">
                                 Usuario activo
@@ -1819,7 +1819,7 @@
                             <button type="button" data-usuario-modal-close
                                 class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">Cancelar</button>
                             <button type="submit"
-                                class="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-semibold transition">
+                                class="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-emerald-700 text-white font-semibold transition">
                                 Guardar usuario
                             </button>
                         </div>
@@ -1844,13 +1844,13 @@
                 <div
                     class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                     <button type="button" data-usuario-edit-modal-close
-                        class="absolute top-4 right-4 bg-indigo-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
+                        class="absolute top-4 right-4 bg-emerald-600 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
                         ✕
                     </button>
 
                     <div class="space-y-6">
                         <div>
-                            <p class="text-sm uppercase tracking-[0.3em] text-indigo-300">Editar usuario</p>
+                            <p class="text-sm uppercase tracking-[0.3em] text-emerald-300">Editar usuario</p>
                             <h2 class="text-2xl font-semibold">Actualizar {{ $usuario->name }}</h2>
                             <p class="text-slate-400 text-sm">Modifica los datos necesarios y guarda los cambios.</p>
                         </div>
@@ -1862,7 +1862,7 @@
                             <div>
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre completo</label>
                                 <input type="text" name="name" value="{{ $editUsuarioNombre }}"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
                                 @if ($usuarioRowEditing && $usuarioEditErrors?->has('name'))
                                     <p class="text-xs text-rose-300 mt-1">{{ $usuarioEditErrors->first('name') }}</p>
@@ -1872,7 +1872,7 @@
                             <div>
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Correo electrónico</label>
                                 <input type="email" name="email" value="{{ $editUsuarioCorreo }}"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
                                 @if ($usuarioRowEditing && $usuarioEditErrors?->has('email'))
                                     <p class="text-xs text-rose-300 mt-1">{{ $usuarioEditErrors->first('email') }}</p>
@@ -1882,7 +1882,7 @@
                             <div>
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Rol</label>
                                 <select name="role_id"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
                                     <option value="">Selecciona un rol</option>
                                     @foreach ($roles as $rol)
@@ -1900,7 +1900,7 @@
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Contraseña</label>
                                 <input type="password" name="password" value=""
                                     autocomplete="new-password"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                     placeholder="Dejar en blanco para mantener">
                             @if ($usuarioRowEditing && $usuarioEditErrors?->has('password'))
                                 <p class="text-xs text-rose-300 mt-1">{{ $usuarioEditErrors->first('password') }}</p>
@@ -1914,7 +1914,7 @@
                                 <div class="flex items-center gap-3">
                                     <input type="hidden" name="activo" value="{{ $isCurrentUser ? (int) $editUsuarioActivo : 0 }}">
                                     <input type="checkbox" id="usuario_activo_{{ $usuario->id }}" name="activo" value="1"
-                                        class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-indigo-500 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-emerald-500 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
                                         {{ $editUsuarioActivo ? 'checked' : '' }} {{ $isCurrentUser ? 'disabled' : '' }}>
                                     <label for="usuario_activo_{{ $usuario->id }}"
                                         class="text-xs uppercase tracking-widest text-slate-400">Usuario activo</label>
@@ -1935,7 +1935,7 @@
                                 <button type="button" data-usuario-edit-modal-close
                                     class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">Cancelar</button>
                                 <button type="submit"
-                                    class="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-semibold transition">
+                                    class="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-emerald-700 text-white font-semibold transition">
                                     Guardar cambios
                                 </button>
                             </div>
