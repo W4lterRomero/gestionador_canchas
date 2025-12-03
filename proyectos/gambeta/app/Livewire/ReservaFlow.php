@@ -79,7 +79,7 @@ class ReservaFlow extends Component
         if ($this->canchaObj) {
             $this->canchaTitulo = $this->canchaObj->nombre;
             $this->canchaImagen = asset($this->canchaObj->imagen_url);
-            $this->precioHora   = $this->canchaObj->precio_hora;
+            $this->precioHora   = $this->canchaObj->precioHoraVigente();
             $this->hora = null;
 
             $this->dispatch('reset-calendario');
@@ -232,7 +232,14 @@ class ReservaFlow extends Component
 
     public function getTotalProperty()
     {
-        return round(($this->duracion * $this->precioHora), 2);
+        $duracion = $this->obtenerDuracionHoras();
+        if ($duracion === null) {
+            return 0.00;
+        }
+
+        $precio = is_numeric($this->precioHora) ? (float) $this->precioHora : 0.00;
+
+        return round(($duracion * $precio), 2);
     }
 
 public function generarComprobante()
@@ -325,6 +332,13 @@ private function guardarReserva()
     $this->validarPasoActual();
     $this->asegurarHorarioDisponible();
 
+    $duracionHoras = $this->obtenerDuracionHoras();
+    if ($duracionHoras === null) {
+        throw ValidationException::withMessages([
+            'duracion' => 'Debes ingresar una duración válida.',
+        ]);
+    }
+
     $cliente = Cliente::firstOrCreate(
         ['telefono' => $this->telefono],
         [
@@ -334,9 +348,9 @@ private function guardarReserva()
     );
 
     $inicio = Carbon::parse($this->fecha . ' ' . $this->hora, 'America/El_Salvador');
-    $fin = $inicio->copy()->addHours($this->duracion);
+    $fin = $inicio->copy()->addHours($duracionHoras);
 
-    $duracionMin = $this->duracion * 60;
+    $duracionMin = (int) round($duracionHoras * 60);
 
     Reserva::create([
         'cancha_id'        => $this->cancha,
@@ -359,12 +373,18 @@ private function guardarReserva()
 
 private function asegurarHorarioDisponible(): void
 {
-    if (! $this->cancha || ! $this->fecha || ! $this->hora || ! $this->duracion) {
+    if (! $this->cancha || ! $this->fecha || ! $this->hora) {
+        return;
+    }
+
+    $duracionHoras = $this->obtenerDuracionHoras();
+
+    if ($duracionHoras === null || $duracionHoras <= 0) {
         return;
     }
 
     $inicio = Carbon::parse($this->fecha . ' ' . $this->hora, 'America/El_Salvador');
-    $fin = $inicio->copy()->addHours($this->duracion);
+    $fin = $inicio->copy()->addHours($duracionHoras);
 
     $conflictoBloqueo = BloqueoHorario::query()
         ->where('cancha_id', $this->cancha)
@@ -418,5 +438,14 @@ public function validarAdelanto()
         $this->adelanto = number_format((float)$this->adelanto, 2, '.', '');
     }
 }
+
+    private function obtenerDuracionHoras(): ?float
+    {
+        if ($this->duracion === null || $this->duracion === '') {
+            return null;
+        }
+
+        return is_numeric($this->duracion) ? (float) $this->duracion : null;
+    }
 
 }
