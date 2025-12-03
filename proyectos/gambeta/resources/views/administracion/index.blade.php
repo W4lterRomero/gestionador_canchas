@@ -208,27 +208,27 @@
                     </button>
                 </div>
 
-                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 shadow-2xl">
+                <div class="bg-emerald-950/60 border border-emerald-800 rounded-2xl p-4 shadow-2xl">
                     <div class="flex flex-col gap-4 md:flex-row md:items-end">
                         <div class="flex-1">
-                            <label for="cancha-search" class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por nombre</label>
+                            <label for="cancha-search" class="text-xs uppercase tracking-[0.3em] text-emerald-400">Buscar por nombre</label>
                             <div class="relative mt-1">
-                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-emerald-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35m0 0A7 7 0 1 0 6.5 6.5a7 7 0 0 0 10.15 10.15z" />
                                     </svg>
                                 </span>
                                 <input id="cancha-search" type="search" placeholder="Ej. Arena Indoor"
-                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full rounded-xl border border-emerald-700 bg-emerald-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                     data-cancha-search>
                             </div>
                         </div>
 
                         <div class="w-full md:w-64">
-                            <label for="cancha-type-filter" class="text-xs uppercase tracking-[0.3em] text-slate-400">Filtrar por tipo</label>
+                            <label for="cancha-type-filter" class="text-xs uppercase tracking-[0.3em] text-emerald-400">Filtrar por tipo</label>
                             <select id="cancha-type-filter"
-                                class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="mt-1 w-full rounded-xl border border-emerald-700 bg-emerald-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 data-cancha-type-filter>
                                 <option value="">Todos los tipos</option>
                                 @foreach ($canchaTipos as $tipo)
@@ -243,7 +243,7 @@
                 <div class="hidden md:block overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-emerald-950/60">
-                            <tr class="uppercase text-xs text-slate-400 tracking-wide">
+                            <tr class="uppercase text-xs text-emerald-400 tracking-wide">
                                 <th class="px-6 py-3">Nombre</th>
                                 <th class="px-6 py-3">Tipo</th>
                                 <th class="px-6 py-3">Descripción</th>
@@ -260,9 +260,7 @@
                                     $rowIsEditing = (int) $editarCanchaId === $cancha->id;
                                     $imagenPath = $cancha->imagen_url ? ltrim($cancha->imagen_url, '/') : null;
                                 @endphp
-                                <tr class="hover:bg-emerald-900/40 transition-colors">
-                                    <td class="px-6 py-4 font-semibold text-gray-900">
-                                <tr class="hover:bg-slate-900/70 transition-colors"
+                                <tr class="hover:bg-emerald-900/40 transition-colors"
                                     data-cancha-row
                                     data-cancha-nombre="{{ mb_strtolower($cancha->nombre ?? '') }}"
                                     data-cancha-tipo="{{ mb_strtolower($cancha->tipo ?? '') }}">
@@ -337,7 +335,7 @@
                             @endforelse
                             @if ($canchas->isNotEmpty())
                                 <tr class="hidden" data-cancha-empty-row>
-                                    <td colspan="7" class="px-6 py-10 text-center text-slate-400">
+                                    <td colspan="7" class="px-6 py-10 text-center text-emerald-400">
                                         No se encontraron canchas que coincidan con los filtros aplicados.
                                     </td>
                                 </tr>
@@ -353,7 +351,7 @@
                             $imagenPath = $cancha->imagen_url ? ltrim($cancha->imagen_url, '/') : null;
                         @endphp
                         <div class="bg-white border border-green-100 rounded-xl p-4 shadow-lg hover:shadow-xl hover:border-green-200 transition-all">
-                        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 shadow-xl"
+                        <div class="bg-emerald-950/60 border border-emerald-800 rounded-xl p-4 shadow-xl"
                             data-cancha-card
                             data-cancha-nombre="{{ mb_strtolower($cancha->nombre ?? '') }}"
                             data-cancha-tipo="{{ mb_strtolower($cancha->tipo ?? '') }}">
@@ -363,7 +361,7 @@
                                         class="h-20 w-28 rounded-lg border border-slate-800 object-cover shadow flex-shrink-0">
                                 @else
                                     <div class="h-20 w-28 rounded-lg border border-slate-800 bg-slate-900 flex items-center justify-center flex-shrink-0">
-                                        <span class="text-xs text-slate-500">Sin imagen</span>
+                                        <span class="text-xs text-emerald-500">Sin imagen</span>
                                     </div>
                                 @endif
 
@@ -385,7 +383,7 @@
                                         {{ $cancha->tipo }}
                                     </span>
 
-                                    <p class="text-xs text-slate-400 mt-2 line-clamp-2">
+                                    <p class="text-xs text-emerald-400 mt-2 line-clamp-2">
                                         {{ $cancha->descripcion ?: 'Sin descripción registrada' }}
                                     </p>
                                 </div>
@@ -393,7 +391,7 @@
 
                             <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-800">
                                 <div class="font-semibold text-emerald-400">
-                                    ${{ number_format($cancha->precio_hora, 2, '.', ',') }}<span class="text-xs text-slate-400">/hora</span>
+                                    ${{ number_format($cancha->precio_hora, 2, '.', ',') }}<span class="text-xs text-emerald-400">/hora</span>
                                 </div>
 
                                 <div class="flex items-center gap-3">
@@ -421,12 +419,12 @@
                             </div>
                         </div>
                     @empty
-                        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-8 text-center text-slate-400">
+                        <div class="bg-emerald-950/60 border border-emerald-800 rounded-xl p-8 text-center text-emerald-400">
                             Aún no hay canchas registradas.
                         </div>
                     @endforelse
                     @if ($canchas->isNotEmpty())
-                        <div class="hidden rounded-xl border border-slate-800 bg-slate-950/60 p-6 text-center text-slate-400"
+                        <div class="hidden rounded-xl border border-slate-800 bg-slate-950/60 p-6 text-center text-emerald-400"
                             data-cancha-empty-mobile>
                             No se encontraron canchas que coincidan con los filtros aplicados.
                         </div>
@@ -449,7 +447,7 @@
                     <div>
                         <p class="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-blue-300">Nueva cancha</p>
                         <h2 class="text-xl sm:text-2xl font-semibold">Registrar una cancha</h2>
-                        <p class="text-slate-400 text-xs sm:text-sm">Configura los datos básicos para que pueda reservarse en el
+                        <p class="text-emerald-400 text-xs sm:text-sm">Configura los datos básicos para que pueda reservarse en el
                             sistema.</p>
                     </div>
 
@@ -458,9 +456,9 @@
                         @csrf
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Nombre</label>
                             <input type="text" name="nombre" value="{{ old('nombre') }}"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                             @error('nombre', 'crearCancha')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -468,9 +466,9 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Tipo</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Tipo</label>
                             <select name="tipo"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                                 <option value="" disabled {{ old('tipo') ? '' : 'selected' }}>Selecciona un tipo</option>
                                 <option value="Arena Indoor" {{ old('tipo') === 'Arena Indoor' ? 'selected' : '' }}>Arena Indoor</option>
@@ -483,9 +481,9 @@
                         </div>
 
                         <div class="md:col-span-2">
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Descripción</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Descripción</label>
                             <textarea name="descripcion" rows="3"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 placeholder="Cuenta qué hace especial a la cancha">{{ old('descripcion') }}</textarea>
                             @error('descripcion', 'crearCancha')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -493,9 +491,9 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Precio por hora</label>
                             <input type="number" name="precio_hora" min="0" step="0.01" value="{{ old('precio_hora') }}"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                             @error('precio_hora', 'crearCancha')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -503,9 +501,9 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Imagen</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Imagen</label>
                             <input type="file" name="imagen" accept="image/*"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm file:bg-slate-800 file:text-slate-200 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm file:bg-slate-800 file:text-slate-200 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                             @error('imagen', 'crearCancha')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -515,9 +513,9 @@
                         <div class="flex items-center gap-3">
                             <input type="hidden" name="activa" value="0">
                             <input type="checkbox" id="modal_activa" name="activa" value="1"
-                                class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-blue-500 focus:ring-blue-500"
+                                class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-blue-500 focus:ring-emerald-500"
                                 {{ old('activa') ? 'checked' : '' }}>
-                            <label for="modal_activa" class="text-xs uppercase tracking-widest text-slate-400">Activa para
+                            <label for="modal_activa" class="text-xs uppercase tracking-widest text-emerald-400">Activa para
                                 reservas</label>
                         </div>
                         @error('activa', 'crearCancha')
@@ -562,7 +560,7 @@
                         <div>
                             <p class="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-blue-300">Editar cancha</p>
                             <h2 class="text-xl sm:text-2xl font-semibold">Actualizar {{ $cancha->nombre }}</h2>
-                            <p class="text-slate-400 text-xs sm:text-sm">Modifica la información y guarda los cambios.</p>
+                            <p class="text-emerald-400 text-xs sm:text-sm">Modifica la información y guarda los cambios.</p>
                         </div>
 
                         <form method="POST" action="{{ route('admin.canchas.update', $cancha) }}" enctype="multipart/form-data"
@@ -570,18 +568,18 @@
                             @csrf
                             @method('PUT')
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Nombre</label>
                                 <input type="text" name="nombre" value="{{ $editNombre }}"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
                                 @if ($rowIsEditing && $errors->editarCancha->has('nombre'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('nombre') }}</p>
                                 @endif
                             </div>
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Tipo</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Tipo</label>
                                 <select name="tipo"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
                                     <option value="" disabled {{ $editTipo ? '' : 'selected' }}>Selecciona un tipo</option>
                                     <option value="Arena Indoor" {{ $editTipo === 'Arena Indoor' ? 'selected' : '' }}>Arena Indoor</option>
@@ -593,35 +591,35 @@
                                 @endif
                             </div>
                             <div class="md:col-span-2">
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Descripción</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Descripción</label>
                                 <textarea name="descripcion" rows="3"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500">{{ $editDescripcion }}</textarea>
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500">{{ $editDescripcion }}</textarea>
                                 @if ($rowIsEditing && $errors->editarCancha->has('descripcion'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('descripcion') }}</p>
                                 @endif
                             </div>
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Precio por hora</label>
                                 <input type="number" min="0" step="0.01" name="precio_hora" value="{{ $editPrecio }}"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
                                 @if ($rowIsEditing && $errors->editarCancha->has('precio_hora'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('precio_hora') }}</p>
                                 @endif
                             </div>
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Imagen actual</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Imagen actual</label>
                                 @if ($cancha->imagen_url)
                                     <img src="{{ asset(ltrim($cancha->imagen_url, '/')) }}" alt="Imagen de {{ $cancha->nombre }}"
                                         class="h-20 w-32 rounded-lg border border-slate-700 object-cover">
                                 @else
-                                    <p class="text-xs text-slate-400">Sin imagen cargada.</p>
+                                    <p class="text-xs text-emerald-400">Sin imagen cargada.</p>
                                 @endif
                             </div>
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Actualizar imagen</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Actualizar imagen</label>
                                 <input type="file" name="imagen" accept="image/*"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm file:bg-slate-800 file:text-slate-200 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-blue-500">
+                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm file:bg-slate-800 file:text-slate-200 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-emerald-500">
                                 @if ($rowIsEditing && $errors->editarCancha->has('imagen'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('imagen') }}</p>
                                 @endif
@@ -646,23 +644,23 @@
                                         @endforeach
                                     </div>
                                 @else
-                                    <p class="text-xs text-slate-500 mb-4 italic">No hay imágenes adicionales en la galería.</p>
+                                    <p class="text-xs text-emerald-500 mb-4 italic">No hay imágenes adicionales en la galería.</p>
                                 @endif
 
                                 <div>
-                                    <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Agregar más fotos</label>
+                                    <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Agregar más fotos</label>
                                     <input type="file" name="imagenes_galeria[]" multiple accept="image/*"
-                                        class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm file:bg-slate-800 file:text-slate-200 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-blue-500">
-                                    <p class="text-xs text-slate-500 mt-1">Puedes seleccionar varias imágenes a la vez (Ctrl + Click).</p>
+                                        class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm file:bg-slate-800 file:text-slate-200 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-emerald-500">
+                                    <p class="text-xs text-emerald-500 mt-1">Puedes seleccionar varias imágenes a la vez (Ctrl + Click).</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <input type="hidden" name="activa" value="0">
                                 <input type="checkbox" id="modal_activa_{{ $cancha->id }}" name="activa" value="1"
-                                    class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-blue-500 focus:ring-blue-500"
+                                    class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-blue-500 focus:ring-emerald-500"
                                     {{ $editActiva ? 'checked' : '' }}>
                                 <label for="modal_activa_{{ $cancha->id }}"
-                                    class="text-xs uppercase tracking-widest text-slate-400">Activa para reservas</label>
+                                    class="text-xs uppercase tracking-widest text-emerald-400">Activa para reservas</label>
                             </div>
                             @if ($rowIsEditing && $errors->editarCancha->has('activa'))
                                 <div class="md:col-span-2 text-xs text-red-300">
@@ -697,7 +695,7 @@
             <div
                 class="relative w-full max-w-lg border {{ $isErrorFeedback ? 'border-red-500/40' : 'border-emerald-500/40' }} bg-slate-950/95 p-4 sm:p-6 shadow-2xl text-white">
                 <button type="button" data-feedback-close
-                    class="absolute top-2 right-2 sm:top-3 sm:right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    class="absolute top-2 right-2 sm:top-3 sm:right-3 text-emerald-400 hover:text-white transition" aria-label="Cerrar">
                     ✕
                 </button>
                 <div class="space-y-3 sm:space-y-4">
@@ -719,7 +717,7 @@
                             @endif
                         </div>
                         <div>
-                            <p class="text-sm uppercase tracking-[0.3em] text-slate-400">{{ $feedbackTitle }}</p>
+                            <p class="text-sm uppercase tracking-[0.3em] text-emerald-400">{{ $feedbackTitle }}</p>
                             <p class="text-lg font-semibold text-white">{{ $feedbackMessage }}</p>
                         </div>
                     </div>
@@ -742,7 +740,7 @@
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-4 sm:py-8">
             <div class="relative w-full max-w-lg border border-red-500/40 bg-slate-950/95 p-4 sm:p-6 shadow-2xl text-white">
                 <button type="button" data-delete-cancel
-                    class="absolute top-2 right-2 sm:top-3 sm:right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    class="absolute top-2 right-2 sm:top-3 sm:right-3 text-emerald-400 hover:text-white transition" aria-label="Cerrar">
                     ✕
                 </button>
                 <div class="space-y-3 sm:space-y-4">
@@ -796,19 +794,19 @@
                         <h1 class="text-lg sm:text-xl font-bold text-white">Reservas registradas</h1>
                         <p class="text-xs sm:text-sm text-gray-600">Consulta el detalle de cada reserva creada en el sistema.</p>
                     </div>
-                    <div class="text-xs sm:text-sm text-slate-400">
+                    <div class="text-xs sm:text-sm text-emerald-400">
                         Total: <span class="font-semibold text-white">{{ $reservas->count() }}</span>
                     </div>
                 </div>
 
                 <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
-                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 shadow-2xl">
+                <div class="bg-emerald-950/60 border border-emerald-800 rounded-2xl p-4 shadow-2xl">
                     <div class="grid gap-4 md:grid-cols-3">
                         <div>
                             <label for="reserva-cancha-search"
-                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por cancha</label>
+                                class="text-xs uppercase tracking-[0.3em] text-emerald-400">Buscar por cancha</label>
                             <div class="relative mt-1">
-                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-emerald-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -816,15 +814,15 @@
                                     </svg>
                                 </span>
                                 <input id="reserva-cancha-search" type="search" placeholder="Ej. Cancha Central"
-                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full rounded-xl border border-emerald-700 bg-emerald-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                     data-reserva-cancha-search>
                             </div>
                         </div>
 
                         <div>
-                            <label for="reserva-tipo-filter" class="text-xs uppercase tracking-[0.3em] text-slate-400">Filtrar por tipo</label>
+                            <label for="reserva-tipo-filter" class="text-xs uppercase tracking-[0.3em] text-emerald-400">Filtrar por tipo</label>
                             <select id="reserva-tipo-filter"
-                                class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="mt-1 w-full rounded-xl border border-emerald-700 bg-emerald-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 data-reserva-tipo-filter>
                                 <option value="">Todos los tipos</option>
                                 @foreach ($reservaTipos as $tipo)
@@ -835,9 +833,9 @@
 
                         <div>
                             <label for="reserva-cliente-search"
-                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por cliente</label>
+                                class="text-xs uppercase tracking-[0.3em] text-emerald-400">Buscar por cliente</label>
                             <div class="relative mt-1">
-                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-emerald-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -845,7 +843,7 @@
                                     </svg>
                                 </span>
                                 <input id="reserva-cliente-search" type="search" placeholder="Ej. Juan Pérez"
-                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full rounded-xl border border-emerald-700 bg-emerald-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                     data-reserva-cliente-search>
                             </div>
                         </div>
@@ -855,7 +853,7 @@
                 <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-emerald-950/60">
-                            <tr class="uppercase text-xs text-slate-400 tracking-wide">
+                            <tr class="uppercase text-xs text-emerald-400 tracking-wide">
                                 <th class="px-6 py-3">Cancha</th>
                                 <th class="px-6 py-3">Cliente</th>
                                 <th class="px-6 py-3">Fecha reserva</th>
@@ -880,8 +878,7 @@
                                     ];
                                     $estadoClass = $estadoColors[$reserva->estado] ?? 'bg-slate-500/20 text-slate-200';
                                 @endphp
-                                <tr class="hover:bg-emerald-900/40 transition-colors">
-                                <tr class="hover:bg-slate-900/70 transition-colors"
+                                <tr class="hover:bg-emerald-900/40 transition-colors"
                                     data-reserva-row
                                     data-reserva-cancha="{{ mb_strtolower(optional($reserva->cancha)->nombre ?? '') }}"
                                     data-reserva-tipo="{{ mb_strtolower(optional($reserva->cancha)->tipo ?? '') }}"
@@ -890,13 +887,13 @@
                                         <p class="font-semibold text-white">
                                             {{ optional($reserva->cancha)->nombre ?? 'Cancha eliminada' }}
                                         </p>
-                                        <p class="text-xs text-slate-500">Reserva #{{ $reserva->id }}</p>
+                                        <p class="text-xs text-emerald-500">Reserva #{{ $reserva->id }}</p>
                                     </td>
                                     <td class="px-6 py-4">
                                         <p class="font-semibold text-white">
                                             {{ optional($reserva->cliente)->nombre ?? 'Cliente no disponible' }}
                                         </p>
-                                        <p class="text-xs text-slate-400">
+                                        <p class="text-xs text-emerald-400">
                                             {{ optional($reserva->cliente)->telefono ?? optional($reserva->cliente)->email ?? '—' }}
                                         </p>
                                     </td>
@@ -936,7 +933,7 @@
                                         <p class="font-semibold text-white">
                                             {{ optional($reserva->creador)->name ?? 'Usuario no disponible' }}
                                         </p>
-                                        <p class="text-xs text-slate-400">
+                                        <p class="text-xs text-emerald-400">
                                             {{ optional($reserva->creador)->email ?? '—' }}
                                         </p>
                                     </td>
@@ -944,7 +941,7 @@
                                         <p class="font-semibold text-white">
                                             {{ optional($reserva->actualizador)->name ?? 'Usuario no disponible' }}
                                         </p>
-                                        <p class="text-xs text-slate-400">
+                                        <p class="text-xs text-emerald-400">
                                             {{ optional($reserva->actualizador)->email ?? '—' }}
                                         </p>
                                     </td>
@@ -979,14 +976,14 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="11" class="px-6 py-10 text-center text-slate-400">
+                                    <td colspan="11" class="px-6 py-10 text-center text-emerald-400">
                                         Aún no hay reservas registradas.
                                     </td>
                                 </tr>
                             @endforelse
                             @if ($reservas->isNotEmpty())
                                 <tr class="hidden" data-reserva-empty-row>
-                                    <td colspan="11" class="px-6 py-10 text-center text-slate-400">
+                                    <td colspan="11" class="px-6 py-10 text-center text-emerald-400">
                                         No se encontraron reservas que coincidan con los filtros aplicados.
                                     </td>
                                 </tr>
@@ -1026,7 +1023,7 @@
                         <div>
                             <p class="text-xs uppercase tracking-[0.3em] text-blue-300">Editar reserva</p>
                             <h2 class="text-2xl font-semibold">Actualizar reserva #{{ $reserva->id }}</h2>
-                            <p class="text-slate-400 text-sm">Modifica las fechas, importes o el estado cuando sea necesario.</p>
+                            <p class="text-emerald-400 text-sm">Modifica las fechas, importes o el estado cuando sea necesario.</p>
                         </div>
 
                         <form method="POST" action="{{ route('admin.reservas.update', $reserva) }}" class="grid gap-4 md:grid-cols-2 text-sm">
@@ -1041,9 +1038,9 @@
                             @endif
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Cancha</label>
                                 <select name="cancha_id"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('cancha_id') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('cancha_id') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                     <option value="">Selecciona una cancha</option>
                                     @foreach ($canchas as $canchaOption)
@@ -1058,9 +1055,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cliente</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Cliente</label>
                                 <select name="cliente_id"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('cliente_id') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('cliente_id') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                     <option value="">Selecciona un cliente</option>
                                     @foreach ($clientes as $clienteOption)
@@ -1075,9 +1072,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha de reserva</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Fecha de reserva</label>
                                 <input type="date" name="fecha_reserva" value="{{ $editFechaReserva }}"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('fecha_reserva') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('fecha_reserva') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                 @if ($reservaRowEditing && $reservaEditErrors?->has('fecha_reserva'))
                                     <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('fecha_reserva') }}</p>
@@ -1085,9 +1082,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Duración (minutos)</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Duración (minutos)</label>
                                 <input type="number" min="15" max="1440" step="15" name="duracion_minutos" value="{{ $editDuracion }}"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('duracion_minutos') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('duracion_minutos') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                 @if ($reservaRowEditing && $reservaEditErrors?->has('duracion_minutos'))
                                     <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('duracion_minutos') }}</p>
@@ -1095,9 +1092,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Inicio</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Inicio</label>
                                 <input type="datetime-local" name="fecha_inicio" value="{{ $editFechaInicio }}"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('fecha_inicio') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('fecha_inicio') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                 @if ($reservaRowEditing && $reservaEditErrors?->has('fecha_inicio'))
                                     <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('fecha_inicio') }}</p>
@@ -1105,9 +1102,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fin</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Fin</label>
                                 <input type="datetime-local" name="fecha_fin" value="{{ $editFechaFin }}"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('fecha_fin') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('fecha_fin') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                 @if ($reservaRowEditing && $reservaEditErrors?->has('fecha_fin'))
                                     <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('fecha_fin') }}</p>
@@ -1115,9 +1112,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Precio por hora</label>
                                 <input type="number" min="0" step="0.01" name="precio_hora" value="{{ $editPrecioHora }}"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('precio_hora') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('precio_hora') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                 @if ($reservaRowEditing && $reservaEditErrors?->has('precio_hora'))
                                     <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('precio_hora') }}</p>
@@ -1125,9 +1122,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Total</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Total</label>
                                 <input type="number" min="0" step="0.01" name="total" value="{{ $editTotal }}"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('total') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('total') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                 @if ($reservaRowEditing && $reservaEditErrors?->has('total'))
                                     <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('total') }}</p>
@@ -1135,9 +1132,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Estado</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Estado</label>
                                 <select name="estado"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('estado') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('estado') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                     <option value="">Selecciona un estado</option>
                                     @foreach ($estadoOptions as $estado)
@@ -1152,9 +1149,9 @@
                             </div>
 
                             <div class="md:col-span-2">
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Observaciones</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Observaciones</label>
                                 <textarea name="observaciones" rows="3"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('observaciones') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-blue-500' }}"
+                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $reservaRowEditing && $reservaEditErrors?->has('observaciones') ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
                                     placeholder="Notas internas o mensajes para el equipo">{{ $editObservaciones }}</textarea>
                                 @if ($reservaRowEditing && $reservaEditErrors?->has('observaciones'))
                                     <p class="text-xs text-red-300 mt-1">{{ $reservaEditErrors->first('observaciones') }}</p>
@@ -1188,7 +1185,7 @@
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div class="relative w-full max-w-lg border border-rose-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
                 <button type="button" data-reserva-delete-cancel
-                    class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    class="absolute top-3 right-3 text-emerald-400 hover:text-white transition" aria-label="Cerrar">
                     ✕
                 </button>
                 <div class="space-y-4">
@@ -1206,16 +1203,16 @@
                             <p class="text-lg font-semibold text-white">
                                 ¿Eliminar esta reserva?
                             </p>
-                            <p class="text-sm text-slate-400 mt-1">
+                            <p class="text-sm text-emerald-400 mt-1">
                                 Esta acción no se puede deshacer y liberará el horario seleccionado.
                             </p>
                         </div>
                     </div>
 
                     <div class="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
-                        <p class="text-sm text-slate-400">Cliente</p>
+                        <p class="text-sm text-emerald-400">Cliente</p>
                         <p class="text-lg font-semibold text-white" data-reserva-delete-name>—</p>
-                        <p class="text-xs text-slate-500" data-reserva-delete-id></p>
+                        <p class="text-xs text-emerald-500" data-reserva-delete-id></p>
                     </div>
 
                     <div class="flex justify-end gap-3">
@@ -1251,13 +1248,13 @@
                 </div>
 
                 <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
-                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 shadow-2xl">
+                <div class="bg-emerald-950/60 border border-emerald-800 rounded-2xl p-4 shadow-2xl">
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
                             <label for="bloqueo-cancha-search"
-                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por cancha</label>
+                                class="text-xs uppercase tracking-[0.3em] text-emerald-400">Buscar por cancha</label>
                             <div class="relative mt-1">
-                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-emerald-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -1265,16 +1262,16 @@
                                     </svg>
                                 </span>
                                 <input id="bloqueo-cancha-search" type="search" placeholder="Ej. Arena Indoor"
-                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                    class="w-full rounded-xl border border-emerald-700 bg-emerald-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                     data-bloqueo-search>
                             </div>
                         </div>
 
                         <div>
                             <label for="bloqueo-type-filter"
-                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Filtrar por tipo</label>
+                                class="text-xs uppercase tracking-[0.3em] text-emerald-400">Filtrar por tipo</label>
                             <select id="bloqueo-type-filter"
-                                class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                class="mt-1 w-full rounded-xl border border-emerald-700 bg-emerald-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 data-bloqueo-type>
                                 <option value="">Todos los tipos</option>
                                 @foreach ($bloqueoTipos as $tipo)
@@ -1288,7 +1285,7 @@
                 <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-emerald-950/60">
-                            <tr class="uppercase text-xs text-slate-400 tracking-wide">
+                            <tr class="uppercase text-xs text-emerald-400 tracking-wide">
                                 <th class="px-6 py-3">Cancha</th>
                                 <th class="px-6 py-3">Inicio</th>
                                 <th class="px-6 py-3">Fin</th>
@@ -1299,26 +1296,25 @@
                         </thead>
                         <tbody class="divide-y divide-emerald-900/50">
                             @forelse ($bloqueos as $bloqueo)
-                                <tr class="hover:bg-emerald-900/40 transition-colors">
-                                <tr class="hover:bg-slate-900/70 transition-colors"
+                                <tr class="hover:bg-emerald-900/40 transition-colors"
                                     data-bloqueo-row
                                     data-bloqueo-cancha="{{ mb_strtolower(optional($bloqueo->cancha)->nombre ?? '') }}"
                                     data-bloqueo-tipo="{{ mb_strtolower(optional($bloqueo->cancha)->tipo ?? '') }}">
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-white">{{ optional($bloqueo->cancha)->nombre ?? 'Cancha eliminada' }}</div>
-                                        <div class="text-xs text-slate-500">ID #{{ $bloqueo->cancha_id }}</div>
+                                        <div class="text-xs text-emerald-500">ID #{{ $bloqueo->cancha_id }}</div>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-emerald-400">
                                             {{ optional($bloqueo->fecha_inicio)->format('d/m/Y H:i') ?? '—' }}
                                         </div>
-                                        <p class="text-xs text-slate-400">Hora local</p>
+                                        <p class="text-xs text-emerald-400">Hora local</p>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-rose-300">
                                             {{ optional($bloqueo->fecha_fin)->format('d/m/Y H:i') ?? '—' }}
                                         </div>
-                                        <p class="text-xs text-slate-400">Hora local</p>
+                                        <p class="text-xs text-emerald-400">Hora local</p>
                                     </td>
                                     <td class="px-6 py-4 max-w-xs">
                                         <p class="text-sm text-slate-300 leading-snug">
@@ -1329,7 +1325,7 @@
                                         <p class="font-semibold text-white">
                                             {{ optional($bloqueo->creador)->name ?? 'Usuario no disponible' }}
                                         </p>
-                                        <p class="text-xs text-slate-400">
+                                        <p class="text-xs text-emerald-400">
                                             {{ optional($bloqueo->creador)->email ?? 'Sin correo' }}
                                         </p>
                                     </td>
@@ -1361,14 +1357,14 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-6 py-10 text-center text-slate-400">
+                                    <td colspan="6" class="px-6 py-10 text-center text-emerald-400">
                                         Aún no hay bloqueos registrados.
                                     </td>
                                 </tr>
                             @endforelse
                             @if ($bloqueos->isNotEmpty())
                                 <tr class="hidden" data-bloqueo-empty-row>
-                                    <td colspan="6" class="px-6 py-10 text-center text-slate-400">
+                                    <td colspan="6" class="px-6 py-10 text-center text-emerald-400">
                                         No se encontraron bloqueos que coincidan con los filtros aplicados.
                                     </td>
                                 </tr>
@@ -1393,13 +1389,13 @@
                     <div>
                         <p class="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-emerald-300">Nuevo bloqueo</p>
                         <h2 class="text-xl sm:text-2xl font-semibold">Bloquear una cancha</h2>
-                        <p class="text-slate-400 text-xs sm:text-sm">Define el intervalo de fechas y el motivo del bloqueo.</p>
+                        <p class="text-emerald-400 text-xs sm:text-sm">Define el intervalo de fechas y el motivo del bloqueo.</p>
                     </div>
 
                     <form method="POST" action="{{ route('admin.bloqueos.store') }}" class="grid gap-4 md:grid-cols-2 text-sm">
                         @csrf
                         <div class="md:col-span-2">
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Cancha</label>
                             @php
                                 $crearCanchaError = $crearBloqueoErrors?->has('cancha_id');
                             @endphp
@@ -1419,7 +1415,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de inicio</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Fecha y hora de inicio</label>
                             @php
                                 $crearInicioError = $crearBloqueoErrors?->has('fecha_inicio');
                             @endphp
@@ -1432,7 +1428,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de fin</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Fecha y hora de fin</label>
                             @php
                                 $crearFinError = $crearBloqueoErrors?->has('fecha_fin');
                             @endphp
@@ -1445,7 +1441,7 @@
                         </div>
 
                         <div class="md:col-span-2">
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Motivo</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Motivo</label>
                             @php
                                 $crearMotivoError = $crearBloqueoErrors?->has('motivo');
                             @endphp
@@ -1495,7 +1491,7 @@
                         <div>
                             <p class="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-emerald-300">Editar bloqueo</p>
                             <h2 class="text-xl sm:text-2xl font-semibold">Actualizar bloqueo de {{ optional($bloqueo->cancha)->nombre ?? 'Cancha eliminada' }}</h2>
-                            <p class="text-slate-400 text-xs sm:text-sm">Ajusta fechas o cambia el motivo cuando sea necesario.</p>
+                            <p class="text-emerald-400 text-xs sm:text-sm">Ajusta fechas o cambia el motivo cuando sea necesario.</p>
                         </div>
 
                         <form method="POST" action="{{ route('admin.bloqueos.update', $bloqueo) }}" class="grid gap-4 md:grid-cols-2 text-sm">
@@ -1503,7 +1499,7 @@
                             @method('PUT')
 
                             <div class="md:col-span-2">
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Cancha</label>
                                 @php
                                     $editCanchaError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('cancha_id');
                                 @endphp
@@ -1523,7 +1519,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de inicio</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Fecha y hora de inicio</label>
                                 @php
                                     $editInicioError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('fecha_inicio');
                                 @endphp
@@ -1536,7 +1532,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de fin</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Fecha y hora de fin</label>
                                 @php
                                     $editFinError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('fecha_fin');
                                 @endphp
@@ -1549,7 +1545,7 @@
                             </div>
 
                             <div class="md:col-span-2">
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Motivo</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Motivo</label>
                                 @php
                                     $editMotivoError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('motivo');
                                 @endphp
@@ -1582,7 +1578,7 @@
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div class="relative w-full max-w-lg border border-red-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
                 <button type="button" data-bloqueo-delete-cancel
-                    class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    class="absolute top-3 right-3 text-emerald-400 hover:text-white transition" aria-label="Cerrar">
                     ✕
                 </button>
                 <div class="space-y-4">
@@ -1600,7 +1596,7 @@
                             <p class="text-lg font-semibold text-white">
                                 El bloqueo seleccionado se eliminará de forma permanente.
                             </p>
-                            <p class="text-sm text-slate-400 mt-1">Esta acción no se puede deshacer.</p>
+                            <p class="text-sm text-emerald-400 mt-1">Esta acción no se puede deshacer.</p>
                         </div>
                     </div>
 
@@ -1637,13 +1633,13 @@
                 </div>
 
                 <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
-                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 shadow-2xl">
+                <div class="bg-emerald-950/60 border border-emerald-800 rounded-2xl p-4 shadow-2xl">
                     <div class="grid gap-4 md:grid-cols-2">
                         <div>
                             <label for="precio-cancha-search"
-                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por cancha</label>
+                                class="text-xs uppercase tracking-[0.3em] text-emerald-400">Buscar por cancha</label>
                             <div class="relative mt-1">
-                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-emerald-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -1651,16 +1647,16 @@
                                     </svg>
                                 </span>
                                 <input id="precio-cancha-search" type="search" placeholder="Ej. Cancha Central"
-                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                    class="w-full rounded-xl border border-emerald-700 bg-emerald-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-emerald-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
                                     data-precio-search>
                             </div>
                         </div>
 
                         <div>
                             <label for="precio-type-filter"
-                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Filtrar por tipo</label>
+                                class="text-xs uppercase tracking-[0.3em] text-emerald-400">Filtrar por tipo</label>
                             <select id="precio-type-filter"
-                                class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                class="mt-1 w-full rounded-xl border border-emerald-700 bg-emerald-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
                                 data-precio-type>
                                 <option value="">Todos los tipos</option>
                                 @foreach ($precioTipos as $tipo)
@@ -1674,7 +1670,7 @@
                 <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-emerald-950/60">
-                            <tr class="uppercase text-xs text-slate-400 tracking-wide">
+                            <tr class="uppercase text-xs text-emerald-400 tracking-wide">
                                 <th class="px-6 py-3">Cancha</th>
                                 <th class="px-6 py-3 text-right">Precio/Hora</th>
                                 <th class="px-6 py-3">Desde</th>
@@ -1715,14 +1711,13 @@
                                         ];
                                     }
                                 @endphp
-                                <tr class="hover:bg-emerald-900/40 transition-colors">
-                                <tr class="hover:bg-slate-900/70 transition-colors"
+                                <tr class="hover:bg-emerald-900/40 transition-colors"
                                     data-precio-row
                                     data-precio-cancha="{{ mb_strtolower(optional($precio->cancha)->nombre ?? '') }}"
                                     data-precio-tipo="{{ mb_strtolower(optional($precio->cancha)->tipo ?? '') }}">
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-white">{{ optional($precio->cancha)->nombre ?? 'Cancha no disponible' }}</div>
-                                        <div class="text-xs text-slate-500">ID #{{ $precio->cancha_id }}</div>
+                                        <div class="text-xs text-emerald-500">ID #{{ $precio->cancha_id }}</div>
                                     </td>
                                     <td class="px-6 py-4 text-right font-semibold text-amber-300">
                                         ${{ number_format((float) $precio->precio_hora, 2, '.', ',') }}
@@ -1731,13 +1726,13 @@
                                         <div class="font-semibold text-slate-200">
                                             {{ optional($fechaDesde)->format('d/m/Y H:i') ?? '—' }}
                                         </div>
-                                        <p class="text-xs text-slate-400">Hora local</p>
+                                        <p class="text-xs text-emerald-400">Hora local</p>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-slate-200">
                                             {{ optional($fechaHasta)->format('d/m/Y H:i') ?? 'Sin fecha de cierre' }}
                                         </div>
-                                        <p class="text-xs text-slate-400">
+                                        <p class="text-xs text-emerald-400">
                                             {{ $fechaHasta ? 'Hora límite' : 'Vigencia abierta' }}
                                         </p>
                                     </td>
@@ -1777,14 +1772,14 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-6 py-10 text-center text-slate-400">
+                                    <td colspan="6" class="px-6 py-10 text-center text-emerald-400">
                                         Todavía no hay historial de precios registrado.
                                     </td>
                                 </tr>
                             @endforelse
                             @if ($precios->isNotEmpty())
                                 <tr class="hidden" data-precio-empty-row>
-                                    <td colspan="6" class="px-6 py-10 text-center text-slate-400">
+                                    <td colspan="6" class="px-6 py-10 text-center text-emerald-400">
                                         No se encontraron precios que coincidan con los filtros aplicados.
                                     </td>
                                 </tr>
@@ -1809,7 +1804,7 @@
                     <div>
                         <p class="text-sm uppercase tracking-[0.3em] text-amber-300">Nuevo precio</p>
                         <h2 class="text-2xl font-semibold">Definir vigencia y valor</h2>
-                        <p class="text-slate-400 text-sm">Establece la cancha, el precio y el periodo de aplicación.</p>
+                        <p class="text-emerald-400 text-sm">Establece la cancha, el precio y el periodo de aplicación.</p>
                     </div>
 
                     <form method="POST" action="{{ route('admin.precios.store') }}" class="grid gap-4 md:grid-cols-2 text-sm">
@@ -1821,7 +1816,7 @@
                             </div>
                         @endif
                         <div class="md:col-span-2">
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Cancha</label>
                             @php
                                 $crearPrecioCanchaError = $crearPrecioErrors?->has('cancha_id');
                             @endphp
@@ -1841,7 +1836,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Precio por hora</label>
                             @php
                                 $crearPrecioValorError = $crearPrecioErrors?->has('precio_hora');
                             @endphp
@@ -1854,7 +1849,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de inicio</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Fecha y hora de inicio</label>
                             @php
                                 $crearPrecioDesdeError = $crearPrecioErrors?->has('fecha_desde');
                             @endphp
@@ -1867,7 +1862,7 @@
                         </div>
 
                         <div class="md:col-span-2">
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de fin (opcional)</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Fecha y hora de fin (opcional)</label>
                             @php
                                 $crearPrecioHastaError = $crearPrecioErrors?->has('fecha_hasta');
                             @endphp
@@ -1920,7 +1915,7 @@
                             <h2 class="text-2xl font-semibold">
                                 {{ optional($precio->cancha)->nombre ?? 'Cancha no disponible' }}
                             </h2>
-                            <p class="text-slate-400 text-sm">Actualiza el valor o las fechas de vigencia.</p>
+                            <p class="text-emerald-400 text-sm">Actualiza el valor o las fechas de vigencia.</p>
                         </div>
 
                         <form method="POST" action="{{ route('admin.precios.update', $precio) }}" class="grid gap-4 md:grid-cols-2 text-sm">
@@ -1934,7 +1929,7 @@
                             @endif
 
                             <div class="md:col-span-2">
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Cancha</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Cancha</label>
                                 @php
                                     $editPrecioCanchaError = $rowIsEditingPrecio && $editarPrecioErrors?->has('cancha_id');
                                 @endphp
@@ -1954,7 +1949,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Precio por hora</label>
                                 @php
                                     $editPrecioValorError = $rowIsEditingPrecio && $editarPrecioErrors?->has('precio_hora');
                                 @endphp
@@ -1967,7 +1962,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de inicio</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Fecha y hora de inicio</label>
                                 @php
                                     $editPrecioDesdeError = $rowIsEditingPrecio && $editarPrecioErrors?->has('fecha_desde');
                                 @endphp
@@ -1980,7 +1975,7 @@
                             </div>
 
                             <div class="md:col-span-2">
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Fecha y hora de fin (opcional)</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Fecha y hora de fin (opcional)</label>
                                 @php
                                     $editPrecioHastaError = $rowIsEditingPrecio && $editarPrecioErrors?->has('fecha_hasta');
                                 @endphp
@@ -2012,7 +2007,7 @@
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div class="relative w-full max-w-lg border border-amber-500/30 bg-slate-950/95 p-6 shadow-2xl text-white">
                 <button type="button" data-precio-delete-cancel
-                    class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    class="absolute top-3 right-3 text-emerald-400 hover:text-white transition" aria-label="Cerrar">
                     ✕
                 </button>
                 <div class="space-y-4">
@@ -2030,7 +2025,7 @@
                             <p class="text-lg font-semibold text-white">
                                 ¿Eliminar esta vigencia de precio?
                             </p>
-                            <p class="text-sm text-slate-400 mt-1">Las reservas futuras utilizarán el precio vigente restante.</p>
+                            <p class="text-sm text-emerald-400 mt-1">Las reservas futuras utilizarán el precio vigente restante.</p>
                         </div>
                     </div>
 
@@ -2056,7 +2051,7 @@
                 <div class="flex flex-col gap-3 sm:gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 class="text-lg sm:text-xl font-bold text-white">Usuarios del sistema</h1>
-                        <p class="text-xs sm:text-sm text-slate-400">Administra cuentas, roles y estados de acceso.</p>
+                        <p class="text-xs sm:text-sm text-emerald-400">Administra cuentas, roles y estados de acceso.</p>
                     </div>
                     <button id="abrirUsuarioModal" type="button"
                         class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition whitespace-nowrap">
@@ -2067,13 +2062,13 @@
                 </div>
 
                 <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
-                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 shadow-2xl">
+                <div class="bg-emerald-950/60 border border-emerald-800 rounded-2xl p-4 shadow-2xl">
                     <div class="grid gap-4 md:grid-cols-2">
                         <div>
                             <label for="usuario-search"
-                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Buscar por nombre/correo</label>
+                                class="text-xs uppercase tracking-[0.3em] text-emerald-400">Buscar por nombre/correo</label>
                             <div class="relative mt-1">
-                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-emerald-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -2081,16 +2076,16 @@
                                     </svg>
                                 </span>
                                 <input id="usuario-search" type="search" placeholder="Ej. Ana, ana@mail.com"
-                                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    class="w-full rounded-xl border border-emerald-700 bg-emerald-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder-emerald-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     data-usuario-search>
                             </div>
                         </div>
 
                         <div>
                             <label for="usuario-role-filter"
-                                class="text-xs uppercase tracking-[0.3em] text-slate-400">Filtrar por rol</label>
+                                class="text-xs uppercase tracking-[0.3em] text-emerald-400">Filtrar por rol</label>
                             <select id="usuario-role-filter"
-                                class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                class="mt-1 w-full rounded-xl border border-emerald-700 bg-emerald-900/70 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 data-usuario-role>
                                 <option value="">Todos los roles</option>
                                 @foreach ($usuarioRoles as $rolNombre)
@@ -2104,7 +2099,7 @@
                 <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-emerald-950/60">
-                            <tr class="uppercase text-xs text-slate-400 tracking-wide">
+                            <tr class="uppercase text-xs text-emerald-400 tracking-wide">
                                 <th class="px-6 py-3">Usuario</th>
                                 <th class="px-6 py-3">Rol</th>
                                 <th class="px-6 py-3 text-center">Estado</th>
@@ -2118,15 +2113,14 @@
                                     $rolLabel = optional($usuario->role)->description ?? optional($usuario->role)->name ?? 'Sin rol asignado';
                                     $isCurrentUser = auth()->id() === $usuario->id;
                                 @endphp
-                                <tr class="hover:bg-emerald-900/40 transition-colors">
-                                <tr class="hover:bg-slate-900/70 transition-colors"
+                                <tr class="hover:bg-emerald-900/40 transition-colors"
                                     data-usuario-row
                                     data-usuario-nombre="{{ mb_strtolower($usuario->name) }}"
                                     data-usuario-email="{{ mb_strtolower($usuario->email) }}"
                                     data-usuario-rol="{{ mb_strtolower($rolLabel) }}">
                                     <td class="px-6 py-4">
                                         <p class="font-semibold text-white">{{ $usuario->name }}</p>
-                                        <p class="text-xs text-slate-400">{{ $usuario->email }}</p>
+                                        <p class="text-xs text-emerald-400">{{ $usuario->email }}</p>
                                     </td>
                                     <td class="px-6 py-4">
                                         <span class="inline-flex items-center rounded-full bg-emerald-500/10 text-emerald-200 px-3 py-1 text-xs font-medium">
@@ -2148,7 +2142,7 @@
                                         <p class="font-semibold text-white">
                                             {{ optional($usuario->created_at)->format('d/m/Y') ?? '—' }}
                                         </p>
-                                        <p class="text-xs text-slate-400">ID #{{ $usuario->id }}</p>
+                                        <p class="text-xs text-emerald-400">ID #{{ $usuario->id }}</p>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center justify-end gap-3 text-lg">
@@ -2161,7 +2155,7 @@
                                                 </svg>
                                             </button>
                                             @if ($isCurrentUser)
-                                                <span class="text-xs text-slate-500 border border-slate-700 rounded-full px-3 py-1" title="No puedes eliminar tu propia cuenta">
+                                                <span class="text-xs text-emerald-500 border border-slate-700 rounded-full px-3 py-1" title="No puedes eliminar tu propia cuenta">
                                                     Sesión activa
                                                 </span>
                                             @else
@@ -2186,14 +2180,14 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-6 py-10 text-center text-slate-400">
+                                    <td colspan="5" class="px-6 py-10 text-center text-emerald-400">
                                         Aún no hay usuarios registrados.
                                     </td>
                                 </tr>
                             @endforelse
                             @if ($usuarios->isNotEmpty())
                                 <tr class="hidden" data-usuario-empty-row>
-                                    <td colspan="5" class="px-6 py-10 text-center text-slate-400">
+                                    <td colspan="5" class="px-6 py-10 text-center text-emerald-400">
                                         No se encontraron usuarios que coincidan con los filtros aplicados.
                                     </td>
                                 </tr>
@@ -2218,14 +2212,14 @@
                     <div>
                         <p class="text-sm uppercase tracking-[0.3em] text-emerald-300">Nuevo usuario</p>
                         <h2 class="text-2xl font-semibold">Registrar cuenta</h2>
-                        <p class="text-slate-400 text-sm">Define los datos básicos y el rol que tendrá dentro del sistema.</p>
+                        <p class="text-emerald-400 text-sm">Define los datos básicos y el rol que tendrá dentro del sistema.</p>
                     </div>
 
                     <form method="POST" action="{{ route('admin.usuarios.store') }}" class="grid gap-4 md:grid-cols-2 text-sm">
                         @csrf
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre completo</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Nombre completo</label>
                             <input type="text" name="name" value="{{ old('name') }}"
                                 class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
@@ -2235,7 +2229,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Correo electrónico</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Correo electrónico</label>
                             <input type="email" name="email" value=""
                                 autocomplete="off"
                                 class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
@@ -2246,7 +2240,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Rol</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Rol</label>
                             <select name="role_id"
                                 class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
@@ -2263,7 +2257,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Contraseña</label>
+                            <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Contraseña</label>
                             <input type="password" name="password"
                                 autocomplete="new-password"
                                 class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
@@ -2271,7 +2265,7 @@
                             @error('password', 'crearUsuario')
                                 <p class="text-xs text-rose-300 mt-1">{{ $message }}</p>
                             @enderror
-                            <p class="text-xs text-slate-500 mt-1">
+                            <p class="text-xs text-emerald-500 mt-1">
                                 Debe tener al menos 8 caracteres y combinar letras, números o símbolos.
                             </p>
                         </div>
@@ -2281,7 +2275,7 @@
                             <input type="checkbox" id="usuario_activo_create" name="activo" value="1"
                                 class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-emerald-500 focus:ring-emerald-500"
                                 {{ old('activo', 1) ? 'checked' : '' }}>
-                            <label for="usuario_activo_create" class="text-xs uppercase tracking-widest text-slate-400">
+                            <label for="usuario_activo_create" class="text-xs uppercase tracking-widest text-emerald-400">
                                 Usuario activo
                             </label>
                         </div>
@@ -2328,7 +2322,7 @@
                         <div>
                             <p class="text-sm uppercase tracking-[0.3em] text-emerald-300">Editar usuario</p>
                             <h2 class="text-2xl font-semibold">Actualizar {{ $usuario->name }}</h2>
-                            <p class="text-slate-400 text-sm">Modifica los datos necesarios y guarda los cambios.</p>
+                            <p class="text-emerald-400 text-sm">Modifica los datos necesarios y guarda los cambios.</p>
                         </div>
 
                         <form method="POST" action="{{ route('admin.usuarios.update', $usuario) }}" class="grid gap-4 md:grid-cols-2 text-sm">
@@ -2336,7 +2330,7 @@
                             @method('PUT')
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre completo</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Nombre completo</label>
                                 <input type="text" name="name" value="{{ $editUsuarioNombre }}"
                                     class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
@@ -2346,7 +2340,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Correo electrónico</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Correo electrónico</label>
                                 <input type="email" name="email" value="{{ $editUsuarioCorreo }}"
                                     class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
@@ -2356,7 +2350,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Rol</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Rol</label>
                                 <select name="role_id"
                                     class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
@@ -2373,7 +2367,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Contraseña</label>
+                                <label class="block text-xs uppercase tracking-widest text-emerald-400 mb-1">Contraseña</label>
                                 <input type="password" name="password" value=""
                                     autocomplete="new-password"
                                     class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-500"
@@ -2381,7 +2375,7 @@
                             @if ($usuarioRowEditing && $usuarioEditErrors?->has('password'))
                                 <p class="text-xs text-rose-300 mt-1">{{ $usuarioEditErrors->first('password') }}</p>
                             @endif
-                                <p class="text-xs text-slate-500 mt-1">
+                                <p class="text-xs text-emerald-500 mt-1">
                                     Debe tener mínimo 8 caracteres. Deja el campo vacío para conservar la actual.
                                 </p>
                             </div>
@@ -2393,10 +2387,10 @@
                                         class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-emerald-500 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
                                         {{ $editUsuarioActivo ? 'checked' : '' }} {{ $isCurrentUser ? 'disabled' : '' }}>
                                     <label for="usuario_activo_{{ $usuario->id }}"
-                                        class="text-xs uppercase tracking-widest text-slate-400">Usuario activo</label>
+                                        class="text-xs uppercase tracking-widest text-emerald-400">Usuario activo</label>
                                 </div>
                                 @if ($isCurrentUser)
-                                    <p class="text-xs text-slate-500">
+                                    <p class="text-xs text-emerald-500">
                                         No puedes desactivar tu propia cuenta mientras la sesión esté activa.
                                     </p>
                                 @endif
@@ -2426,7 +2420,7 @@
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div class="relative w-full max-w-lg border border-rose-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
                 <button type="button" data-usuario-delete-cancel
-                    class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
+                    class="absolute top-3 right-3 text-emerald-400 hover:text-white transition" aria-label="Cerrar">
                     ✕
                 </button>
                 <div class="space-y-4">
@@ -2444,16 +2438,16 @@
                             <p class="text-lg font-semibold text-white">
                                 ¿Eliminar este usuario?
                             </p>
-                            <p class="text-sm text-slate-400 mt-1">
+                            <p class="text-sm text-emerald-400 mt-1">
                                 Se revocará su acceso inmediatamente. Esta acción no se puede deshacer.
                             </p>
                         </div>
                     </div>
 
                     <div class="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
-                        <p class="text-sm text-slate-400">Usuario</p>
+                        <p class="text-sm text-emerald-400">Usuario</p>
                         <p class="text-lg font-semibold text-white" data-usuario-delete-name>—</p>
-                        <p class="text-xs text-slate-500" data-usuario-delete-email>—</p>
+                        <p class="text-xs text-emerald-500" data-usuario-delete-email>—</p>
                     </div>
 
                     <div class="flex justify-end gap-3">
