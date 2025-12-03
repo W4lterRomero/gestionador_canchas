@@ -17,6 +17,7 @@ class CalendarioReserva extends Component
     public $canchaId;
 
     public $horasDisponibles = [];
+    public bool $excluirCanceladas = false;
 
     public function mount($fechaInicial = null)
     {
@@ -90,10 +91,18 @@ public function seleccionarDia($dia)
         $inicioDia = Carbon::parse($this->fecha, 'America/El_Salvador')->startOfDay();
         $finDia = $inicioDia->copy()->endOfDay();
 
-        $reservas = Reserva::where('cancha_id', $this->canchaId)
+        $reservasQuery = Reserva::where('cancha_id', $this->canchaId)
             ->where('fecha_inicio', '<', $finDia)
-            ->where('fecha_fin', '>', $inicioDia)
-            ->get(['fecha_inicio', 'fecha_fin']);
+            ->where('fecha_fin', '>', $inicioDia);
+
+        if ($this->excluirCanceladas) {
+            $reservasQuery->where(function ($query) {
+                $query->whereNull('estado')
+                    ->orWhere('estado', '!=', 'cancelada');
+            });
+        }
+
+        $reservas = $reservasQuery->get(['fecha_inicio', 'fecha_fin']);
 
         $bloqueos = BloqueoHorario::where('cancha_id', $this->canchaId)
             ->where('fecha_inicio', '<', $finDia)

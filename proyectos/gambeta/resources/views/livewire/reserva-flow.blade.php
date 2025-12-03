@@ -98,7 +98,8 @@
             <div class="col-span-1">
                 @livewire('calendario-reserva', [
                     'fechaInicial' => $fecha,
-                    'canchaId'     => $cancha
+                    'canchaId'     => $cancha,
+                    'excluirCanceladas' => true,
                 ])
             </div>
 
