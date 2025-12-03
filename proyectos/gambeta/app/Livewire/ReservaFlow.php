@@ -2,10 +2,14 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
+use App\Models\BloqueoHorario;
 use App\Models\Cancha;
 use App\Models\Cliente;
+use App\Models\Reserva;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
+use Livewire\Component;
 
 class ReservaFlow extends Component
 {
@@ -34,6 +38,7 @@ class ReservaFlow extends Component
 
     public $estadoReserva;
     public $estadoPago;
+    public $totalPagar;
     public $adelanto;
     public $metodoPago;
     public $observaciones;
@@ -42,7 +47,6 @@ class ReservaFlow extends Component
     public $mostrarModalExito = false;
 
     public $comprobantePdf = null;
-
 
     protected $listeners = [
         'fechaSeleccionada' => 'setFecha',
@@ -75,7 +79,7 @@ class ReservaFlow extends Component
         if ($this->canchaObj) {
             $this->canchaTitulo = $this->canchaObj->nombre;
             $this->canchaImagen = asset($this->canchaObj->imagen_url);
-            $this->precioHora   = $this->canchaObj->precio_hora;
+            $this->precioHora   = $this->canchaObj->precioHoraVigente();
             $this->hora = null;
 
             $this->dispatch('reset-calendario');
@@ -129,6 +133,8 @@ class ReservaFlow extends Component
                 'duracion'   => 'required|numeric|min:1',
                 'precioHora' => 'required|numeric|min:0'
             ]);
+
+            $this->asegurarHorarioDisponible();
         }
 
         if ($this->pasoActual == 2) {
@@ -226,30 +232,49 @@ class ReservaFlow extends Component
 
     public function getTotalProperty()
     {
-        return round(($this->duracion * $this->precioHora), 2);
+        $duracion = $this->obtenerDuracionHoras();
+        if ($duracion === null) {
+            return 0.00;
+        }
+
+        $precio = is_numeric($this->precioHora) ? (float) $this->precioHora : 0.00;
+
+        return round(($duracion * $precio), 2);
     }
 
-    public function generarComprobante()
+public function generarComprobante()
 {
     $data = [
-        'cancha' => $this->canchaTitulo,
-        'fecha'  => $this->fecha,
-        'hora'   => $this->hora,
-        'duracion' => $this->duracion,
-        'total' => $this->total,
-        'cliente' => $this->nombre,
-        'telefono' => $this->telefono
+        'cancha'      => $this->canchaTitulo,
+        'fecha'       => $this->fecha,
+        'hora'        => $this->hora,
+        'duracion'    => $this->duracion,
+        'total'       => $this->total,
+        'cliente'     => $this->nombre,
+        'telefono'    => $this->telefono,
+        'estadoPago'  => $this->estadoPago,
+        'totalPagar'  => $this->totalPagar,
+        'adelanto'    => $this->adelanto ?? 0,
+        'metodoPago'  => $this->metodoPago,
     ];
 
-    $pdf = Pdf::loadView('pdf.comprobante', $data);
+    // Asegurar que la carpeta exista
+    $folder = storage_path('app/public/comprobantes');
+    if (!file_exists($folder)) {
+        mkdir($folder, 0775, true);
+    }
 
     $fileName = 'comprobante_' . time() . '.pdf';
-    $path = storage_path('app/public/comprobantes/' . $fileName);
+    $path = $folder . '/' . $fileName;
 
+    $pdf = Pdf::loadView('pdf.comprobante', $data);
     $pdf->save($path);
 
+    // Ruta pública
     $this->comprobantePdf = 'storage/comprobantes/' . $fileName;
-    }
+}
+
+
 
     public function finalizar()
     {
@@ -284,7 +309,7 @@ class ReservaFlow extends Component
 
     public function abrirConfirmacion()
 {
-    $this->validarPasoActual();
+    $this->validarPasoActual();  
     $this->mostrarModalConfirmacion = true;
 }
 
@@ -305,6 +330,14 @@ public function confirmarGuardado()
 private function guardarReserva()
 {
     $this->validarPasoActual();
+    $this->asegurarHorarioDisponible();
+
+    $duracionHoras = $this->obtenerDuracionHoras();
+    if ($duracionHoras === null) {
+        throw ValidationException::withMessages([
+            'duracion' => 'Debes ingresar una duración válida.',
+        ]);
+    }
 
     $cliente = Cliente::firstOrCreate(
         ['telefono' => $this->telefono],
@@ -314,15 +347,15 @@ private function guardarReserva()
         ]
     );
 
-    $inicio = \Carbon\Carbon::parse($this->fecha . ' ' . $this->hora);
-    $fin = $inicio->copy()->addHours($this->duracion);
+    $inicio = Carbon::parse($this->fecha . ' ' . $this->hora, 'America/El_Salvador');
+    $fin = $inicio->copy()->addHours($duracionHoras);
 
-    $duracionMin = $this->duracion * 60;
+    $duracionMin = (int) round($duracionHoras * 60);
 
-    \App\Models\Reserva::create([
+    Reserva::create([
         'cancha_id'        => $this->cancha,
         'cliente_id'       => $cliente->id,
-        'fecha_reserva'    => $this->fecha,
+        'fecha_reserva'    => $this->fecha, 
         'fecha_inicio'     => $inicio,
         'fecha_fin'        => $fin,
         'duracion_minutos' => $duracionMin,
@@ -338,5 +371,81 @@ private function guardarReserva()
     $this->pasoActual = 1;
 }
 
+private function asegurarHorarioDisponible(): void
+{
+    if (! $this->cancha || ! $this->fecha || ! $this->hora) {
+        return;
+    }
+
+    $duracionHoras = $this->obtenerDuracionHoras();
+
+    if ($duracionHoras === null || $duracionHoras <= 0) {
+        return;
+    }
+
+    $inicio = Carbon::parse($this->fecha . ' ' . $this->hora, 'America/El_Salvador');
+    $fin = $inicio->copy()->addHours($duracionHoras);
+
+    $conflictoBloqueo = BloqueoHorario::query()
+        ->where('cancha_id', $this->cancha)
+        ->where('fecha_inicio', '<', $fin)
+        ->where('fecha_fin', '>', $inicio)
+        ->exists();
+
+    if ($conflictoBloqueo) {
+        throw ValidationException::withMessages([
+            'hora' => 'La cancha está bloqueada por el administrador en el horario seleccionado.',
+        ]);
+    }
 }
 
+public function actualizarEstadoPago()
+{
+    $totalReserva = number_format($this->total, 2, '.', '');
+
+    if ($this->estadoPago === 'pagado') {
+        $this->totalPagar = $totalReserva;
+    }
+
+    if ($this->estadoPago === 'adelanto') {
+        if (!$this->totalPagar) {
+            $this->totalPagar = $totalReserva;
+        }
+    }
+
+    if ($this->estadoPago === 'nopago') {
+        $this->totalPagar = '0.00';
+        $this->adelanto = 0;
+    }
+}
+
+
+
+public function validarTotalPagar()
+{
+    $this->totalPagar = preg_replace('/[^0-9.]/', '', $this->totalPagar);
+
+    if (is_numeric($this->totalPagar)) {
+        $this->totalPagar = number_format((float)$this->totalPagar, 2, '.', '');
+    }
+}
+
+public function validarAdelanto()
+{
+    $this->adelanto = preg_replace('/[^0-9.]/', '', $this->adelanto);
+
+    if (is_numeric($this->adelanto)) {
+        $this->adelanto = number_format((float)$this->adelanto, 2, '.', '');
+    }
+}
+
+    private function obtenerDuracionHoras(): ?float
+    {
+        if ($this->duracion === null || $this->duracion === '') {
+            return null;
+        }
+
+        return is_numeric($this->duracion) ? (float) $this->duracion : null;
+    }
+
+}
