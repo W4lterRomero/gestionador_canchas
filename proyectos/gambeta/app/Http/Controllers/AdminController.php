@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BloqueoHorario;
+use App\Models\Cancha;
+use App\Models\CanchaPrecio;
+use App\Models\Reserva;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +18,22 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('administracion.index');
+        $canchas = Cancha::orderBy('nombre')->get();
+        $reservas = Reserva::with(['cancha', 'cliente', 'creador', 'actualizador'])
+            ->latest('fecha_reserva')
+            ->get();
+        $bloqueos = BloqueoHorario::with(['cancha', 'creador'])
+            ->latest('fecha_inicio')
+            ->get();
+        $precios = CanchaPrecio::with('cancha')
+            ->latest('fecha_desde')
+            ->get();
+        $usuarios = User::with('role')
+            ->orderBy('name')
+            ->get();
+        $roles = Role::orderBy('name')->get();
+
+        return view('administracion.index', compact('canchas', 'reservas', 'bloqueos', 'precios', 'usuarios', 'roles'));
     }
 
     /**
