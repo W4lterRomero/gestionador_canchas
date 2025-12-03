@@ -2,9 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Models\BloqueoHorario;
+use App\Models\Reserva;
 use Carbon\Carbon;
 use Livewire\Component;
-use App\Models\Reserva;
 
 class CalendarioReserva extends Component
 {
@@ -71,6 +72,11 @@ public function seleccionarDia($dia)
 
     private function generarHoras()
     {
+        if (! $this->canchaId) {
+            $this->horasDisponibles = [];
+            return;
+        }
+
         $todas = [];
 
         $inicio = Carbon::createFromTime(0, 0, 0, 'America/El_Salvador');
@@ -81,21 +87,23 @@ public function seleccionarDia($dia)
             $inicio->addMinutes(30);
         }
 
+        $inicioDia = Carbon::parse($this->fecha, 'America/El_Salvador')->startOfDay();
+        $finDia = $inicioDia->copy()->endOfDay();
+
         $reservas = Reserva::where('cancha_id', $this->canchaId)
-            ->whereDate('fecha_inicio', $this->fecha)
-            ->get();
+            ->where('fecha_inicio', '<', $finDia)
+            ->where('fecha_fin', '>', $inicioDia)
+            ->get(['fecha_inicio', 'fecha_fin']);
 
-        $bloqueadas = [];
+        $bloqueos = BloqueoHorario::where('cancha_id', $this->canchaId)
+            ->where('fecha_inicio', '<', $finDia)
+            ->where('fecha_fin', '>', $inicioDia)
+            ->get(['fecha_inicio', 'fecha_fin']);
 
-        foreach ($reservas as $r) {
-            $ini = Carbon::parse($r->fecha_inicio);
-            $fin = Carbon::parse($r->fecha_fin);
+        $bloqueadasReservas = $this->generarSlotsBloqueados($reservas, $inicioDia, $finDia);
+        $bloqueadasAdmin = $this->generarSlotsBloqueados($bloqueos, $inicioDia, $finDia);
 
-            while ($ini < $fin) {
-                $bloqueadas[] = $ini->format('H:i');
-                $ini->addMinutes(30);
-            }
-        }
+        $bloqueadas = array_values(array_unique(array_merge($bloqueadasReservas, $bloqueadasAdmin)));
 
         $ahora = Carbon::now('America/El_Salvador');
         $esHoy = $this->fecha === $ahora->format('Y-m-d');
@@ -120,6 +128,41 @@ public function seleccionarDia($dia)
                 ];
             })
             ->toArray();
+    }
+
+    /**
+     * Devuelve los slots de 30 minutos ocupados dentro del día.
+     *
+     * @param iterable<int, object> $registros
+     * @return list<string>
+     */
+    private function generarSlotsBloqueados(iterable $registros, Carbon $inicioDia, Carbon $finDia): array
+    {
+        $slots = [];
+
+        foreach ($registros as $registro) {
+            $ini = Carbon::parse($registro->fecha_inicio, 'America/El_Salvador')
+                ->copy()
+                ->setSecond(0);
+            $fin = Carbon::parse($registro->fecha_fin, 'America/El_Salvador')
+                ->copy()
+                ->setSecond(0);
+
+            if ($ini->lt($inicioDia)) {
+                $ini = $inicioDia->copy();
+            }
+
+            if ($fin->gt($finDia)) {
+                $fin = $finDia->copy();
+            }
+
+            while ($ini < $fin) {
+                $slots[] = $ini->format('H:i');
+                $ini->addMinutes(30);
+            }
+        }
+
+        return $slots;
     }
 
     public function render()

@@ -2,10 +2,14 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
+use App\Models\BloqueoHorario;
 use App\Models\Cancha;
 use App\Models\Cliente;
+use App\Models\Reserva;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
+use Livewire\Component;
 
 class ReservaFlow extends Component
 {
@@ -129,6 +133,8 @@ class ReservaFlow extends Component
                 'duracion'   => 'required|numeric|min:1',
                 'precioHora' => 'required|numeric|min:0'
             ]);
+
+            $this->asegurarHorarioDisponible();
         }
 
         if ($this->pasoActual == 2) {
@@ -317,8 +323,9 @@ public function confirmarGuardado()
 private function guardarReserva()
 {
     $this->validarPasoActual();
+    $this->asegurarHorarioDisponible();
 
-    $cliente = \App\Models\Cliente::firstOrCreate(
+    $cliente = Cliente::firstOrCreate(
         ['telefono' => $this->telefono],
         [
             'nombrecliente' => $this->nombre,
@@ -326,12 +333,12 @@ private function guardarReserva()
         ]
     );
 
-    $inicio = \Carbon\Carbon::parse($this->fecha . ' ' . $this->hora);
+    $inicio = Carbon::parse($this->fecha . ' ' . $this->hora, 'America/El_Salvador');
     $fin = $inicio->copy()->addHours($this->duracion);
 
     $duracionMin = $this->duracion * 60;
 
-    \App\Models\Reserva::create([
+    Reserva::create([
         'cancha_id'        => $this->cancha,
         'cliente_id'       => $cliente->id,
         'fecha_reserva'    => $this->fecha, 
@@ -348,6 +355,28 @@ private function guardarReserva()
 
     $this->resetExcept('canchas');
     $this->pasoActual = 1;
+}
+
+private function asegurarHorarioDisponible(): void
+{
+    if (! $this->cancha || ! $this->fecha || ! $this->hora || ! $this->duracion) {
+        return;
+    }
+
+    $inicio = Carbon::parse($this->fecha . ' ' . $this->hora, 'America/El_Salvador');
+    $fin = $inicio->copy()->addHours($this->duracion);
+
+    $conflictoBloqueo = BloqueoHorario::query()
+        ->where('cancha_id', $this->cancha)
+        ->where('fecha_inicio', '<', $fin)
+        ->where('fecha_fin', '>', $inicio)
+        ->exists();
+
+    if ($conflictoBloqueo) {
+        throw ValidationException::withMessages([
+            'hora' => 'La cancha está bloqueada por el administrador en el horario seleccionado.',
+        ]);
+    }
 }
 
 public function actualizarEstadoPago()
