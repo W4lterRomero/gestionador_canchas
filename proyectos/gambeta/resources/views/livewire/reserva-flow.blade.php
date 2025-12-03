@@ -205,16 +205,13 @@
         placeholder="Equipo o grupo (opcional)"
         @disabled($clienteExiste)>
 
-</div>
-
-<textarea wire:model.live="notas"
-    class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
-    placeholder="Notas del cliente"
-    @disabled($clienteExiste)></textarea>
+    <textarea wire:model.live="notas"
+        class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
+        placeholder="Notas del cliente"
+        @disabled($clienteExiste)></textarea>
 </div>
 
 @endif
-
 
 
 @if ($pasoActual == 3)
