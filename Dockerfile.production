@@ -21,8 +21,9 @@ RUN printf "<Directory /var/www/html/public>\nOptions Indexes FollowSymLinks\nAl
     > /etc/apache2/conf-available/z-laravel.conf \
     && a2enconf z-laravel
 
-# Cambiar DocumentRoot a /var/www/html/public
-RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
+# Cambiar DocumentRoot explícitamente
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
+    && sed -i 's|<Directory /var/www/>|<Directory /var/www/html/public>|g' /etc/apache2/apache2.conf
 
 # Copiar código de la aplicación Laravel
 COPY --chown=www-data:www-data ./proyectos/gambeta /var/www/html
