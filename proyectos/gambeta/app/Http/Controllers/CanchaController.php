@@ -65,7 +65,7 @@ class CanchaController extends Controller
 
     $path = $request->file('imagen')->store('canchas', 'public');
 
-    return Storage::url($path); // /storage/canchas/archivo.jpg
+    return Storage::url($path); // Returns relative URL
 }
 
 

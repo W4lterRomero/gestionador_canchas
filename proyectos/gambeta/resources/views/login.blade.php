@@ -7,7 +7,7 @@
 
     <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
 
-    <!-- Bootstrap 5 CSS -->
+    {{-- CSS --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -22,7 +22,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Fondo con Blur */
+        /* Fondo */
         .bg-image {
             position: fixed;
             top: -20px;
@@ -36,7 +36,7 @@
             z-index: -1;
         }
 
-        /* Overlay oscuro para mejorar contraste */
+        /* Overlay */
         .overlay {
             position: fixed;
             top: 0;
@@ -50,7 +50,7 @@
         .login-card {
             position: relative;
             z-index: 1;
-            background: rgba(255, 255, 255, 0.1); /* Glassmorphism */
+            background: rgba(255, 255, 255, 0.1); /* Estilo */
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -67,10 +67,10 @@
             height: auto;
             display: block;
             margin: 0 auto 2rem;
-            filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,255,255,0.5)); /* Logo blanco brillante */
+            filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,255,255,0.5)); /* Logo */
             transition: transform 0.3s ease;
         }
-        
+
         .login-logo:hover {
             transform: scale(1.05);
         }
@@ -90,10 +90,10 @@
             box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1) !important;
         }
 
-        /* Fix para el fondo blanco del label flotante en Bootstrap 5.3+ */
+        /* Fix label */
         .form-floating > .form-control:focus ~ label::after,
         .form-floating > .form-control:not(:placeholder-shown) ~ label::after {
-            background-color: transparent !important; 
+            background-color: transparent !important;
         }
 
         .form-control::placeholder {
@@ -113,10 +113,10 @@
             background-color: transparent !important;
         }
 
-        /* Fix para el autocompletado de Chrome que pone fondo blanco/azul */
+        /* Fix autocompletado */
         input:-webkit-autofill,
-        input:-webkit-autofill:hover, 
-        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
         input:-webkit-autofill:active{
             -webkit-box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.1) inset !important;
             -webkit-text-fill-color: white !important;
@@ -124,7 +124,7 @@
         }
 
         .btn-custom {
-            background: linear-gradient(135deg, #3c7a4eff, #2fb341ff); /* Gradiente llamativo */
+            background: linear-gradient(135deg, #3c7a4eff, #2fb341ff); /* Gradiente */
             border: none;
             color: white;
             font-weight: 700;
@@ -157,13 +157,13 @@
     <div class="overlay"></div>
 
     <div class="login-card">
-        <!-- LOGO -->
+        {{-- Logo --}}
         <img src="{{ asset('images/logo.png') }}" alt="Logo" class="login-logo">
 
-        <!-- TÍTULO -->
+        {{-- Título --}}
         <h3 class="text-center mb-4 fw-bold" style="letter-spacing: 1px;">BIENVENIDO</h3>
 
-        <!-- MOSTRAR ERRORES -->
+        {{-- Errores --}}
         @if ($errors->any())
         <div class="alert alert-danger mb-4 rounded-3" role="alert">
             <ul class="mb-0 ps-3">
@@ -174,23 +174,23 @@
         </div>
         @endif
 
-        <!-- FORMULARIO -->
+        {{-- Formulario --}}
         <form method="POST" action="{{ route('admin.login') }}">
             @csrf
 
-            <!-- Email -->
+            {{-- Email --}}
             <div class="form-floating mb-3">
                 <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
                 <label for="email">Correo Electrónico</label>
             </div>
 
-            <!-- Contraseña -->
+            {{-- Contraseña --}}
             <div class="form-floating mb-4">
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                 <label for="password">Contraseña</label>
             </div>
 
-            <!-- Botón -->
+            {{-- Botón --}}
             <div class="d-grid">
                 <button type="submit" class="btn btn-custom btn-lg rounded-pill">
                     INGRESAR
@@ -204,7 +204,7 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
+    {{-- JS --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
