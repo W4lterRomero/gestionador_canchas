@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Sistema Nacional de Áreas Deportivas</title>
+    <title>Instituto Nacional de Áreas Deportivas</title>
     <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
 
     @livewireStyles
@@ -36,37 +36,56 @@
 </head>
 
 <body class="text-gray-900 min-h-screen flex flex-col  bg-gradient-to-b from-[#063b2b] via-[#0b5c41] to-[#167a52]">    
-    <!-- NAVBAR -->
     @include('components.navbar')
 
-    <!-- CONTENIDO -->
     <main class="flex-grow">
         @yield('content')
         {{ $slot ?? '' }}
     </main>
 
 <!-- FOOTER -->
-<footer class="mt-16 text-white py-6
+<footer class="mt-16 text-white py-8
     bg-gradient-to-r from-[#01150f] via-[#022019] to-[#01150f]">
 
     <div class="container mx-auto px-6 text-center">
 
+        {{-- TITULO --}}
         <p class="text-sm opacity-90 font-semibold">
-            &copy; 2025 Sistema Nacional de Estadios Deportivos
+            &copy; 2025 Instituto Nacional de Estadios Deportivos
         </p>
 
+        {{-- SEPARADOR --}}
         <div class="w-24 h-[1px] bg-white/20 mx-auto my-4"></div>
 
-        <p class="text-xs opacity-70 tracking-wide uppercase">
+        {{-- DERECHOS --}}
+        <p class="text-xs opacity-70 tracking-wide uppercase mb-6">
             Todos los derechos reservados
         </p>
+
+        {{-- ENLACES ADICIONALES --}}
+        <div class="flex items-center justify-center gap-8 mt-4">
+
+            {{-- ICONO GITHUB --}}
+            <a href="https://github.com/W4lterRomero/gestionador_canchas.git"
+               target="_blank"
+               class="text-white hover:text-green-300 transition flex items-center gap-2">
+                <i class="fa-brands fa-github text-2xl"></i>
+                <span class="text-sm hidden md:inline opacity-80 hover:opacity-100 transition">
+                    Repositorio
+                </span>
+            </a>
+
+            {{-- ENLACE CREDITOS --}}
+            <a href="{{ route('creditos') }}"
+               class="text-white text-sm opacity-80 hover:opacity-100 hover:text-green-300 transition">
+                Créditos del equipo
+            </a>
+
+        </div>
 
     </div>
 </footer>
 
-
-
-    <!-- SCRIPTS LIVEWIRE -->
     @livewireScripts
 
 </body>

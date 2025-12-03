@@ -1,8 +1,7 @@
-<nav class="navbar px-6 py-4 shadow-xl 
+<nav class="navbar fixed top-0 left-0 w-full z-50
+            px-6 py-4 shadow-xl 
             bg-gradient-to-r from-[#022019] via-[#063b2b] to-[#0b5c41]
             backdrop-blur-xl border-b border-green-500/20">
-
-    <!-- LOGO -->
     <div class="flex items-center gap-3">
         <a href="{{ auth()->check() ? route('inicio') : route('login') }}" class="flex items-center">
             <img src="{{ asset('images/logo.png') }}" 
@@ -12,7 +11,6 @@
     </div>
 
     @auth
-    <!-- MENÚ ESCRITORIO -->
     <ul class="hidden md:flex space-x-8 text-lg font-medium text-white">
 
         <li>
@@ -30,9 +28,16 @@
         </li>
 
         <li>
-            <a href="{{ route('reservas.index') }}" 
+            <a href="{{ route('reservas.index') }}"
                class="hover:text-green-300 hover:underline decoration-green-300 underline-offset-8 transition">
                 Reservas
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ route('clientes.index') }}"
+               class="hover:text-green-300 hover:underline decoration-green-300 underline-offset-8 transition">
+                Clientes
             </a>
         </li>
 
@@ -47,7 +52,6 @@
 
     </ul>
 
-    <!-- MENÚ RESPONSIVE -->
     <div class="md:hidden">
         <div class="dropdown dropdown-end">
             <label tabindex="0" 
@@ -63,6 +67,7 @@
                 <li><a href="{{ route('inicio') }}" class="hover:bg-[#0b5c41] rounded-lg">Inicio</a></li>
                 <li><a href="{{ route('estadios.index') }}" class="hover:bg-[#0b5c41] rounded-lg">Estadios</a></li>
                 <li><a href="{{ route('reservas.index') }}" class="hover:bg-[#0b5c41] rounded-lg">Reservas</a></li>
+                <li><a href="{{ route('clientes.index') }}" class="hover:bg-[#0b5c41] rounded-lg">Clientes</a></li>
 
                 @if(auth()->user()->isAdmin())
                 <li><a href="{{ route('admin.index') }}" class="hover:bg-[#0b5c41] rounded-lg">Administración</a></li>
@@ -72,7 +77,6 @@
         </div>
     </div>
 
-    <!-- USUARIO LOGUEADO + LOGOUT -->
     <div class="ml-6 hidden md:flex items-center gap-3">
         <span class="text-white text-sm">{{ auth()->user()->name }}</span>
         <form action="{{ route('admin.logout') }}" method="POST" class="inline">
@@ -88,7 +92,6 @@
     @endauth
 
     @guest
-    <!-- Usuario no logueado -->
     <div class="ml-6 hidden md:block">
         <a href="{{ route('login') }}">
             <button class="mary-btn mary-btn-circle shadow-lg
