@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,89 +7,205 @@
 
     <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
 
-    <!-- Tailwind + DaisyUI -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.css" rel="stylesheet" />
-
-    <!-- Bootstrap (solo para el modal si lo necesitas) -->
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Fondo con Blur */
+        .bg-image {
+            position: fixed;
+            top: -20px;
+            left: -20px;
+            width: calc(100% + 40px);
+            height: calc(100% + 40px);
             background-image: url('{{ asset("images/Fondo.jpg") }}');
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
+            filter: blur(10px); /* Efecto de blur solicitado */
+            z-index: -1;
         }
-        .dark-layer {
-            background: rgba(0, 0, 0, 0.65);
+
+        /* Overlay oscuro para mejorar contraste */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.1); /* Glassmorphism */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 420px;
+            padding: 3rem 2.5rem;
+            color: white;
+        }
+
+        .login-logo {
+            width: 140px;
+            height: auto;
+            display: block;
+            margin: 0 auto 2rem;
+            filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,255,255,0.5)); /* Logo blanco brillante */
+            transition: transform 0.3s ease;
+        }
+        
+        .login-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+            border-radius: 0.75rem;
+            height: 3.5rem;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: rgba(255, 255, 255, 0.5) !important;
+            color: white !important;
+            box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Fix para el fondo blanco del label flotante en Bootstrap 5.3+ */
+        .form-floating > .form-control:focus ~ label::after,
+        .form-floating > .form-control:not(:placeholder-shown) ~ label::after {
+            background-color: transparent !important; 
+        }
+
+        .form-control::placeholder {
+            color: transparent;
+        }
+
+        .form-floating > label {
+            color: rgba(255, 255, 255, 0.8);
+            padding-left: 1rem;
+            z-index: 2;
+        }
+
+        .form-floating > .form-control:focus ~ label,
+        .form-floating > .form-control:not(:placeholder-shown) ~ label {
+            color: rgba(255, 255, 255, 0.9) !important;
+            transform: scale(0.85) translateY(-0.75rem) translateX(0.15rem);
+            background-color: transparent !important;
+        }
+
+        /* Fix para el autocompletado de Chrome que pone fondo blanco/azul */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.1) inset !important;
+            -webkit-text-fill-color: white !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .btn-custom {
+            background: linear-gradient(135deg, #00b09b, #96c93d); /* Gradiente llamativo */
+            border: none;
+            color: white;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(150, 201, 61, 0.4);
+            color: white;
+            filter: brightness(1.1);
+        }
+
+        .alert-danger {
+            background-color: rgba(220, 53, 69, 0.8);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: white;
+            backdrop-filter: blur(5px);
         }
     </style>
 </head>
 
-<body class="text-gray-200">
+<body>
 
-    <!-- CAPA OSCURA SOBRE EL FONDO -->
-    <div class="dark-layer min-h-screen flex items-center justify-center px-4">
+    <div class="bg-image"></div>
+    <div class="overlay"></div>
 
-        <!-- TARJETA DE LOGIN VERDE -->
-        <div class="card w-full max-w-md bg-green-900/70 shadow-2xl p-8 border border-green-500 rounded-2xl backdrop-blur-xl">
+    <div class="login-card">
+        <!-- LOGO -->
+        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="login-logo">
 
-            <!-- LOGO -->
-            <div class="flex justify-center mb-6">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" 
-                     class="h-32 w-auto object-contain drop-shadow-xl">
+        <!-- TÍTULO -->
+        <h3 class="text-center mb-4 fw-bold" style="letter-spacing: 1px;">BIENVENIDO</h3>
+
+        <!-- MOSTRAR ERRORES -->
+        @if ($errors->any())
+        <div class="alert alert-danger mb-4 rounded-3" role="alert">
+            <ul class="mb-0 ps-3">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        <!-- FORMULARIO -->
+        <form method="POST" action="{{ route('admin.login') }}">
+            @csrf
+
+            <!-- Email -->
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                <label for="email">Correo Electrónico</label>
             </div>
 
-            <!-- TÍTULO -->
-            <h2 class="text-3xl font-bold text-center text-green-300 mb-6 tracking-wide">
-                Inicio de Sesión
-            </h2>
-
-            <!-- MOSTRAR ERRORES -->
-            @if ($errors->any())
-            <div class="alert alert-error mb-4 bg-red-600/80 text-white rounded-lg p-3">
-                <ul class="list-disc list-inside text-sm">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+            <!-- Contraseña -->
+            <div class="form-floating mb-4">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                <label for="password">Contraseña</label>
             </div>
-            @endif
 
-            <!-- FORMULARIO -->
-            <form class="space-y-5" method="POST" action="{{ route('admin.login') }}">
-                @csrf
-
-                <!-- Email -->
-                <div>
-                    <label class="block mb-1 text-green-300 font-semibold">Email</label>
-                    <input type="email" name="email"
-                        placeholder="admin@example.com"
-                        class="input input-bordered w-full bg-gray-900/40 border-green-600 text-white focus:border-green-400" required />
-                </div>
-
-                <!-- Contraseña -->
-                <div>
-                    <label class="block mb-1 text-green-300 font-semibold">Contraseña</label>
-                    <input type="password" name="password"
-                        placeholder="Ingrese su contraseña"
-                        class="input input-bordered w-full bg-gray-900/40 border-green-600 text-white focus:border-green-400" required />
-                </div>
-
-                <!-- Botón -->
-                <button type="submit"
-                   class="btn w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg rounded-full shadow-lg">
-                    Entrar
+            <!-- Botón -->
+            <div class="d-grid">
+                <button type="submit" class="btn btn-custom btn-lg rounded-pill">
+                    INGRESAR
                 </button>
+            </div>
 
-            </form>
+        </form>
 
-            <!-- Divider -->
-            <div class="divider text-green-300 mt-8">Sistema Nacional de Estadios Deportivos</div>
-
+        <div class="text-center mt-4 text-white-50 small">
+            &copy; 2025 Sistema Nacional de Estadios Deportivos
         </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
