@@ -4,14 +4,22 @@ namespace App\Livewire;
 
 use App\Models\Reserva;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class AdminCalendar extends Component
 {
     /**
-     * Mes actual en formato YYYY-MM.
+     * Mes seleccionado en formato YYYY-MM.
      */
-    public string $currentMonth;
+    public string $selectedPeriod;
+
+    /**
+     * Opciones del selector de mes.
+     *
+     * @var array<string, string>
+     */
+    public array $monthOptions = [];
 
     /**
      * Reservas agrupadas por fecha (YYYY-MM-DD).
@@ -55,7 +63,17 @@ class AdminCalendar extends Component
     public function mount(): void
     {
         $now = Carbon::now('America/El_Salvador');
-        $this->currentMonth = $now->format('Y-m');
+        $this->selectedPeriod = $now->format('Y-m');
+        $this->monthOptions = $this->buildMonthOptions($now);
+        $this->loadReservations();
+    }
+
+    public function updatedSelectedPeriod(): void
+    {
+        if (! array_key_exists($this->selectedPeriod, $this->monthOptions)) {
+            $this->selectedPeriod = array_key_first($this->monthOptions) ?? Carbon::now('America/El_Salvador')->format('Y-m');
+        }
+
         $this->loadReservations();
     }
 
@@ -138,9 +156,24 @@ class AdminCalendar extends Component
         $this->dispatch('admin-calendar:modal-visible', open: false);
     }
 
+    private function buildMonthOptions(Carbon $now): array
+    {
+        $start = $now->copy()->startOfMonth()->subMonths(2);
+        $end = $now->copy()->startOfMonth()->addMonths(9);
+
+        $options = [];
+        for ($cursor = $start->copy(); $cursor <= $end; $cursor->addMonth()) {
+            $options[$cursor->format('Y-m')] = Str::ucfirst(
+                $cursor->locale('es')->isoFormat('MMMM YYYY')
+            );
+        }
+
+        return $options;
+    }
+
     private function focusedMonth(): Carbon
     {
-        return Carbon::createFromFormat('Y-m', $this->currentMonth, 'America/El_Salvador')
+        return Carbon::createFromFormat('Y-m', $this->selectedPeriod, 'America/El_Salvador')
             ->startOfMonth();
     }
 

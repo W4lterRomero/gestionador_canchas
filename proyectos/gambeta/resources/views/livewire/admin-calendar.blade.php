@@ -10,10 +10,14 @@
                 </p>
             </div>
             <div class="w-full md:w-auto">
-                <div class="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur text-right">
-                    <p class="text-xs uppercase tracking-[0.4em] text-emerald-200">Mes en curso</p>
-                    <p class="mt-2 text-2xl font-bold">{{ $focusedMonthLabel }}</p>
-                    <p class="text-[11px] text-slate-200/80">Actualizado automáticamente</p>
+                <label class="text-xs uppercase tracking-widest text-emerald-200">Visualizar mes</label>
+                <div class="mt-2 rounded-2xl bg-white/10 p-3 backdrop-blur">
+                    <select wire:model.live="selectedPeriod" wire:loading.attr="disabled"
+                        class="w-full bg-transparent text-white font-semibold focus:outline-none">
+                        @foreach ($monthOptions as $value => $label)
+                            <option class="text-slate-900" value="{{ $value }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         </div>
@@ -65,44 +69,61 @@
             <span>Sáb</span>
         </div>
 
-        <div class="mt-2 grid grid-cols-7 gap-2">
-            @foreach ($this->calendarDays as $day)
-                @php
-                    $baseClasses = 'relative min-h-[90px] rounded-2xl border px-3 py-4 text-left transition-all';
-                    $stateClasses = match (true) {
-                        ! $day['isCurrentMonth'] => 'border-slate-900 bg-slate-900/30 text-slate-600',
-                        $day['isToday'] => 'border-emerald-400 bg-emerald-500/10 text-white shadow-lg shadow-emerald-500/20',
-                        default => 'border-slate-800 bg-slate-900/50 text-slate-300',
-                    };
-                    $interactivityClasses = $day['hasReservations']
-                        ? 'cursor-pointer hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/15'
-                        : 'cursor-not-allowed opacity-50';
-                @endphp
-                <button type="button"
-                    data-calendar-day
-                    data-has-reservations="{{ $day['hasReservations'] ? 'true' : 'false' }}"
-                    @if ($day['hasReservations']) wire:click="openDay('{{ $day['date'] }}')" @endif
-                    @if (! $day['hasReservations']) disabled @endif
-                    class="{{ $baseClasses }} {{ $stateClasses }} {{ $interactivityClasses }}">
-                    <div class="flex items-start justify-between">
-                        <span class="text-2xl font-semibold">{{ $day['label'] }}</span>
+        <div class="relative mt-2">
+            <div class="grid grid-cols-7 gap-2 transition opacity-100" wire:loading.class="opacity-40 pointer-events-none" wire:target="selectedPeriod">
+                @foreach ($this->calendarDays as $day)
+                    @php
+                        $baseClasses = 'relative min-h-[90px] rounded-2xl border px-3 py-4 text-left transition-all';
+                        $stateClasses = match (true) {
+                            ! $day['isCurrentMonth'] => 'border-slate-900 bg-slate-900/30 text-slate-600',
+                            $day['isToday'] => 'border-emerald-400 bg-emerald-500/10 text-white shadow-lg shadow-emerald-500/20',
+                            default => 'border-slate-800 bg-slate-900/50 text-slate-300',
+                        };
+                        $interactivityClasses = $day['hasReservations']
+                            ? 'cursor-pointer hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/15'
+                            : 'cursor-not-allowed';
+                    @endphp
+                    <button type="button"
+                        data-calendar-day
+                        wire:key="day-{{ $day['date'] }}"
+                        data-has-reservations="{{ $day['hasReservations'] ? 'true' : 'false' }}"
+                        @if ($day['hasReservations']) wire:click="openDay('{{ $day['date'] }}')" @endif
+                        @if (! $day['hasReservations']) disabled @endif
+                        class="{{ $baseClasses }} {{ $stateClasses }} {{ $interactivityClasses }}">
+                        <div class="flex items-start justify-between">
+                            <span class="text-2xl font-semibold">{{ $day['label'] }}</span>
+                            @if ($day['hasReservations'])
+                                <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                            @else
+                                <span class="h-2 w-2 rounded-full border border-slate-600/70"></span>
+                            @endif
+                        </div>
+                        <p class="mt-1 text-xs text-slate-400">{{ \Carbon\Carbon::parse($day['date'])->isoFormat('DD MMM') }}</p>
                         @if ($day['hasReservations'])
-                            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                            <span class="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 text-[11px] font-semibold text-emerald-100">
+                                <span class="h-2 w-2 animate-pulse rounded-full bg-emerald-300"></span>
+                                {{ $day['reservationsCount'] }} reservas
+                            </span>
+                        @else
+                            <span class="mt-4 inline-flex items-center gap-2 rounded-full border border-slate-700 px-3 py-1 text-[11px] font-semibold text-slate-500">
+                                <span class="h-2 w-2 rounded-full border border-slate-500/70"></span>
+                                Día libre
+                            </span>
                         @endif
-                    </div>
-                    <p class="mt-1 text-xs text-slate-400">{{ \Carbon\Carbon::parse($day['date'])->isoFormat('DD MMM') }}</p>
-                    @if ($day['hasReservations'])
-                        <span class="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 text-[11px] font-semibold text-emerald-100">
-                            <span class="h-2 w-2 animate-pulse rounded-full bg-emerald-300"></span>
-                            {{ $day['reservationsCount'] }} reservas
-                        </span>
-                    @else
-                        <span class="mt-4 inline-flex items-center rounded-full border border-slate-700 px-3 py-1 text-[11px] font-semibold text-slate-500">
-                            Día libre
-                        </span>
-                    @endif
-                </button>
-            @endforeach
+                    </button>
+                @endforeach
+            </div>
+            <div wire:loading.flex wire:target="selectedPeriod"
+                class="pointer-events-none absolute inset-0 items-center justify-center rounded-3xl bg-slate-950/60 text-slate-200">
+                <div class="flex flex-col items-center gap-3">
+                    <svg class="h-8 w-8 animate-spin text-emerald-300" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
+                    </svg>
+                    <p class="text-sm uppercase tracking-[0.3em] text-emerald-200">Actualizando mes</p>
+                </div>
+            </div>
         </div>
     </div>
 
