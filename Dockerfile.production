@@ -17,13 +17,23 @@ COPY --chown=www-data:www-data ./proyectos/gambeta /var/www/html
 
 WORKDIR /var/www/html
 
-# Configurar Apache para apuntar a /public
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && echo '<Directory /var/www/html/public>\n\
-    Options Indexes FollowSymLinks\n\
-    AllowOverride All\n\
-    Require all granted\n\
-</Directory>' >> /etc/apache2/sites-available/000-default.conf
+# Configurar Apache para apuntar a /public (reescribir completamente)
+RUN echo '<VirtualHost *:80>\n\
+    ServerAdmin webmaster@localhost\n\
+    DocumentRoot /var/www/html/public\n\
+    \n\
+    <Directory /var/www/html/public>\n\
+        Options Indexes FollowSymLinks\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+    \n\
+    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
+    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+
+# Verificar que public/index.php existe
+RUN test -f /var/www/html/public/index.php || (echo "ERROR: public/index.php no existe" && exit 1)
 
 # Instalar dependencias
 RUN composer install --no-dev --optimize-autoloader --no-interaction
@@ -38,16 +48,22 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN echo '#!/bin/bash\n\
 set -e\n\
 echo "Iniciando Gambeta..."\n\
+echo "DocumentRoot: /var/www/html/public"\n\
+\n\
+# Verificar estructura\n\
+ls -la /var/www/html/public/ || echo "ERROR: No existe /var/www/html/public"\n\
 \n\
 # Generar APP_KEY si no existe\n\
 if [ -z "$APP_KEY" ]; then\n\
+    echo "Generando APP_KEY..."\n\
     php artisan key:generate --force\n\
 fi\n\
 \n\
 # Esperar BD y migrar\n\
+echo "Esperando base de datos..."\n\
 for i in {1..30}; do\n\
     if php artisan migrate --force 2>/dev/null; then\n\
-        echo "Migraciones ejecutadas"\n\
+        echo "Migraciones ejecutadas correctamente"\n\
         break\n\
     fi\n\
     sleep 2\n\
