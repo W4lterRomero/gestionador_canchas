@@ -284,7 +284,7 @@ class ReservaFlow extends Component
 
     public function abrirConfirmacion()
 {
-    $this->validarPasoActual();  
+    $this->validarPasoActual();
     $this->mostrarModalConfirmacion = true;
 }
 
@@ -306,7 +306,7 @@ private function guardarReserva()
 {
     $this->validarPasoActual();
 
-    $cliente = \App\Models\Cliente::firstOrCreate(
+    $cliente = Cliente::firstOrCreate(
         ['telefono' => $this->telefono],
         [
             'nombrecliente' => $this->nombre,
@@ -322,7 +322,7 @@ private function guardarReserva()
     \App\Models\Reserva::create([
         'cancha_id'        => $this->cancha,
         'cliente_id'       => $cliente->id,
-        'fecha_reserva'    => $this->fecha, 
+        'fecha_reserva'    => $this->fecha,
         'fecha_inicio'     => $inicio,
         'fecha_fin'        => $fin,
         'duracion_minutos' => $duracionMin,
