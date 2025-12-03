@@ -124,7 +124,7 @@
         }
 
         .btn-custom {
-            background: linear-gradient(135deg, #00b09b, #96c93d); /* Gradiente llamativo */
+            background: linear-gradient(135deg, #3c7a4eff, #2fb341ff); /* Gradiente llamativo */
             border: none;
             color: white;
             font-weight: 700;
