@@ -1960,6 +1960,7 @@
 </div>
 
 {{-- pasar variables de PHP a JavaScript ignorar error del editor --}}
+
 <script>
     window.reservasConfig = {
         shouldOpenCreateModal: @json($shouldOpenCreateModal),
