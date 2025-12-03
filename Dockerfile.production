@@ -24,13 +24,13 @@ RUN printf "<Directory /var/www/html/public>\nOptions Indexes FollowSymLinks\nAl
 # Cambiar DocumentRoot a /var/www/html/public
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
-# Copiar código de la aplicación
-COPY --chown=www-data:www-data ./proyectos /var/www/html
+# Copiar código de la aplicación Laravel
+COPY --chown=www-data:www-data ./proyectos/gambeta /var/www/html
 
 WORKDIR /var/www/html
 
 # Instalar dependencias de Composer (sin dev)
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
 # Configurar permisos para producción
 RUN chown -R www-data:www-data /var/www/html \
@@ -38,14 +38,11 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage \
     && chmod -R 775 /var/www/html/bootstrap/cache
 
-# Optimizar Laravel para producción
-RUN php artisan config:cache || true \
-    && php artisan route:cache || true \
-    && php artisan view:cache || true
+# Copiar script de inicio
+COPY docker-entrypoint-prod.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint-prod.sh
 
 EXPOSE 80
 
-# Ejecutar como www-data
-USER www-data
-
-CMD ["apache2-foreground"]
+# Ejecutar script de inicio que maneja migraciones y cachés
+CMD ["/usr/local/bin/docker-entrypoint-prod.sh"]
