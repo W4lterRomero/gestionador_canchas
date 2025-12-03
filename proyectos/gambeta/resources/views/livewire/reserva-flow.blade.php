@@ -59,7 +59,7 @@
 
 <div x-data="{ abierto: false }" class="relative">
 
-    <!-- BOTÓN -->
+    {{-- Botón --}}
     <div 
         class="w-full bg-white border border-green-300 rounded-xl px-4 py-3 shadow flex justify-between items-center cursor-pointer"
         @click="abierto = !abierto"
@@ -70,7 +70,7 @@
         <i class="fa-solid fa-chevron-down text-green-700"></i>
     </div>
 
-    <!-- LISTA -->
+    {{-- Lista --}}
     <div 
         x-show="abierto"
         @click.outside="abierto = false"
@@ -153,7 +153,7 @@
                     @enderror
                 </div>
 
-                <!-- TOTAL -->
+                {{-- Total --}}
                 <div class="p-4 bg-green-100 rounded-xl border border-green-300">
                     <p class="text-gray-700 font-semibold">Total:</p>
                     <p class="text-3xl font-bold text-green-700">
@@ -181,7 +181,7 @@
 
     <h2 class="text-2xl font-bold text-green-700">Datos del cliente</h2>
 
-    <!-- BUSCADOR -->
+    {{-- Buscador --}}
     <div class="relative">
 
         <i class="fa-solid fa-magnifying-glass text-green-700 absolute left-3 top-3"></i>
@@ -209,7 +209,7 @@
 
     </div>
 
-    <!-- INPUTS DE CLIENTE -->
+    {{-- Datos del cliente --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         <input type="text" wire:model.live="nombre"
@@ -341,9 +341,7 @@
             Detalles de la reserva
         </h2>
 
-        {{-- ======================= --}}
-        {{-- SECCIÓN CANCHA --}}
-        {{-- ======================= --}}
+        {{-- Cancha --}}
         <div class="space-y-2">
             <h3 class="text-xl font-bold text-green-600">Detalles de la cancha</h3>
 
@@ -354,9 +352,7 @@
             <p><b>Duración:</b> {{ $duracion }} h</p>
         </div>
 
-        {{-- ======================= --}}
-        {{-- SECCIÓN CLIENTE --}}
-        {{-- ======================= --}}
+        {{-- Cliente --}}
         <div class="space-y-2 pt-4">
             <h3 class="text-xl font-bold text-green-600">Detalles del cliente</h3>
 
@@ -367,9 +363,7 @@
             <p><b>Equipo:</b> {{ $equipo ?: '—' }}</p>
         </div>
 
-        {{-- ======================= --}}
-        {{-- SECCIÓN PAGO Y ESTADO --}}
-        {{-- ======================= --}}
+        {{-- Pago y estado --}}
         <div class="space-y-2 pt-4">
             <h3 class="text-xl font-bold text-green-600">Detalles del pago y estado</h3>
 

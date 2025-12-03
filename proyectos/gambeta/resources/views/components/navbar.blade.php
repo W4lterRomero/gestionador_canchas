@@ -2,6 +2,11 @@
             px-6 py-4 shadow-xl 
             bg-gradient-to-r from-[#022019] via-[#063b2b] to-[#0b5c41]
             backdrop-blur-xl border-b border-green-500/20">
+<<<<<<< HEAD
+=======
+
+    <!-- Logo -->
+>>>>>>> 5800a4daac2d18231e9b2c1696263997e25e8f62
     <div class="flex items-center gap-3">
         <a href="{{ auth()->check() ? route('inicio') : route('login') }}" class="flex items-center">
             <img src="{{ asset('images/logo.png') }}" 
@@ -11,6 +16,10 @@
     </div>
 
     @auth
+<<<<<<< HEAD
+=======
+    <!-- Menú Escritorio -->
+>>>>>>> 5800a4daac2d18231e9b2c1696263997e25e8f62
     <ul class="hidden md:flex space-x-8 text-lg font-medium text-white">
 
         <li>
@@ -52,6 +61,10 @@
 
     </ul>
 
+<<<<<<< HEAD
+=======
+    <!-- Menú Móvil -->
+>>>>>>> 5800a4daac2d18231e9b2c1696263997e25e8f62
     <div class="md:hidden">
         <div class="dropdown dropdown-end">
             <label tabindex="0" 
@@ -77,6 +90,10 @@
         </div>
     </div>
 
+<<<<<<< HEAD
+=======
+    <!-- Usuario y Salir -->
+>>>>>>> 5800a4daac2d18231e9b2c1696263997e25e8f62
     <div class="ml-6 hidden md:flex items-center gap-3">
         <span class="text-white text-sm">{{ auth()->user()->name }}</span>
         <form action="{{ route('admin.logout') }}" method="POST" class="inline">
@@ -92,6 +109,10 @@
     @endauth
 
     @guest
+<<<<<<< HEAD
+=======
+    <!-- Usuario Invitado -->
+>>>>>>> 5800a4daac2d18231e9b2c1696263997e25e8f62
     <div class="ml-6 hidden md:block">
         <a href="{{ route('login') }}">
             <button class="mary-btn mary-btn-circle shadow-lg

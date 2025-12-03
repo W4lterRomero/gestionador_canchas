@@ -39,8 +39,15 @@ class CanchaSeeder extends Seeder
             ],
         ];
 
-        foreach ($canchas as $cancha) {
-            Cancha::factory()->fromSeeder($cancha)->create();
+        foreach ($canchas as $data) {
+            $cancha = Cancha::factory()->fromSeeder($data)->create();
+
+            // Agregar imágenes de galería de ejemplo
+            $cancha->imagenes()->createMany([
+                ['imagen_url' => '/storage/canchas/cancha.png'],
+                ['imagen_url' => '/storage/canchas/cancha.png'],
+                ['imagen_url' => '/storage/canchas/cancha.png'],
+            ]);
         }
     }
 }

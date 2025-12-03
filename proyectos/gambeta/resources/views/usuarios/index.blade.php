@@ -4,7 +4,7 @@
 
 <section class="container mx-auto px-6 py-10">
 
-    <!-- ENCABEZADO -->
+    {{-- Encabezado --}}
     <div class="flex justify-between items-center mb-8">
 
         <div>
@@ -12,7 +12,7 @@
             <p class="text-gray-600">Administración de cuentas y roles del sistema.</p>
         </div>
 
-        <!-- Botón crear usuario -->
+        {{-- Botón crear --}}
         <button 
             data-bs-toggle="modal" 
             data-bs-target="#modalCrearUsuario"
@@ -22,18 +22,18 @@
     </div>
 
 
-    <!-- FILTROS -->
+    {{-- Filtros --}}
     <div class="bg-white rounded-xl shadow p-5 border border-green-200">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-            <!-- Buscar -->
+            {{-- Buscar --}}
             <input 
                 type="text" 
                 class="mary-input mary-input-bordered bg-gray-50"
                 placeholder="Buscar usuario por nombre...">
 
-            <!-- Rol -->
+            {{-- Rol --}}
             <select class="mary-select mary-select-bordered bg-gray-50">
                 <option value="">Filtrar por rol</option>
                 <option>Administrador</option>
@@ -46,7 +46,7 @@
     </div>
 
 
-    <!-- TABLA DE USUARIOS -->
+    {{-- Tabla de usuarios --}}
     <div class="mt-8 bg-white rounded-2xl shadow-xl overflow-hidden border border-green-200">
 
         <table class="table table-zebra w-full">
@@ -63,7 +63,7 @@
 
             <tbody>
 
-                <!-- EJEMPLO 1 -->
+                {{-- Ejemplo 1 --}}
                 <tr>
                     <td>Carlos Pérez</td>
                     <td>cperez</td>
@@ -85,7 +85,7 @@
                     </td>
                 </tr>
 
-                <!-- EJEMPLO 2 -->
+                {{-- Ejemplo 2 --}}
                 <tr>
                     <td>María López</td>
                     <td>mlopez</td>
@@ -107,7 +107,7 @@
                     </td>
                 </tr>
 
-                <!-- EJEMPLO 3 -->
+                {{-- Ejemplo 3 --}}
                 <tr>
                     <td>José Martínez</td>
                     <td>jmartinez</td>
@@ -136,9 +136,7 @@
 
 
 
-    <!-- ======================================================== -->
-    <!-- MODAL: CREAR USUARIO -->
-    <!-- ======================================================== -->
+    {{-- Modal crear usuario --}}
     <div class="modal fade" id="modalCrearUsuario" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content rounded-2xl overflow-hidden">
