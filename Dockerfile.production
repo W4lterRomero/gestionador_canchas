@@ -1,10 +1,6 @@
 FROM php:8.2-apache
 
-# Variables de entorno para producción
-ENV APP_ENV=production
-ENV APP_DEBUG=false
-
-# Instalar extensiones necesarias
+# Instalar extensiones PHP necesarias
 RUN apt-get update && apt-get install -y \
     git unzip libpng-dev libonig-dev libxml2-dev zip curl \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd \
@@ -16,31 +12,21 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Activar mod_rewrite
 RUN a2enmod rewrite
 
-# Copiar código PRIMERO (antes de configurar Apache)
+# Copiar código de Laravel
 COPY --chown=www-data:www-data ./proyectos/gambeta /var/www/html
 
 WORKDIR /var/www/html
 
-# Crear configuración de Apache NUEVA
-RUN echo '<VirtualHost *:80>\n\
-    ServerAdmin webmaster@localhost\n\
-    DocumentRoot /var/www/html/public\n\
-    \n\
-    <Directory /var/www/html/public>\n\
-        Options Indexes FollowSymLinks\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>\n\
-    \n\
-    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
-    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+# Configurar Apache para apuntar a /public
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
+    && echo '<Directory /var/www/html/public>\n\
+    Options Indexes FollowSymLinks\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>' >> /etc/apache2/sites-available/000-default.conf
 
-# Verificar que public/index.php existe
-RUN ls -la /var/www/html/public/index.php || (echo "ERROR: index.php no encontrado" && exit 1)
-
-# Instalar dependencias de Composer
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+# Instalar dependencias
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Configurar permisos
 RUN chown -R www-data:www-data /var/www/html \
@@ -48,39 +34,31 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage \
     && chmod -R 775 /var/www/html/bootstrap/cache
 
-# Verificar estructura final
-RUN echo "Verificando estructura..." \
-    && ls -la /var/www/html/ \
-    && echo "Contenido de public:" \
-    && ls -la /var/www/html/public/ \
-    && echo "DocumentRoot configurado en Apache:" \
-    && grep DocumentRoot /etc/apache2/sites-available/000-default.conf
-
-EXPOSE 80
-
-# Script de inicio simple
+# Script de inicio
 RUN echo '#!/bin/bash\n\
+set -e\n\
 echo "Iniciando Gambeta..."\n\
 \n\
 # Generar APP_KEY si no existe\n\
 if [ -z "$APP_KEY" ]; then\n\
-    echo "Generando APP_KEY..."\n\
     php artisan key:generate --force\n\
 fi\n\
 \n\
-# Esperar BD y ejecutar migraciones\n\
-echo "Esperando base de datos..."\n\
+# Esperar BD y migrar\n\
 for i in {1..30}; do\n\
-    if php artisan migrate:status &> /dev/null; then\n\
-        echo "BD conectada, ejecutando migraciones..."\n\
-        php artisan migrate --force --no-interaction || true\n\
+    if php artisan migrate --force 2>/dev/null; then\n\
+        echo "Migraciones ejecutadas"\n\
         break\n\
     fi\n\
     sleep 2\n\
 done\n\
 \n\
+# Storage link\n\
+php artisan storage:link 2>/dev/null || true\n\
+\n\
 echo "Iniciando Apache..."\n\
-exec apache2-foreground' > /usr/local/bin/docker-entrypoint.sh \
-    && chmod +x /usr/local/bin/docker-entrypoint.sh
+exec apache2-foreground' > /entrypoint.sh && chmod +x /entrypoint.sh
 
-CMD ["/usr/local/bin/docker-entrypoint.sh"]
+EXPOSE 80
+
+CMD ["/entrypoint.sh"]

@@ -5,8 +5,6 @@
 
 # Documentación
 *.md
-README.md
-SOLUCION_PERMISOS_DOCKER.md
 
 # Archivos de entorno (se configuran en producción)
 .env
@@ -47,7 +45,10 @@ tests/
 phpunit.xml
 .phpunit.result.cache
 
-# Docker local
+# Docker local (solo para desarrollo)
+docker-compose.yml
 docker-compose.override.yml
 docker-compose.local.yml
+dockerfile
 .env.docker
+setup.sh

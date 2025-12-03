@@ -2,18 +2,7 @@
 
 Sistema web para gestionar reservas de canchas deportivas. Desarrollado con Laravel 12, Livewire 3 y MySQL, containerizado con Docker.
 
-## Qué hace
-
-Aplicación para administrar un complejo deportivo:
-- Gestión de canchas (CRUD, múltiples imágenes, precios por cancha)
-- Sistema de reservas con calendario interactivo
-- Registro de clientes y su historial
-- Generación de comprobantes en PDF
-- Control de pagos y adelantos
-- Roles de usuario (Admin/Empleado)
-- Bloqueo de horarios para mantenimiento
-
-## Stack
+## Stack Tecnológico
 
 - Laravel 12 + Livewire 3
 - MySQL 8.0
@@ -23,15 +12,11 @@ Aplicación para administrar un complejo deportivo:
 - Spatie Permission para roles
 - DomPDF para comprobantes
 
-## Requisitos
+---
 
-- Docker Desktop
-- Git
-- WSL2 (si estás en Windows)
+## Desarrollo Local
 
-## Instalación
-
-### Opción 1: Script automático (recomendado)
+### Instalación rápida
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
@@ -39,65 +24,127 @@ cd gestionador_canchas
 ./setup.sh
 ```
 
-El script configura todo: Docker, dependencias, base de datos, permisos, etc. Tarda unos 10-15 minutos.
+El script configura automáticamente Docker, dependencias, base de datos y permisos.
 
-### Opción 2: Manual
-
-Si el script falla o prefieres hacerlo paso a paso:
+### Instalación manual
 
 ```bash
-# 1. Clonar repo
-git clone <URL_DEL_REPOSITORIO>
-cd gestionador_canchas
-
-# 2. Configurar permisos Docker (Linux/macOS/WSL)
+# 1. Configurar permisos Docker
 cp .env.docker.example .env.docker
 echo "UID=$(id -u)" >> .env.docker
 echo "GID=$(id -g)" >> .env.docker
 
-# 3. Levantar contenedores
-docker compose build
-docker compose up -d
+# 2. Levantar contenedores
+docker-compose up -d
 
-# 4. Setup Laravel
-docker compose exec app bash -c "cd gambeta && composer install"
-docker compose exec app bash -c "cd gambeta && cp .env.example .env"
-docker compose exec app bash -c "cd gambeta && php artisan key:generate"
-docker compose exec app chown -R www-data:www-data /var/www/html
-docker compose exec app bash -c "cd gambeta && chmod -R 775 storage bootstrap/cache"
-
-# 5. Base de datos
-docker compose exec app bash -c "cd gambeta && php artisan migrate --seed"
-
-# 6. Frontend
-docker compose exec app bash -c "cd gambeta && npm install && npm run build"
+# 3. Setup Laravel (dentro del contenedor)
+docker-compose exec app bash -c "cd gambeta && composer install"
+docker-compose exec app bash -c "cd gambeta && cp .env.example .env"
+docker-compose exec app bash -c "cd gambeta && php artisan key:generate"
+docker-compose exec app bash -c "cd gambeta && php artisan migrate --seed"
+docker-compose exec app bash -c "cd gambeta && npm install && npm run build"
 ```
 
 ### Acceso
 
-- App: http://localhost:8080
-- phpMyAdmin: http://localhost:8082 (root/rootpass)
+- **App**: http://localhost:8080
+- **phpMyAdmin**: http://localhost:8082 (root/rootpass)
 
-Si ejecutaste seeders:
+Usuarios de prueba (si ejecutaste seeders):
 - Admin: admin@gambeta.com / password
 - Empleado: empleado@gambeta.com / password
+
+### Comandos útiles
+
+```bash
+# Levantar/detener
+docker-compose up -d
+docker-compose down
+
+# Ver logs
+docker-compose logs -f app
+
+# Ejecutar Artisan
+docker-compose exec app bash -c "cd gambeta && php artisan [comando]"
+
+# Limpiar y reiniciar
+docker-compose down -v
+docker-compose up -d
+```
+
+---
+
+## Despliegue en Render
+
+### Pasos para desplegar
+
+1. **Push a GitHub**
+   ```bash
+   git add .
+   git commit -m "Deploy to Render"
+   git push origin main
+   ```
+
+2. **Conectar en Render**
+   - Ve a https://render.com
+   - New → Blueprint
+   - Conecta tu repositorio de GitHub
+   - Render detectará automáticamente `render.yaml`
+   - Confirma la creación del servicio web y base de datos
+
+3. **Esperar el despliegue**
+   - El build tarda 5-10 minutos
+   - Render ejecuta las migraciones automáticamente
+   - La base de datos MySQL se crea automáticamente
+
+### Variables de entorno
+
+Las variables se configuran automáticamente desde `render.yaml`:
+- `APP_NAME`, `APP_ENV`, `APP_DEBUG`
+- `APP_KEY` (se genera automáticamente)
+- `DB_*` (se configuran desde la base de datos de Render)
+
+### Solución de problemas en Render
+
+**Ver logs:**
+- Render Dashboard → Tu servicio → Logs
+
+**Error 500:**
+```bash
+# En Render Shell
+php artisan migrate --force
+php artisan config:clear
+php artisan cache:clear
+```
+
+**Error de base de datos:**
+- Verificar que la BD en Render esté activa (tarda 1-2 min en iniciar)
+- Las credenciales se configuran automáticamente
+
+---
 
 ## Estructura del proyecto
 
 ```
 gestionador_canchas/
-├── dockerfile              # Imagen Docker desarrollo
-├── docker-compose.yml      # Orquestación contenedores
-├── setup.sh               # Script instalación automática
-└── proyectos/gambeta/     # App Laravel
-    ├── app/
-    │   ├── Http/Controllers/  # 16 controladores
-    │   ├── Livewire/          # 7 componentes
-    │   └── Models/            # 11 modelos
-    ├── database/migrations/   # 17 migraciones
-    ├── resources/views/       # Vistas Blade
-    └── routes/web.php         # Rutas
+├── dockerfile              # Docker para desarrollo local
+├── Dockerfile.production   # Docker para Render (producción)
+├── docker-compose.yml      # Compose para desarrollo local
+├── render.yaml             # Configuración de Render
+├── .dockerignore           # Archivos excluidos del build
+├── .env.docker.example     # Variables para desarrollo
+└── proyectos/gambeta/      # Aplicación Laravel
 ```
+
+## Funcionalidades
+
+- Gestión de canchas (CRUD, múltiples imágenes, histórico de precios)
+- Sistema de reservas con calendario interactivo
+- Registro de clientes y su historial
+- Generación de comprobantes en PDF
+- Control de pagos y adelantos
+- Roles de usuario (Admin/Empleado)
+- Bloqueo de horarios para mantenimiento
 
 ## Base de datos
 
@@ -108,138 +155,19 @@ gestionador_canchas/
 - `cancha_precios` - Histórico de precios
 - `bloqueos_horarios` - Bloqueos de tiempo
 - `clientes` - Clientes del complejo
-- `reservas` - Reservas (con estados: pendiente, confirmada, finalizada, cancelada)
+- `reservas` - Reservas (con estados)
 - `pagos` - Registro de pagos
-- `reservas_estados_historial` - Auditoría de cambios
-
-## Comandos útiles
-
-### Docker
-
-```bash
-# Levantar/detener
-docker compose up -d
-docker compose down
-
-# Ver logs
-docker compose logs -f app
-
-# Entrar al contenedor
-docker compose exec app bash
-
-# Reiniciar todo desde cero
-docker compose down -v
-docker compose build --no-cache
-docker compose up -d
-```
-
-### Laravel
-
-```bash
-# Ejecutar artisan
-docker compose exec app bash -c "cd gambeta && php artisan [comando]"
-
-# Ejemplos
-docker compose exec app bash -c "cd gambeta && php artisan migrate"
-docker compose exec app bash -c "cd gambeta && php artisan route:list"
-docker compose exec app bash -c "cd gambeta && php artisan make:controller NombreController"
-docker compose exec app bash -c "cd gambeta && php artisan make:livewire ComponenteNombre"
-
-# Limpiar cachés
-docker compose exec app bash -c "cd gambeta && php artisan cache:clear"
-docker compose exec app bash -c "cd gambeta && php artisan config:clear"
-docker compose exec app bash -c "cd gambeta && php artisan view:clear"
-```
-
-### Composer
-
-```bash
-docker compose exec app bash -c "cd gambeta && composer require paquete/nombre"
-docker compose exec app bash -c "cd gambeta && composer update"
-docker compose exec app bash -c "cd gambeta && composer dump-autoload"
-```
-
-### Base de datos
-
-```bash
-# Backup
-docker compose exec db mysqldump -u appuser -papppass appdb > backup.sql
-
-# Restaurar
-docker compose exec -T db mysql -u appuser -papppass appdb < backup.sql
-
-# Acceder a MySQL
-docker compose exec db mysql -u root -prootpass
-```
-
-
-## Desarrollo
-
-### Git workflow
-
-```bash
-# Antes de empezar
-git pull origin main
-
-# Crear rama
-git checkout -b feature/nombre-feature
-
-# Commits
-git add .
-git commit -m "Add: descripción"
-
-# Push
-git push origin feature/nombre-feature
-```
-
-### Convención de commits
-
-- `Add:` Nueva funcionalidad
-- `Fix:` Corrección de bugs
-- `Update:` Actualización de feature
-- `Refactor:` Refactorización
-- `Docs:` Documentación
-
-## Testing
-
-```bash
-docker compose exec app bash -c "cd gambeta && php artisan test"
-docker compose exec app bash -c "cd gambeta && php artisan test --filter=NombreTest"
-docker compose exec app bash -c "cd gambeta && php artisan test --coverage"
-```
-
-## Producción
-
-Ver [DESPLIEGUE_RENDER.md](DESPLIEGUE_RENDER.md) para deploy en Render.com.
-
-Checklist antes de deploy:
-- `APP_ENV=production`
-- `APP_DEBUG=false`
-- Generar nueva `APP_KEY`
-- Configurar DB de producción
-- `composer install --optimize-autoloader --no-dev`
-- `npm run build`
-- Configurar HTTPS/SSL
-- Configurar backups
-
-## Documentación adicional
-
-- [GUIA_INSTALACION.md](GUIA_INSTALACION.md) - Instalación detallada por OS
-- [SOLUCION_PERMISOS_DOCKER.md](SOLUCION_PERMISOS_DOCKER.md) - Troubleshooting permisos
-- [DESPLIEGUE_RENDER.md](DESPLIEGUE_RENDER.md) - Deploy producción
-
-## Recursos
-
-- [Laravel 12 Docs](https://laravel.com/docs/12.x)
-- [Livewire v3 Docs](https://livewire.laravel.com/docs)
-- [Spatie Permission](https://spatie.be/docs/laravel-permission/v6)
-- [Docker Compose Reference](https://docs.docker.com/compose/)
-
-## Licencia
-
-Proyecto educativo - Trabajo Práctico Integrador (TPI)
+- `reservas_estados_historial` - Auditoría
 
 ---
 
-**Última actualización:** Diciembre 2025
-**Laravel:** 12.x | **Livewire:** 3.7 | **PHP:** 8.2
+## Notas importantes
+
+- **Desarrollo**: Usa `docker-compose.yml` + `dockerfile`
+- **Producción**: Usa `Dockerfile.production` (automático en Render)
+- Los archivos de desarrollo NO afectan el despliegue
+- Render usa `render.yaml` para configuración automática
+
+---
+
+**Última actualización:** Diciembre 2024
