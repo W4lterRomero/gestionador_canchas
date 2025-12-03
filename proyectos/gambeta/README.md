@@ -1,59 +1,56 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Gambeta (Laravel + Livewire)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicación interna para administrar las reservas del complejo deportivo Gambeta. Incluye módulos para canchas, clientes, calendarios, bloqueos de horario y gestión de pagos con flujos paso a paso en Livewire.
 
-## About Laravel
+## Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Laravel 12 (PHP 8.2)  
+- Livewire 3 y componentes Alpine externos mínimos  
+- Tailwind vía Vite  
+- MySQL 8.0  
+- Spatie Laravel Permission para roles `admin` y `empleado`
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Características destacadas
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Flujo de reservas guiado**: selección de cancha, horario, cliente y confirmación de pago en un wizard Livewire.  
+- **Calendario visual**: `App\Livewire\CalendarioReserva` muestra la disponibilidad real combinando reservas existentes y `BloqueoHorario`.  
+- **Bloqueos administrativos**: desde el panel de admin se definen ventanas de mantenimiento que impiden tomar turnos.  
+- **Gestión de clientes frecuentes**: historial, banderas y estadísticas básicas.  
+- **PDF de comprobantes**: gracias a `barryvdh/laravel-dompdf`.
 
-## Learning Laravel
+## Preparar el proyecto (sin Docker)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+> Si estás usando el Docker del repositorio raíz, ejecuta los mismos comandos dentro del contenedor `app`.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
 
-## Laravel Sponsors
+npm install
+npm run dev   # o npm run build
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Las migraciones crean los usuarios `admin@example.com` y `empleado@example.com` con contraseña `1234`.
 
-### Premium Partners
+## Scripts útiles
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- `composer run setup`: instala dependencias, genera `.env`, ejecuta migraciones y compila assets.  
+- `composer run dev`: arranca servidor artisan, cola de trabajos, logs de pail y Vite de manera concurrente (requiere `npx concurrently`).  
+- `npm run dev` / `npm run build`: compila assets con Vite.
 
-## Contributing
+## Pruebas
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan test          # test suite de Laravel
+```
 
-## Code of Conduct
+## Dónde tocar
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Livewire / UI**: `app/Livewire` y `resources/views/livewire`.  
+- **Modelos/negocio**: `app/Models` y `app/Services` (si aplica).  
+- **Policies y permisos**: `app/Providers/AuthServiceProvider.php` + `database/seeders/RolePermissionSeeder.php`.
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Mantén esta guía sincronizada con el código antes de tocar producción o el Docker raíz.
