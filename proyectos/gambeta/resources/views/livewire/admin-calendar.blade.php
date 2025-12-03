@@ -59,7 +59,8 @@
             </div>
         </div>
 
-        <div class="mt-6 grid grid-cols-7 text-center text-xs font-semibold uppercase tracking-widest text-slate-500">
+        <div
+            class="mt-6 hidden grid-cols-7 text-center text-[11px] font-semibold uppercase tracking-widest text-slate-500 md:grid">
             <span>Dom</span>
             <span>Lun</span>
             <span>Mar</span>
@@ -68,12 +69,17 @@
             <span>Vie</span>
             <span>Sáb</span>
         </div>
+        <div class="mt-6 flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.4em] text-slate-500 md:hidden">
+            <span>Días del mes</span>
+            <span>{{ $focusedMonthLabel }}</span>
+        </div>
 
         <div class="relative mt-2">
-            <div class="grid grid-cols-7 gap-2 transition opacity-100" wire:loading.class="opacity-40 pointer-events-none" wire:target="selectedPeriod">
+            <div class="grid grid-cols-2 gap-3 transition opacity-100 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7"
+                wire:loading.class="opacity-40 pointer-events-none" wire:target="selectedPeriod">
                 @foreach ($this->calendarDays as $day)
                     @php
-                        $baseClasses = 'relative min-h-[90px] rounded-2xl border px-3 py-4 text-left transition-all';
+                        $baseClasses = 'relative min-h-[86px] rounded-2xl border px-3 py-4 text-left transition-all sm:min-h-[94px]';
                         $stateClasses = match (true) {
                             ! $day['isCurrentMonth'] => 'border-slate-900 bg-slate-900/30 text-slate-600',
                             $day['isToday'] && $day['hasReservations'] => 'border-emerald-400 bg-emerald-500/15 text-white shadow-lg shadow-emerald-500/20',
