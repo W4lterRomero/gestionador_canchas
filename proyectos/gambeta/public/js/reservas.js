@@ -18,8 +18,8 @@
             return;
         }
 
-        const activeClasses = ['bg-indigo-200', 'shadow'];
-        const inactiveClasses = ['bg-white', 'hover:bg-gray-100'];
+        const activeClasses = ['bg-emerald-200', 'text-emerald-900', 'shadow'];
+        const inactiveClasses = ['bg-white', 'text-gray-900', 'hover:bg-gray-100'];
 
         const activateSection = (target) => {
             sections.forEach((section) => {
@@ -29,7 +29,7 @@
             navButtons.forEach((btn) => {
                 const isActive = btn.dataset.sectionTarget === target;
                 btn.classList.remove(...activeClasses, ...inactiveClasses);
-                btn.classList.add(...(isActive ? activeClasses : inactiveClasses), 'text-gray-900');
+                btn.classList.add(...(isActive ? activeClasses : inactiveClasses));
             });
         };
 

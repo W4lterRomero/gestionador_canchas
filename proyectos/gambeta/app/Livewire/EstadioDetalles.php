@@ -3,19 +3,21 @@
 namespace App\Livewire;
 
 use App\Models\Cancha;
+use App\Models\CanchaImagen;
 use App\Models\Reserva;
 use Livewire\Component;
+use Illuminate\Support\Facades\Storage;
 
 class EstadioDetalles extends Component
 {
-    // (serializable)
+    // Public properties are serializable
     public $canchaId;
 
-    // Para el calendario
+    // Calendar state
     public $mesActual;
     public $añoActual;
 
-    // Para el modal de detalles
+    // Modal state
     public $diaSeleccionado = null;
     public $mostrarModal = false;
 
@@ -23,12 +25,12 @@ class EstadioDetalles extends Component
     {
         $this->canchaId = $id;
 
-        // ✅ Verificamos que exista la cancha
+        // Ensure stadium exists
         if (!Cancha::find($id)) {
             abort(404, 'Cancha no encontrada');
         }
 
-        // Inicializar calendario al mes actual
+        // Start calendar at current month
         $this->mesActual = now()->month;
         $this->añoActual = now()->year;
     }
@@ -80,7 +82,7 @@ class EstadioDetalles extends Component
             ->get();
     }
 
-    // Generar bloques horarios para el timeline (8 AM - 10 PM en bloques de 30 min)
+    // Generate 30-min time slots (8 AM - 10 PM)
     public function getBloquesHorariosProperty()
     {
         $bloques = [];
@@ -95,7 +97,7 @@ class EstadioDetalles extends Component
         return $bloques;
     }
 
-    // Verificar si un bloque horario tiene una reserva
+    // Check if slot is booked
     public function getBloqueConReserva($horaBloque)
     {
         if (!$this->diaSeleccionado) return null;
@@ -105,7 +107,7 @@ class EstadioDetalles extends Component
         $finBloque = $inicioBloque->copy()->addMinutes(30);
 
         foreach ($this->reservasDiaSeleccionado as $reserva) {
-            // Verificar si la reserva intersecta con este bloque
+            // Check for overlap
             if ($reserva->fecha_inicio < $finBloque && $reserva->fecha_fin > $inicioBloque) {
                 return $reserva;
             }
@@ -114,20 +116,20 @@ class EstadioDetalles extends Component
         return null;
     }
 
-    // Calcular cuántos bloques ocupa una reserva desde su inicio
+    // Calculate slot span
     public function calcularBloques($reserva)
     {
         $duracionMinutos = $reserva->duracion_minutos ?? $reserva->fecha_inicio->diffInMinutes($reserva->fecha_fin);
         return ceil($duracionMinutos / 30);
     }
 
-    // Verificar si esta es la primera aparición de la reserva en el timeline
+    // Check if this is the start block
     public function esInicioReserva($reserva, $horaBloque)
     {
         list($hora, $minuto) = explode(':', $horaBloque);
         $inicioBloque = $this->diaSeleccionado->copy()->setTime($hora, $minuto, 0);
 
-        // Verificar si el inicio de la reserva está en este bloque de 30 min
+        // Is start time in this block?
         return $reserva->fecha_inicio >= $inicioBloque &&
                $reserva->fecha_inicio < $inicioBloque->copy()->addMinutes(30);
     }
@@ -154,20 +156,20 @@ class EstadioDetalles extends Component
         $primerDia = \Carbon\Carbon::create($this->añoActual, $this->mesActual, 1);
         $ultimoDia = $primerDia->copy()->endOfMonth();
 
-        // Día de la semana del primer día (0=Domingo, 1=Lunes, etc.)
+        // Get starting weekday
         $primerDiaSemana = $primerDia->dayOfWeek;
 
-        // Ajustar para que Lunes sea 0
+        // Adjust for Monday start
         $primerDiaSemana = $primerDiaSemana == 0 ? 6 : $primerDiaSemana - 1;
 
         $dias = [];
 
-        // Días vacíos al inicio
+        // Empty slots before 1st of month
         for ($i = 0; $i < $primerDiaSemana; $i++) {
             $dias[] = null;
         }
 
-        // Días del mes
+        // Fill actual days
         for ($dia = 1; $dia <= $ultimoDia->day; $dia++) {
             $dias[] = \Carbon\Carbon::create($this->añoActual, $this->mesActual, $dia);
         }
@@ -175,7 +177,7 @@ class EstadioDetalles extends Component
         return $dias;
     }
 
-    // Obtener reservas por fecha
+    // Filter reservations by date
     public function getReservasPorFecha($fecha)
     {
         if (!$fecha) return collect();
@@ -185,7 +187,7 @@ class EstadioDetalles extends Component
         });
     }
 
-    // Nombre del mes
+    // Month name helper
     public function getNombreMesProperty()
     {
         $meses = [
