@@ -29,24 +29,19 @@
 
 <body class="text-gray-200">
 
-    <!-- CAPA OSCURA SOBRE EL FONDO -->
     <div class="dark-layer min-h-screen flex items-center justify-center px-4">
 
-        <!-- TARJETA DE LOGIN VERDE -->
         <div class="card w-full max-w-md bg-green-900/70 shadow-2xl p-8 border border-green-500 rounded-2xl backdrop-blur-xl">
 
-            <!-- LOGO -->
             <div class="flex justify-center mb-6">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" 
                      class="h-32 w-auto object-contain drop-shadow-xl">
             </div>
 
-            <!-- TÍTULO -->
             <h2 class="text-3xl font-bold text-center text-green-300 mb-6 tracking-wide">
                 Inicio de Sesión
             </h2>
 
-            <!-- MOSTRAR ERRORES -->
             @if ($errors->any())
             <div class="alert alert-error mb-4 bg-red-600/80 text-white rounded-lg p-3">
                 <ul class="list-disc list-inside text-sm">
@@ -57,11 +52,9 @@
             </div>
             @endif
 
-            <!-- FORMULARIO -->
             <form class="space-y-5" method="POST" action="{{ route('admin.login') }}">
                 @csrf
 
-                <!-- Email -->
                 <div>
                     <label class="block mb-1 text-green-300 font-semibold">Email</label>
                     <input type="email" name="email"
@@ -69,7 +62,6 @@
                         class="input input-bordered w-full bg-gray-900/40 border-green-600 text-white focus:border-green-400" required />
                 </div>
 
-                <!-- Contraseña -->
                 <div>
                     <label class="block mb-1 text-green-300 font-semibold">Contraseña</label>
                     <input type="password" name="password"
@@ -77,7 +69,6 @@
                         class="input input-bordered w-full bg-gray-900/40 border-green-600 text-white focus:border-green-400" required />
                 </div>
 
-                <!-- Botón -->
                 <button type="submit"
                    class="btn w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg rounded-full shadow-lg">
                     Entrar
@@ -85,7 +76,6 @@
 
             </form>
 
-            <!-- Divider -->
             <div class="divider text-green-300 mt-8">Sistema Nacional de Estadios Deportivos</div>
 
         </div>

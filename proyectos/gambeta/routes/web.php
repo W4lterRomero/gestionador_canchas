@@ -90,3 +90,8 @@ Route::post('/admin/login', [App\Http\Controllers\AdminController::class, 'login
 Route::post('/admin/logout', [App\Http\Controllers\AdminController::class, 'logout'])
     ->name('admin.logout')
     ->middleware('auth');
+
+// Creditos
+    Route::get('/creditos', function () {
+        return view('creditos');
+    })->name('creditos');

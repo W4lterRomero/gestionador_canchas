@@ -1,6 +1,5 @@
 <div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
 
-    <!-- Hero Section con Imagen -->
     <div class="relative h-96 overflow-hidden group">
         <img src="{{ $this->cancha->imagen_url ? asset($this->cancha->imagen_url) : asset('images/default-cancha.jpg') }}"
              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -8,7 +7,6 @@
 
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent transition-opacity duration-300 group-hover:from-black/70"></div>
 
-        <!-- Contenido sobre la imagen -->
         <div class="absolute inset-0 flex items-end">
             <div class="container mx-auto px-6 pb-12">
 
@@ -26,7 +24,6 @@
                     @endif
                 </div>
 
-                <!-- Título y tipo -->
                 <h1 class="text-5xl font-bold text-white mb-3 tracking-tight transform transition-all duration-300 hover:translate-x-2">{{ $this->cancha->nombre }}</h1>
                 <p class="text-xl text-gray-200 transition-colors duration-300 hover:text-white">{{ $this->cancha->tipo }}</p>
             </div>
@@ -40,7 +37,6 @@
         </a>
     </div>
 
-    <!-- Contenido Principal -->
     <div class="container mx-auto px-6 py-12">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -57,7 +53,6 @@
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Características</h2>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Tipo -->
                         <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-green-50/50 transition-all duration-300 group cursor-default">
                             <div class="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center flex-shrink-0 group-hover:bg-green-100 group-hover:scale-110 transition-all duration-300">
                                 <svg class="w-6 h-6 text-green-600 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,7 +66,6 @@
                             </div>
                         </div>
 
-                        <!-- Precio -->
                         <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-green-50/50 transition-all duration-300 group cursor-default">
                             <div class="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center flex-shrink-0 group-hover:bg-green-100 group-hover:scale-110 transition-all duration-300">
                                 <svg class="w-6 h-6 text-green-600 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,7 +78,6 @@
                             </div>
                         </div>
 
-                        <!-- Estado -->
                         <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-green-50/50 transition-all duration-300 group cursor-default">
                             <div class="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center flex-shrink-0 group-hover:bg-green-100 group-hover:scale-110 transition-all duration-300">
                                 <svg class="w-6 h-6 text-green-600 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,13 +112,11 @@
                 <div class="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 sticky top-6 hover:shadow-2xl hover:border-green-100 transition-all duration-300">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Información rápida</h2>
 
-                    <!-- Precio destacado -->
                     <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 mb-6 hover:from-green-100 hover:to-green-200 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-default group">
                         <p class="text-sm text-gray-600 font-medium mb-2 group-hover:text-green-700 transition-colors">Tarifa por hora</p>
                         <p class="text-4xl font-bold text-green-700 group-hover:text-green-800 group-hover:scale-105 transition-all">${{ number_format($this->cancha->precio_hora, 2) }}</p>
                     </div>
 
-                    <!-- Detalles adicionales -->
                     <div class="space-y-4">
                         <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50/50 transition-all duration-300 group cursor-default">
                             <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center group-hover:bg-green-100 group-hover:scale-110 transition-all duration-300">
@@ -167,7 +158,6 @@
                         </div>
                     </div>
 
-                    <!-- Nota informativa -->
                     <div class="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-xl hover:bg-blue-100 hover:border-blue-200 hover:shadow-lg transition-all duration-300 group cursor-default">
                         <div class="flex items-start gap-3">
                             <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,17 +172,14 @@
 
                 </div>
             </div>
-            <!-- Calendario de Reservas -->
 <div class="lg:col-span-3 mt-6">
     <div class="bg-white rounded-3xl p-4 sm:p-8 shadow-sm border border-gray-100 hover:shadow-xl hover:border-green-100 transition-all duration-300">
 
-        <!-- Header del Calendario - Responsive -->
         <div class="mb-6">
             <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 hover:text-green-600 transition-colors">
                 Calendario de Reservas
             </h2>
 
-            <!-- Navegación del mes - Stack en móvil -->
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <div class="flex items-center gap-2 flex-1">
                     <button wire:click="mesAnterior"
@@ -221,10 +208,8 @@
             </div>
         </div>
 
-        <!-- Grid del Calendario - Responsive -->
         <div class="border border-gray-200 rounded-2xl overflow-hidden">
 
-            <!-- Días de la semana -->
             <div class="grid grid-cols-7 bg-gray-50 border-b border-gray-200">
                 @foreach(['L', 'M', 'X', 'J', 'V', 'S', 'D'] as $index => $dia)
                     <div class="py-2 sm:py-3 text-center text-xs sm:text-sm font-semibold text-gray-700 border-r border-gray-200 last:border-r-0">
@@ -234,7 +219,6 @@
                 @endforeach
             </div>
 
-            <!-- Días del mes -->
             <div class="grid grid-cols-7">
                 @foreach($this->diasCalendario as $index => $fecha)
                     @php
@@ -247,7 +231,6 @@
                     <div class="min-h-[80px] sm:min-h-[100px] md:min-h-[120px] border-r border-b border-gray-200 last:border-r-0 bg-white transition-all duration-300 p-1 sm:p-2 {{ $fecha ? 'cursor-pointer hover:bg-gradient-to-br hover:from-blue-50 hover:to-green-50 hover:shadow-lg hover:scale-105 hover:z-10 hover:border-green-300' : '' }} group/day"
                          @if($fecha) wire:click="verDetallesDia({{ $fecha->day }})" @endif>
                         @if($fecha)
-                            <!-- Número del día -->
                             <div class="flex items-start justify-between mb-1">
                                 <span class="text-xs sm:text-sm font-semibold {{ $esHoy ? 'w-5 h-5 sm:w-7 sm:h-7 bg-green-500 text-white rounded-full flex items-center justify-center text-[10px] sm:text-sm' : 'text-gray-700' }}">
                                     {{ $fecha->day }}
@@ -260,7 +243,6 @@
                                 @endif
                             </div>
 
-                            <!-- Reservas del día - Solo mostrar en tablets y desktop -->
                             <div class="space-y-1 hidden sm:block">
                                 @foreach($reservasDelDia->take(2) as $reserva)
                                     <div class="text-[10px] sm:text-xs p-1 sm:p-1.5 rounded {{ $reserva->estado === 'confirmada' ? 'bg-green-100 text-green-800 border-l-2 border-green-500' : ($reserva->estado === 'cancelada' ? 'bg-red-100 text-red-800 border-l-2 border-red-500' : ($reserva->estado === 'finalizada' ? 'bg-blue-100 text-blue-800 border-l-2 border-blue-500' : 'bg-yellow-100 text-yellow-800 border-l-2 border-yellow-500')) }} truncate">
@@ -276,7 +258,6 @@
                                 @endif
                             </div>
 
-                            <!-- Indicador de reservas en móvil - Mostrar solo puntos -->
                             @if($tieneReservas)
                                 <div class="sm:hidden flex gap-0.5 mt-1">
                                     @foreach($reservasDelDia->take(3) as $reserva)
@@ -285,7 +266,6 @@
                                 </div>
                             @endif
                         @else
-                            <!-- Día vacío (fuera del mes) -->
                             <div class="text-gray-300"></div>
                         @endif
                     </div>
@@ -293,7 +273,6 @@
             </div>
         </div>
 
-        <!-- Leyenda - Responsive -->
         <div class="mt-4 sm:mt-6 grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-3 sm:gap-6 text-xs sm:text-sm">
             <div class="flex items-center gap-2">
                 <div class="w-3 h-3 sm:w-4 sm:h-4 bg-green-100 border-l-2 border-green-500 rounded"></div>
@@ -319,18 +298,14 @@
         </div>
     </div>
 
-    <!-- Modal de Detalles del Día con Timeline -->
     @if($mostrarModal && $diaSeleccionado)
         <div class="fixed inset-0 z-50 overflow-y-auto" wire:click="cerrarModal">
-            <!-- Overlay -->
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
 
-            <!-- Modal -->
             <div class="flex min-h-screen items-end sm:items-center justify-center p-0 sm:p-4">
                 <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden"
                      wire:click.stop>
 
-                    <!-- Header del Modal -->
                     <div class="bg-gradient-to-r from-green-600 to-green-500 px-3 sm:px-6 py-3 sm:py-5 text-white">
                         <div class="flex items-center justify-between mb-3 sm:mb-0">
                             <div class="flex-1 min-w-0">
@@ -349,7 +324,6 @@
                             </button>
                         </div>
 
-                        <!-- Resumen del día -->
                         <div class="grid grid-cols-3 gap-1.5 sm:gap-4 mt-3">
                             <div class="bg-white/10 backdrop-blur-sm rounded-lg sm:rounded-xl px-2 py-1.5 sm:px-4 sm:py-3">
                                 <p class="text-[10px] sm:text-xs text-green-100 mb-0.5">Reservas</p>
@@ -368,11 +342,9 @@
                         </div>
                     </div>
 
-                    <!-- Timeline del día -->
                     <div class="p-2 sm:p-6 overflow-y-auto max-h-[calc(95vh-220px)] sm:max-h-[calc(90vh-280px)]">
 
                         @if($this->reservasDiaSeleccionado->count() > 0)
-                            <!-- Vista Timeline -->
                             <div class="space-y-0 border border-gray-200 rounded-xl sm:rounded-2xl overflow-hidden">
                                 @php
                                     $reservasMostradas = [];
@@ -390,7 +362,6 @@
                                     @endphp
 
                                     @if($esInicio)
-                                        <!-- Bloque de Reserva Completo -->
                                         @php
                                             $bloques = $this->calcularBloques($reserva);
                                             $alturaBloque = 60; // px por bloque de 30 min
@@ -399,7 +370,6 @@
 
                                         <div class="flex flex-col sm:flex-row border-b border-gray-200 hover:bg-gray-50/50 transition-colors">
 
-                                            <!-- Columna de hora - Horizontal en móvil -->
                                             <div class="w-full sm:w-20 md:w-24 flex-shrink-0 p-2 sm:p-3 md:p-4 border-b sm:border-b-0 sm:border-r border-gray-200 bg-gray-50">
                                                 <div class="flex sm:flex-col items-center sm:items-start justify-between sm:justify-start gap-2 sm:gap-1">
                                                     <div class="flex items-center gap-2 sm:flex-col sm:items-start sm:gap-1">
@@ -411,13 +381,10 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Contenido de la reserva -->
                                             <div class="flex-1 p-3 sm:p-3 md:p-4 {{ $reserva->estado === 'confirmada' ? 'bg-green-50 border-l-2 sm:border-l-4 border-green-500' : ($reserva->estado === 'cancelada' ? 'bg-red-50 border-l-2 sm:border-l-4 border-red-500' : ($reserva->estado === 'finalizada' ? 'bg-blue-50 border-l-2 sm:border-l-4 border-blue-500' : 'bg-yellow-50 border-l-2 sm:border-l-4 border-yellow-500')) }}">
 
-                                                <!-- Info principal - Stack en móvil -->
                                                 <div class="space-y-2 sm:space-y-0 sm:flex sm:items-start sm:justify-between mb-2">
                                                     <div class="flex-1 min-w-0">
-                                                        <!-- Nombre -->
                                                         <div class="flex items-center gap-2 mb-2">
                                                             <svg class="w-4 h-4 text-gray-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -427,7 +394,6 @@
                                                             </h4>
                                                         </div>
 
-                                                        <!-- Detalles secundarios -->
                                                         <div class="space-y-1">
                                                             @if($reserva->cliente && $reserva->cliente->equipo)
                                                                 <div class="flex items-center gap-1.5 text-gray-600">
@@ -449,7 +415,6 @@
                                                         </div>
                                                     </div>
 
-                                                    <!-- Badges - Horizontal en móvil, vertical en desktop -->
                                                     <div class="flex sm:flex-col items-center sm:items-end gap-2 sm:ml-2">
                                                         <span class="px-2 py-1 rounded-lg sm:rounded-full text-[10px] sm:text-xs font-semibold whitespace-nowrap {{ $reserva->estado === 'confirmada' ? 'bg-green-100 text-green-700 ring-1 ring-green-600/20' : ($reserva->estado === 'cancelada' ? 'bg-red-100 text-red-700 ring-1 ring-red-600/20' : ($reserva->estado === 'finalizada' ? 'bg-blue-100 text-blue-700 ring-1 ring-blue-600/20' : 'bg-yellow-100 text-yellow-700 ring-1 ring-yellow-600/20')) }}">
                                                             {{ ucfirst($reserva->estado) }}
@@ -473,7 +438,6 @@
                                         </div>
 
                                     @elseif(!$reserva && str_ends_with($horaBloque, ':00'))
-                                        <!-- Bloque Disponible (solo mostrar las horas en punto) -->
                                         <div class="hidden sm:flex border-b border-gray-100 hover:bg-green-50/30 transition-colors"
                                              style="min-height: 50px;">
                                             <div class="w-20 md:w-24 flex-shrink-0 p-3 md:p-4 border-r border-gray-200 bg-gray-50">
@@ -493,7 +457,6 @@
                             </div>
 
                         @else
-                            <!-- Sin reservas -->
                             <div class="text-center py-12">
                                 <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -507,7 +470,6 @@
 
                     </div>
 
-                    <!-- Footer del Modal -->
                     <div class="border-t border-gray-200 px-3 sm:px-6 py-2 sm:py-4 bg-gray-50 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3">
                         <div class="text-[10px] sm:text-sm text-gray-600 text-center sm:text-left">
                             Horario: <span class="font-semibold">8:00 AM - 10:00 PM</span>

@@ -11,13 +11,13 @@
 
     <div class="relative z-10 text-center px-6 max-w-3xl mx-auto">
         <img src="{{ asset('images/logo.png') }}"
-             class="h-28 md:h-32 w-auto mx-auto mb-4 drop-shadow-xl" alt="Logo">
+             class="h-36 md:h-60 w-auto mx-auto drop-shadow-xl" alt="Logo">
 
         <h1 class="text-3xl md:text-5xl font-bold mb-3 tracking-wide">
-            Sistema Nacional de Estadios Deportivos
+            Instituto Nacional de Estadios Deportivos
         </h1>
 
-        <p class="text-md md:text-lg opacity-95">
+        <p class="text-md md:text-lg opacity-95 mb-2">
             Plataforma moderna para administrar estadios, coordinar reservaciones y gestionar
             la disponibilidad deportiva a nivel nacional.
         </p>
@@ -30,7 +30,7 @@
     <div class="max-w-3xl mx-auto text-center">
 
         <h2 class="text-3xl font-bold text-white mb-6 tracking-wide">
-            ¿Qué es el Sistema Nacional de Estadios Deportivos?
+            ¿Qué es el Instituto Nacional de Estadios Deportivos?
         </h2>
 
         <p class="text-gray-200 leading-relaxed text-lg">
