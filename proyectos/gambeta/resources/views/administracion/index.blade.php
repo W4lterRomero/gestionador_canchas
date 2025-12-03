@@ -30,9 +30,9 @@
 @endphp
 
 @section('content')
-<header class="bg-gradient-to-r from-slate-900 via-blue-800 to-blue-500 text-white p-8 shadow-xl">
+<header class="bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-600 text-white p-8 shadow-xl">
     <div class="flex flex-col gap-2">
-        <p class="text-sm uppercase tracking-[0.3em] text-blue-200">PANEL DE ADMINISTRADOR</p>
+        <p class="text-sm uppercase tracking-[0.3em] text-emerald-200">PANEL DE ADMINISTRADOR</p>
     </div>
 </header>
 {{-- NAVBAR --}}
@@ -47,7 +47,7 @@
                 data-default="true"
                 class="panel-tab flex items-center h-10 leading-10 px-4 rounded-md mx-1 cursor-pointer
                            transition-colors duration-100
-                           bg-indigo-200 text-gray-900 shadow hover:bg-indigo-300">
+                           bg-emerald-200 text-emerald-900 shadow hover:bg-emerald-300">
                 <span class="mr-3 text-xl">
                     {{-- Icono cancha --}}
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-900" viewBox="0 0 24 24"
@@ -155,7 +155,7 @@
 <div>
     <!-- SECCIÓN CANCHAS -->
     <section id="canchas" data-section="canchas" class="scroll-mt-32">
-        <div class="bg-slate-900 min-h-screen flex justify-center p-10">
+        <div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 min-h-screen flex justify-center p-10">
             <div class="w-full max-w-5xl space-y-4">
                 <!-- ENCABEZADO + BOTÓN -->
                 <div class="flex items-center justify-between">
@@ -164,16 +164,16 @@
                     </div>
 
                     <button id="abrirModal" type="button"
-                        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition">
+                        class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition">
                         <span class="text-xl font-bold">+</span>
                         AGREGAR
                     </button>
                 </div>
 
                 <!-- TABLA EN TARJETA -->
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
-                        <thead class="bg-slate-900/80">
+                        <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-slate-400 tracking-wide">
                                 <th class="px-6 py-3">Nombre</th>
                                 <th class="px-6 py-3">Tipo</th>
@@ -185,7 +185,7 @@
                             </tr>
                         </thead>
 
-                        <tbody class="divide-y divide-slate-800">
+                        <tbody class="divide-y divide-emerald-900/50">
                             @forelse ($canchas as $cancha)
                                 @php
                                     $rowIsEditing = (int) $editarCanchaId === $cancha->id;
@@ -195,12 +195,12 @@
                                     $editPrecio = $rowIsEditing ? old('precio_hora', $cancha->precio_hora) : $cancha->precio_hora;
                                     $editActiva = $rowIsEditing ? (bool) old('activa', $cancha->activa) : (bool) $cancha->activa;
                                 @endphp
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-emerald-900/40 transition-colors">
                                     <td class="px-6 py-4 font-semibold text-white">
                                         {{ $cancha->nombre }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="inline-flex items-center rounded-full bg-sky-500/10 text-sky-300 px-3 py-1 text-xs font-medium">
+                                        <span class="inline-flex items-center rounded-full bg-emerald-500/15 text-emerald-200 px-3 py-1 text-xs font-medium">
                                             {{ $cancha->tipo }}
                                         </span>
                                     </td>
@@ -218,7 +218,7 @@
                                         @endphp
                                         @if ($imagenPath)
                                             <img src="{{ asset($imagenPath) }}" alt="Imagen de {{ $cancha->nombre }}"
-                                                class="h-16 w-24 rounded-lg border border-slate-800 object-cover shadow">
+                                                class="h-16 w-24 rounded-lg border border-emerald-800/60 object-cover shadow">
                                         @else
                                             <span class="text-xs font-mono text-slate-400">
                                                 Sin imagen
@@ -239,7 +239,7 @@
                                     <td class="px-6 py-4">
                                         <div class="flex items-center justify-end gap-3 text-lg">
                                             <button type="button"
-                                                class="hover:text-blue-400 transition-colors edit-toggle"
+                                                class="hover:text-emerald-400 transition-colors edit-toggle"
                                                 data-edit-target="edit-modal-{{ $cancha->id }}"
                                                 title="Editar cancha">
                                                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -278,15 +278,15 @@
         <div id="modal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div
-                class="relative w-full max-w-5xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+                class="relative w-full max-w-5xl border border-emerald-800/60 bg-emerald-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
                 <button type="button" data-modal-close
-                    class="absolute top-4 right-4 bg-blue-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
+                    class="absolute top-4 right-4 bg-emerald-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
                     ✕
                 </button>
 
                 <div class="space-y-6 text-white">
                     <div>
-                        <p class="text-sm uppercase tracking-[0.3em] text-blue-300">Nueva cancha</p>
+                        <p class="text-sm uppercase tracking-[0.3em] text-emerald-300">Nueva cancha</p>
                         <h2 class="text-2xl font-semibold">Registrar una cancha</h2>
                         <p class="text-slate-400 text-sm">Configura los datos básicos para que pueda reservarse en el
                             sistema.</p>
@@ -299,7 +299,7 @@
                         <div>
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre</label>
                             <input type="text" name="nombre" value="{{ old('nombre') }}"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                class="w-full rounded-lg border border-emerald-700/60 bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                             @error('nombre', 'crearCancha')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -309,7 +309,7 @@
                         <div>
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Tipo</label>
                             <input type="text" name="tipo" value="{{ old('tipo') }}"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                class="w-full rounded-lg border border-emerald-700/60 bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                             @error('tipo', 'crearCancha')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -319,7 +319,7 @@
                         <div class="md:col-span-2">
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Descripción</label>
                             <textarea name="descripcion" rows="3"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                class="w-full rounded-lg border border-emerald-700/60 bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none focus:ring focus:ring-emerald-500"
                                 placeholder="Cuenta qué hace especial a la cancha">{{ old('descripcion') }}</textarea>
                             @error('descripcion', 'crearCancha')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -329,7 +329,7 @@
                         <div>
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
                             <input type="number" name="precio_hora" min="0" step="0.01" value="{{ old('precio_hora') }}"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                class="w-full rounded-lg border border-emerald-700/60 bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                             @error('precio_hora', 'crearCancha')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -339,7 +339,7 @@
                         <div>
                             <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Imagen</label>
                             <input type="file" name="imagen" accept="image/*"
-                                class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm file:bg-slate-800 file:text-slate-200 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                class="w-full rounded-lg border border-emerald-700/60 bg-white/95 px-3 py-2 text-sm text-emerald-900 placeholder-emerald-400 file:bg-emerald-100 file:text-emerald-900 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-emerald-500"
                                 required>
                             @error('imagen', 'crearCancha')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -349,7 +349,7 @@
                         <div class="flex items-center gap-3">
                             <input type="hidden" name="activa" value="0">
                             <input type="checkbox" id="modal_activa" name="activa" value="1"
-                                class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-blue-500 focus:ring-blue-500"
+                                class="h-4 w-4 rounded border-emerald-700/60 bg-white text-emerald-600 focus:ring-emerald-500"
                                 {{ old('activa') ? 'checked' : '' }}>
                             <label for="modal_activa" class="text-xs uppercase tracking-widest text-slate-400">Activa para
                                 reservas</label>
@@ -362,9 +362,9 @@
 
                         <div class="md:col-span-2 flex justify-end gap-3">
                             <button type="button" data-modal-close
-                                class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">Cancelar</button>
+                                class="px-4 py-2 rounded-lg border border-emerald-700/60 text-emerald-100 hover:bg-emerald-900/40 transition">Cancelar</button>
                             <button type="submit"
-                                class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">Guardar
+                                class="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition">Guardar
                                 cancha</button>
                         </div>
                     </form>
@@ -386,15 +386,15 @@
                 class="edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
                 data-edit-modal data-open-default="{{ $rowIsEditing ? 'true' : 'false' }}">
                 <div
-                    class="relative w-full max-w-5xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                    class="relative w-full max-w-5xl border border-emerald-800/60 bg-emerald-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                     <button type="button" data-edit-modal-close
-                        class="absolute top-4 right-4 bg-blue-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
+                        class="absolute top-4 right-4 bg-emerald-500 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 transition">
                         ✕
                     </button>
 
                     <div class="space-y-6">
                         <div>
-                            <p class="text-sm uppercase tracking-[0.3em] text-blue-300">Editar cancha</p>
+                            <p class="text-sm uppercase tracking-[0.3em] text-emerald-300">Editar cancha</p>
                             <h2 class="text-2xl font-semibold">Actualizar {{ $cancha->nombre }}</h2>
                             <p class="text-slate-400 text-sm">Modifica la información y guarda los cambios.</p>
                         </div>
@@ -406,7 +406,7 @@
                             <div>
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Nombre</label>
                                 <input type="text" name="nombre" value="{{ $editNombre }}"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                    class="w-full rounded-lg border border-emerald-700/60 bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
                                 @if ($rowIsEditing && $errors->editarCancha->has('nombre'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('nombre') }}</p>
@@ -415,7 +415,7 @@
                             <div>
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Tipo</label>
                                 <input type="text" name="tipo" value="{{ $editTipo }}"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                    class="w-full rounded-lg border border-emerald-700/60 bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
                                 @if ($rowIsEditing && $errors->editarCancha->has('tipo'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('tipo') }}</p>
@@ -424,7 +424,7 @@
                             <div class="md:col-span-2">
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Descripción</label>
                                 <textarea name="descripcion" rows="3"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500">{{ $editDescripcion }}</textarea>
+                                    class="w-full rounded-lg border border-emerald-700/60 bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none focus:ring focus:ring-emerald-500">{{ $editDescripcion }}</textarea>
                                 @if ($rowIsEditing && $errors->editarCancha->has('descripcion'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('descripcion') }}</p>
                                 @endif
@@ -432,7 +432,7 @@
                             <div>
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Precio por hora</label>
                                 <input type="number" min="0" step="0.01" name="precio_hora" value="{{ $editPrecio }}"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                                    class="w-full rounded-lg border border-emerald-700/60 bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none focus:ring focus:ring-emerald-500"
                                     required>
                                 @if ($rowIsEditing && $errors->editarCancha->has('precio_hora'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('precio_hora') }}</p>
@@ -442,7 +442,7 @@
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Imagen actual</label>
                                 @if ($cancha->imagen_url)
                                     <img src="{{ asset(ltrim($cancha->imagen_url, '/')) }}" alt="Imagen de {{ $cancha->nombre }}"
-                                        class="h-20 w-32 rounded-lg border border-slate-700 object-cover">
+                                        class="h-20 w-32 rounded-lg border border-emerald-800/40 object-cover">
                                 @else
                                     <p class="text-xs text-slate-400">Sin imagen cargada.</p>
                                 @endif
@@ -450,7 +450,7 @@
                             <div>
                                 <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Actualizar imagen</label>
                                 <input type="file" name="imagen" accept="image/*"
-                                    class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm file:bg-slate-800 file:text-slate-200 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-blue-500">
+                                    class="w-full rounded-lg border border-emerald-700/60 bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 text-sm file:bg-emerald-100 file:text-emerald-900 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-emerald-500">
                                 @if ($rowIsEditing && $errors->editarCancha->has('imagen'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('imagen') }}</p>
                                 @endif
@@ -458,7 +458,7 @@
                             <div class="flex items-center gap-3">
                                 <input type="hidden" name="activa" value="0">
                                 <input type="checkbox" id="modal_activa_{{ $cancha->id }}" name="activa" value="1"
-                                    class="h-4 w-4 rounded border-slate-500 bg-slate-900 text-blue-500 focus:ring-blue-500"
+                                    class="h-4 w-4 rounded border-emerald-700/60 bg-white text-emerald-600 focus:ring-emerald-500"
                                     {{ $editActiva ? 'checked' : '' }}>
                                 <label for="modal_activa_{{ $cancha->id }}"
                                     class="text-xs uppercase tracking-widest text-slate-400">Activa para reservas</label>
@@ -470,9 +470,9 @@
                             @endif
                             <div class="md:col-span-2 flex justify-end gap-3">
                                 <button type="button" data-edit-modal-close
-                                    class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">Cancelar</button>
+                                    class="px-4 py-2 rounded-lg border border-emerald-700/60 text-emerald-100 hover:bg-emerald-900/40 transition">Cancelar</button>
                                 <button type="submit"
-                                    class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
+                                    class="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition">
                                     Guardar cambios
                                 </button>
                             </div>
@@ -487,7 +487,7 @@
             data-feedback-modal data-feedback-visible="{{ $feedbackMessage ? 'true' : 'false' }}"
             data-feedback-type="{{ $feedbackType ?? 'success' }}">
             <div
-                class="relative w-full max-w-lg border {{ $isErrorFeedback ? 'border-red-500/40' : 'border-emerald-500/40' }} bg-slate-950/95 p-6 shadow-2xl text-white">
+                class="relative w-full max-w-lg border {{ $isErrorFeedback ? 'border-red-500/40' : 'border-emerald-500/40' }} bg-emerald-950/95 p-6 shadow-2xl text-white">
                 <button type="button" data-feedback-close
                     class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
                     ✕
@@ -532,7 +532,7 @@
 
         <div id="delete-modal"
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
-            <div class="relative w-full max-w-lg border border-red-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
+            <div class="relative w-full max-w-lg border border-red-500/40 bg-emerald-950/95 p-6 shadow-2xl text-white">
                 <button type="button" data-delete-cancel
                     class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
                     ✕
@@ -557,7 +557,7 @@
 
                     <div class="flex justify-end gap-3">
                         <button type="button" data-delete-cancel
-                            class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                            class="px-4 py-2 rounded-lg border border-emerald-700/60 text-emerald-100 hover:bg-emerald-900/40 transition">
                             Cancelar
                         </button>
                         <button type="button" data-delete-confirm
@@ -572,7 +572,7 @@
 
     <!-- SECCIÓN RESERVAS -->
     <section id="reservas" data-section="reservas" class="scroll-mt-32 hidden">
-        <div class="bg-slate-900 min-h-screen flex justify-center p-10">
+        <div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 min-h-screen flex justify-center p-10">
             <div class="w-full max-w-6xl space-y-4">
                 <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div>
@@ -584,9 +584,9 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
-                        <thead class="bg-slate-900/80">
+                        <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-slate-400 tracking-wide">
                                 <th class="px-6 py-3">Cancha</th>
                                 <th class="px-6 py-3">Cliente</th>
@@ -601,18 +601,18 @@
                                 <th class="px-6 py-3 text-right">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800">
+                        <tbody class="divide-y divide-emerald-900/50">
                             @forelse ($reservas as $reserva)
                                 @php
                                     $estadoColors = [
                                         'pendiente' => 'bg-amber-500/15 text-amber-300',
                                         'confirmada' => 'bg-emerald-500/15 text-emerald-300',
-                                        'finalizada' => 'bg-blue-500/15 text-blue-300',
+                                        'finalizada' => 'bg-green-500/15 text-green-300',
                                         'cancelada' => 'bg-rose-500/15 text-rose-300',
                                     ];
-                                    $estadoClass = $estadoColors[$reserva->estado] ?? 'bg-slate-500/20 text-slate-200';
+                                    $estadoClass = $estadoColors[$reserva->estado] ?? 'bg-emerald-500/15 text-emerald-200';
                                 @endphp
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-emerald-900/40 transition-colors">
                                     <td class="px-6 py-4">
                                         <p class="font-semibold text-white">
                                             {{ optional($reserva->cancha)->nombre ?? 'Cancha eliminada' }}
@@ -711,7 +711,7 @@
         <!-- MODAL ELIMINAR RESERVA -->
         <div id="reserva-delete-modal"
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
-            <div class="relative w-full max-w-lg border border-rose-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
+            <div class="relative w-full max-w-lg border border-rose-500/40 bg-emerald-950/95 p-6 shadow-2xl text-white">
                 <button type="button" data-reserva-delete-cancel
                     class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
                     ✕
@@ -737,7 +737,7 @@
                         </div>
                     </div>
 
-                    <div class="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+                    <div class="rounded-lg border border-emerald-800/60 bg-emerald-950/40 p-4">
                         <p class="text-sm text-slate-400">Cliente</p>
                         <p class="text-lg font-semibold text-white" data-reserva-delete-name>—</p>
                         <p class="text-xs text-slate-500" data-reserva-delete-id></p>
@@ -745,7 +745,7 @@
 
                     <div class="flex justify-end gap-3">
                         <button type="button" data-reserva-delete-cancel
-                            class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                            class="px-4 py-2 rounded-lg border border-emerald-700/60 text-emerald-100 hover:bg-emerald-900/40 transition">
                             Cancelar
                         </button>
                         <button type="button" data-reserva-delete-confirm
@@ -760,7 +760,7 @@
 
     <!-- SECCIÓN BLOQUEOS -->
     <section id="bloqueos" data-section="bloqueos" class="scroll-mt-32 hidden">
-        <div class="bg-slate-900 min-h-screen flex justify-center p-10">
+        <div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 min-h-screen flex justify-center p-10">
             <div class="w-full max-w-5xl space-y-4">
                 <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                     <div>
@@ -774,9 +774,9 @@
                     </button>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
-                        <thead class="bg-slate-900/80">
+                        <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-slate-400 tracking-wide">
                                 <th class="px-6 py-3">Cancha</th>
                                 <th class="px-6 py-3">Inicio</th>
@@ -786,9 +786,9 @@
                                 <th class="px-6 py-3 text-right">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800">
+                        <tbody class="divide-y divide-emerald-900/50">
                             @forelse ($bloqueos as $bloqueo)
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-emerald-900/40 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-white">{{ optional($bloqueo->cancha)->nombre ?? 'Cancha eliminada' }}</div>
                                         <div class="text-xs text-slate-500">ID #{{ $bloqueo->cancha_id }}</div>
@@ -861,7 +861,7 @@
         <div id="bloqueo-modal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div
-                class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                class="relative w-full max-w-3xl border border-emerald-800/60 bg-emerald-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                 <button type="button" data-bloqueo-modal-close
                     class="absolute top-4 right-4 bg-emerald-500 text-slate-950 w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 hover:text-white transition">
                     ✕
@@ -882,7 +882,7 @@
                                 $crearCanchaError = $crearBloqueoErrors?->has('cancha_id');
                             @endphp
                             <select name="cancha_id"
-                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
+                                class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $crearCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-emerald-500' }}"
                                 required>
                                 <option value="">Selecciona una cancha</option>
                                 @foreach ($canchas as $canchaOption)
@@ -902,7 +902,7 @@
                                 $crearInicioError = $crearBloqueoErrors?->has('fecha_inicio');
                             @endphp
                             <input type="datetime-local" name="fecha_inicio" value="{{ old('fecha_inicio') }}"
-                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearInicioError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
+                                class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $crearInicioError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-emerald-500' }}"
                                 required>
                             @error('fecha_inicio', 'crearBloqueo')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -915,7 +915,7 @@
                                 $crearFinError = $crearBloqueoErrors?->has('fecha_fin');
                             @endphp
                             <input type="datetime-local" name="fecha_fin" value="{{ old('fecha_fin') }}"
-                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearFinError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
+                                class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $crearFinError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-emerald-500' }}"
                                 required>
                             @error('fecha_fin', 'crearBloqueo')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -928,7 +928,7 @@
                                 $crearMotivoError = $crearBloqueoErrors?->has('motivo');
                             @endphp
                             <textarea name="motivo" rows="3"
-                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearMotivoError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
+                                class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $crearMotivoError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-emerald-500' }}"
                                 required>{{ old('motivo') }}</textarea>
                             @error('motivo', 'crearBloqueo')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -937,7 +937,7 @@
 
                         <div class="md:col-span-2 flex justify-end gap-3">
                             <button type="button" data-bloqueo-modal-close
-                                class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                                class="px-4 py-2 rounded-lg border border-emerald-700/60 text-emerald-100 hover:bg-emerald-900/40 transition">
                                 Cancelar
                             </button>
                             <button type="submit"
@@ -963,7 +963,7 @@
                 class="bloqueo-edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
                 data-bloqueo-edit-modal data-open-default="{{ $rowIsEditingBloqueo ? 'true' : 'false' }}">
                 <div
-                    class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                    class="relative w-full max-w-3xl border border-emerald-800/60 bg-emerald-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                     <button type="button" data-bloqueo-edit-modal-close
                         class="absolute top-4 right-4 bg-emerald-500 text-slate-950 w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 hover:text-white transition">
                         ✕
@@ -986,7 +986,7 @@
                                     $editCanchaError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('cancha_id');
                                 @endphp
                                 <select name="cancha_id"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
+                                    class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $editCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                     <option value="">Selecciona una cancha</option>
                                     @foreach ($canchas as $canchaOption)
@@ -1006,7 +1006,7 @@
                                     $editInicioError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('fecha_inicio');
                                 @endphp
                                 <input type="datetime-local" name="fecha_inicio" value="{{ $editFechaInicio }}"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editInicioError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
+                                    class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $editInicioError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                 @if ($rowIsEditingBloqueo && $errors->editarBloqueo->has('fecha_inicio'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarBloqueo->first('fecha_inicio') }}</p>
@@ -1019,7 +1019,7 @@
                                     $editFinError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('fecha_fin');
                                 @endphp
                                 <input type="datetime-local" name="fecha_fin" value="{{ $editFechaFin }}"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editFinError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
+                                    class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $editFinError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-emerald-500' }}"
                                     required>
                                 @if ($rowIsEditingBloqueo && $errors->editarBloqueo->has('fecha_fin'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarBloqueo->first('fecha_fin') }}</p>
@@ -1032,7 +1032,7 @@
                                     $editMotivoError = $rowIsEditingBloqueo && $editarBloqueoErrors?->has('motivo');
                                 @endphp
                                 <textarea name="motivo" rows="3"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editMotivoError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-emerald-500' }}"
+                                    class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $editMotivoError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-emerald-500' }}"
                                     required>{{ $editMotivo }}</textarea>
                                 @if ($rowIsEditingBloqueo && $errors->editarBloqueo->has('motivo'))
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarBloqueo->first('motivo') }}</p>
@@ -1041,7 +1041,7 @@
 
                             <div class="md:col-span-2 flex justify-end gap-3">
                                 <button type="button" data-bloqueo-edit-modal-close
-                                    class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                                    class="px-4 py-2 rounded-lg border border-emerald-700/60 text-emerald-100 hover:bg-emerald-900/40 transition">
                                     Cancelar
                                 </button>
                                 <button type="submit"
@@ -1058,7 +1058,7 @@
         <!-- MODAL ELIMINAR BLOQUEO -->
         <div id="bloqueo-delete-modal"
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
-            <div class="relative w-full max-w-lg border border-red-500/40 bg-slate-950/95 p-6 shadow-2xl text-white">
+            <div class="relative w-full max-w-lg border border-red-500/40 bg-emerald-950/95 p-6 shadow-2xl text-white">
                 <button type="button" data-bloqueo-delete-cancel
                     class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
                     ✕
@@ -1084,7 +1084,7 @@
 
                     <div class="flex justify-end gap-3">
                         <button type="button" data-bloqueo-delete-cancel
-                            class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                            class="px-4 py-2 rounded-lg border border-emerald-700/60 text-emerald-100 hover:bg-emerald-900/40 transition">
                             Cancelar
                         </button>
                         <button type="button" data-bloqueo-delete-confirm
@@ -1099,7 +1099,7 @@
 
     <!-- SECCIÓN PRECIOS -->
     <section id="precios" data-section="precios" class="scroll-mt-32 hidden">
-        <div class="bg-slate-900 min-h-screen flex justify-center p-10">
+        <div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 min-h-screen flex justify-center p-10">
             <div class="w-full max-w-5xl space-y-4">
                 <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                     <div>
@@ -1113,9 +1113,9 @@
                     </button>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60 shadow-2xl">
+                <div class="overflow-x-auto rounded-2xl border border-emerald-800/60 bg-emerald-950/70 shadow-2xl">
                     <table class="w-full text-left text-sm text-gray-300">
-                        <thead class="bg-slate-900/80">
+                        <thead class="bg-emerald-950/60">
                             <tr class="uppercase text-xs text-slate-400 tracking-wide">
                                 <th class="px-6 py-3">Cancha</th>
                                 <th class="px-6 py-3 text-right">Precio/Hora</th>
@@ -1125,7 +1125,7 @@
                                 <th class="px-6 py-3 text-right">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800">
+                        <tbody class="divide-y divide-emerald-900/50">
                             @forelse ($precios as $precio)
                                 @php
                                     $rowIsEditingPrecio = (int) $editarPrecioId === $precio->id;
@@ -1157,7 +1157,7 @@
                                         ];
                                     }
                                 @endphp
-                                <tr class="hover:bg-slate-900/70 transition-colors">
+                                <tr class="hover:bg-emerald-900/40 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-white">{{ optional($precio->cancha)->nombre ?? 'Cancha no disponible' }}</div>
                                         <div class="text-xs text-slate-500">ID #{{ $precio->cancha_id }}</div>
@@ -1230,7 +1230,7 @@
         <div id="precio-modal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
             <div
-                class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                class="relative w-full max-w-3xl border border-emerald-800/60 bg-emerald-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                 <button type="button" data-precio-modal-close
                     class="absolute top-4 right-4 bg-amber-500 text-slate-950 w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 hover:text-white transition">
                     ✕
@@ -1257,7 +1257,7 @@
                                 $crearPrecioCanchaError = $crearPrecioErrors?->has('cancha_id');
                             @endphp
                             <select name="cancha_id"
-                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearPrecioCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $crearPrecioCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-amber-500' }}"
                                 required>
                                 <option value="">Selecciona una cancha</option>
                                 @foreach ($canchas as $canchaOption)
@@ -1277,7 +1277,7 @@
                                 $crearPrecioValorError = $crearPrecioErrors?->has('precio_hora');
                             @endphp
                             <input type="number" min="0" step="0.01" name="precio_hora" value="{{ old('precio_hora') }}"
-                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearPrecioValorError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $crearPrecioValorError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-amber-500' }}"
                                 required>
                             @error('precio_hora', 'crearPrecio')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -1290,7 +1290,7 @@
                                 $crearPrecioDesdeError = $crearPrecioErrors?->has('fecha_desde');
                             @endphp
                             <input type="datetime-local" name="fecha_desde" value="{{ old('fecha_desde') }}"
-                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearPrecioDesdeError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $crearPrecioDesdeError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-amber-500' }}"
                                 required>
                             @error('fecha_desde', 'crearPrecio')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
@@ -1303,7 +1303,7 @@
                                 $crearPrecioHastaError = $crearPrecioErrors?->has('fecha_hasta');
                             @endphp
                             <input type="datetime-local" name="fecha_hasta" value="{{ old('fecha_hasta') }}"
-                                class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $crearPrecioHastaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}">
+                                class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $crearPrecioHastaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-amber-500' }}">
                             @error('fecha_hasta', 'crearPrecio')
                                 <p class="text-xs text-red-300 mt-1">{{ $message }}</p>
                             @enderror
@@ -1311,7 +1311,7 @@
 
                         <div class="md:col-span-2 flex justify-end gap-3">
                             <button type="button" data-precio-modal-close
-                                class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                                class="px-4 py-2 rounded-lg border border-emerald-700/60 text-emerald-100 hover:bg-emerald-900/40 transition">
                                 Cancelar
                             </button>
                             <button type="submit"
@@ -1339,7 +1339,7 @@
                 class="precio-edit-modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8"
                 data-precio-edit-modal data-open-default="{{ $rowIsEditingPrecio ? 'true' : 'false' }}">
                 <div
-                    class="relative w-full max-w-3xl border border-slate-800 bg-slate-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
+                    class="relative w-full max-w-3xl border border-emerald-800/60 bg-emerald-950/95 p-8 shadow-2xl max-h-[90vh] overflow-y-auto text-white">
                     <button type="button" data-precio-edit-modal-close
                         class="absolute top-4 right-4 bg-amber-500 text-slate-950 w-10 h-10 rounded-full shadow-lg flex items-center justify-center text-2xl font-bold hover:bg-red-500 hover:text-white transition">
                         ✕
@@ -1370,7 +1370,7 @@
                                     $editPrecioCanchaError = $rowIsEditingPrecio && $editarPrecioErrors?->has('cancha_id');
                                 @endphp
                                 <select name="cancha_id"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editPrecioCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                    class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $editPrecioCanchaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-amber-500' }}"
                                     required>
                                     <option value="">Selecciona una cancha</option>
                                     @foreach ($canchas as $canchaOption)
@@ -1390,7 +1390,7 @@
                                     $editPrecioValorError = $rowIsEditingPrecio && $editarPrecioErrors?->has('precio_hora');
                                 @endphp
                                 <input type="number" min="0" step="0.01" name="precio_hora" value="{{ $editPrecioHora }}"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editPrecioValorError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                    class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $editPrecioValorError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-amber-500' }}"
                                     required>
                                 @if ($rowIsEditingPrecio && $editarPrecioErrors?->has('precio_hora'))
                                     <p class="text-xs text-red-300 mt-1">{{ $editarPrecioErrors->first('precio_hora') }}</p>
@@ -1403,7 +1403,7 @@
                                     $editPrecioDesdeError = $rowIsEditingPrecio && $editarPrecioErrors?->has('fecha_desde');
                                 @endphp
                                 <input type="datetime-local" name="fecha_desde" value="{{ $editFechaDesde }}"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editPrecioDesdeError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}"
+                                    class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $editPrecioDesdeError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-amber-500' }}"
                                     required>
                                 @if ($rowIsEditingPrecio && $editarPrecioErrors?->has('fecha_desde'))
                                     <p class="text-xs text-red-300 mt-1">{{ $editarPrecioErrors->first('fecha_desde') }}</p>
@@ -1416,7 +1416,7 @@
                                     $editPrecioHastaError = $rowIsEditingPrecio && $editarPrecioErrors?->has('fecha_hasta');
                                 @endphp
                                 <input type="datetime-local" name="fecha_hasta" value="{{ $editFechaHasta }}"
-                                    class="w-full rounded-lg border bg-slate-900/70 px-3 py-2 focus:outline-none {{ $editPrecioHastaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-slate-600 focus:ring focus:ring-amber-500' }}">
+                                    class="w-full rounded-lg border bg-white/95 px-3 py-2 text-emerald-900 placeholder-emerald-400 focus:outline-none {{ $editPrecioHastaError ? 'border-red-500 focus:ring focus:ring-red-500' : 'border-emerald-700/60 focus:ring focus:ring-amber-500' }}">
                                 @if ($rowIsEditingPrecio && $editarPrecioErrors?->has('fecha_hasta'))
                                     <p class="text-xs text-red-300 mt-1">{{ $editarPrecioErrors->first('fecha_hasta') }}</p>
                                 @endif
@@ -1424,7 +1424,7 @@
 
                             <div class="md:col-span-2 flex justify-end gap-3">
                                 <button type="button" data-precio-edit-modal-close
-                                    class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                                    class="px-4 py-2 rounded-lg border border-emerald-700/60 text-emerald-100 hover:bg-emerald-900/40 transition">
                                     Cancelar
                                 </button>
                                 <button type="submit"
@@ -1441,7 +1441,7 @@
         <!-- MODAL ELIMINAR PRECIO -->
         <div id="precio-delete-modal"
             class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 px-4 py-8">
-            <div class="relative w-full max-w-lg border border-amber-500/30 bg-slate-950/95 p-6 shadow-2xl text-white">
+            <div class="relative w-full max-w-lg border border-amber-500/30 bg-emerald-950/95 p-6 shadow-2xl text-white">
                 <button type="button" data-precio-delete-cancel
                     class="absolute top-3 right-3 text-slate-400 hover:text-white transition" aria-label="Cerrar">
                     ✕
@@ -1467,7 +1467,7 @@
 
                     <div class="flex justify-end gap-3">
                         <button type="button" data-precio-delete-cancel
-                            class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition">
+                            class="px-4 py-2 rounded-lg border border-emerald-700/60 text-emerald-100 hover:bg-emerald-900/40 transition">
                             Cancelar
                         </button>
                         <button type="button" data-precio-delete-confirm
