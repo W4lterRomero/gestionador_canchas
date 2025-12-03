@@ -38,7 +38,7 @@
 </header>
 {{-- NAVBAR --}}
 <nav id="admin-panels-nav"
-    class="sticky top-4 z-10 bg-white shadow-lg border border-gray-200 px-3 sm:px-5 py-3">
+    class="sticky top-0 z-50 bg-white shadow-lg border-b border-gray-200 px-3 sm:px-5 py-3">
     <ul class="flex w-full flex-wrap items-center gap-1 sm:gap-0 sm:-mx-1 text-sm font-medium">
 
         {{-- CANCHAS --}}
