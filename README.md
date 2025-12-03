@@ -172,89 +172,6 @@ docker compose exec -T db mysql -u appuser -papppass appdb < backup.sql
 docker compose exec db mysql -u root -prootpass
 ```
 
-## Troubleshooting
-
-### Error: "Permission denied" al editar archivos
-
-Los archivos pertenecen a otro usuario. Solución:
-
-```bash
-# Verificar tu UID/GID
-id -u
-id -g
-
-# Actualizar .env.docker con los valores correctos
-nano .env.docker
-
-# Reconstruir
-docker compose down
-docker compose build --no-cache
-docker compose up -d
-
-# Arreglar permisos existentes
-docker compose exec app chown -R www-data:www-data /var/www/html
-```
-
-### Error: "Port already in use"
-
-Cambiar puerto en `docker-compose.yml`:
-
-```yaml
-services:
-  app:
-    ports:
-      - "8081:80"  # cambiar 8080 a 8081
-```
-
-O detener el proceso que usa el puerto:
-
-```bash
-# Linux/macOS
-sudo lsof -i :8080
-sudo kill -9 [PID]
-
-# Windows
-netstat -ano | findstr :8080
-taskkill /PID [PID] /F
-```
-
-### MySQL no conecta
-
-```bash
-# Ver estado
-docker compose ps
-
-# Ver logs
-docker compose logs db
-
-# Esperar a que esté healthy (puede tardar 30-60 segundos)
-watch docker compose ps
-
-# Si persiste, recrear
-docker compose down -v
-docker compose up -d
-```
-
-### Error "Class not found"
-
-```bash
-docker compose exec app bash -c "cd gambeta && composer dump-autoload"
-docker compose exec app bash -c "cd gambeta && php artisan cache:clear"
-```
-
-### Error 500
-
-```bash
-# Ver logs Laravel
-docker compose exec app bash -c "cd gambeta && tail -f storage/logs/laravel.log"
-
-# Ver logs Apache
-docker compose logs app
-
-# Verificar permisos
-docker compose exec app bash -c "cd gambeta && chmod -R 775 storage bootstrap/cache"
-docker compose exec app chown -R www-data:www-data /var/www/html
-```
 
 ## Desarrollo
 
@@ -282,14 +199,6 @@ git push origin feature/nombre-feature
 - `Update:` Actualización de feature
 - `Refactor:` Refactorización
 - `Docs:` Documentación
-
-### Qué NO hacer
-
-- NO commitear `.env` o `.env.docker`
-- NO commitear `vendor/` o `node_modules/`
-- NO hacer `chmod -R 777`
-- NO hacer `git push --force` en `main`
-- NO trabajar directo en `main`, usar ramas
 
 ## Testing
 
