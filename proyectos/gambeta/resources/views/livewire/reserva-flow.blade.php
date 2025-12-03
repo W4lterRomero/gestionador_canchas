@@ -188,35 +188,31 @@
     </div>
 
     <!-- INPUTS DE CLIENTE -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <input type="text" wire:model.live="nombre"
-            class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
-            placeholder="Nombre completo">
+    <input type="text" wire:model.live="nombre"
+        class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
+        placeholder="Nombre completo"
+        @disabled($clienteExiste)>
 
-        <input type="text" wire:model.live="telefono"
-            class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
-            placeholder="0000-0000">
+    <input type="text" wire:model.live="telefono"
+        class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
+        placeholder="0000-0000"
+        @disabled($clienteExiste)>
 
-        <input type="text" wire:model.live="equipo"
-            class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
-            placeholder="Equipo o grupo (opcional)">
-
-    </div>
-
-    <textarea wire:model.live="notas"
-        class="w-full bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
-        placeholder="Notas del cliente"></textarea>
-
-    <div class="flex justify-between">
-        <button wire:click="anterior" class="text-green-600 font-bold">← Volver</button>
-        <button wire:click="siguiente"
-            class="bg-green-600 hover:bg-green-500 text-white px-8 py-2 rounded-full font-bold shadow">
-            Continuar
-        </button>
-    </div>
+    <input type="text" wire:model.live="equipo"
+        class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
+        placeholder="Equipo o grupo (opcional)"
+        @disabled($clienteExiste)>
 
 </div>
+
+<textarea wire:model.live="notas"
+    class="bg-gray-100 border border-green-600 rounded-xl px-4 py-2"
+    placeholder="Notas del cliente"
+    @disabled($clienteExiste)></textarea>
+</div>
+
 @endif
 
 
