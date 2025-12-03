@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BloqueoHorario;
 use App\Models\Cancha;
+use App\Models\CanchaImagen;
 use App\Models\CanchaPrecio;
 use App\Models\Reserva;
 use Illuminate\Contracts\View\View;
@@ -31,6 +32,7 @@ class CanchaController extends Controller
             'precio_hora' => ['required', 'numeric', 'min:0', 'max:999999.99'],
             'activa' => ['nullable', 'boolean'],
             'imagen' => [$isUpdate ? 'nullable' : 'required', 'image', 'max:4096'],
+            'imagenes_galeria.*' => ['nullable', 'image', 'max:4096'],
         ];
     }
 
@@ -110,6 +112,15 @@ class CanchaController extends Controller
 
         $cancha->update($validated);
 
+        if ($request->hasFile('imagenes_galeria')) {
+            foreach ($request->file('imagenes_galeria') as $imagen) {
+                $path = $imagen->store('canchas/galeria', 'public');
+                $cancha->imagenes()->create([
+                    'imagen_url' => Storage::url($path),
+                ]);
+            }
+        }
+
         return redirect()->route('admin.index')->with('status', 'Cancha actualizada correctamente.');
     }
 
@@ -118,5 +129,19 @@ class CanchaController extends Controller
         $cancha->delete();
 
         return redirect()->route('admin.index')->with('status', 'Cancha eliminada correctamente.');
+    }
+
+    public function destroyImagen(CanchaImagen $imagen): RedirectResponse
+    {
+        $path = str_replace('/storage/', '', $imagen->imagen_url);
+        
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+
+        $imagen->delete();
+
+        return back()->with('status', 'Imagen eliminada correctamente.')
+                     ->with('editarCanchaId', $imagen->cancha_id);
     }
 }

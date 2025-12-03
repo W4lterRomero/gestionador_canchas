@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+<div class="min-h-screen">
 
     <!-- Hero Section con Imagen -->
     <div class="relative h-96 overflow-hidden group">
@@ -50,6 +50,102 @@
                 <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-xl hover:border-green-100 transition-all duration-300 group">
                     <h2 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-green-600 transition-colors">Acerca de esta cancha</h2>
                     <p class="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors">{{ $this->cancha->descripcion }}</p>
+
+                    <!-- Galería de Imágenes -->
+                    <div class="mt-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Galería de fotos</h3>
+                        </div>
+
+                        @if($this->cancha->imagenes->count() > 0)
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4" x-data="{ 
+                                open: false, 
+                                currentIndex: 0,
+                                images: [
+                                    @foreach($this->cancha->imagenes as $imagen)
+                                        '{{ asset($imagen->imagen_url) }}',
+                                    @endforeach
+                                ],
+                                get currentImage() {
+                                    return this.images[this.currentIndex];
+                                },
+                                next() {
+                                    this.currentIndex = (this.currentIndex + 1) % this.images.length;
+                                },
+                                prev() {
+                                    this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+                                }
+                            }"
+                            @keydown.escape.window="open = false"
+                            @keydown.arrow-right.window="next()"
+                            @keydown.arrow-left.window="prev()">
+                            
+                                @foreach($this->cancha->imagenes as $index => $imagen)
+                                    <div class="relative group/img overflow-hidden rounded-xl cursor-pointer aspect-video shadow-sm hover:shadow-md transition-all">
+                                        <img src="{{ asset($imagen->imagen_url) }}" 
+                                             class="w-full h-full object-cover transform transition-transform duration-500 group-hover/img:scale-110" 
+                                             alt="Galería"
+                                             @click="open = true; currentIndex = {{ $index }}">
+                                        
+                                        <div class="absolute inset-0 bg-black/0 group-hover/img:bg-black/20 transition-colors duration-300 flex items-center justify-center pointer-events-none">
+                                            <svg class="w-8 h-8 text-white opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                                <!-- Lightbox Modal -->
+                                <div x-show="open" 
+                                     x-transition:enter="transition ease-out duration-300"
+                                     x-transition:enter-start="opacity-0"
+                                     x-transition:enter-end="opacity-100"
+                                     x-transition:leave="transition ease-in duration-200"
+                                     x-transition:leave-start="opacity-100"
+                                     x-transition:leave-end="opacity-0"
+                                     class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4"
+                                     style="display: none;">
+                                    
+                                    <div @click.away="open = false" class="relative w-full h-full flex items-center justify-center">
+                                        <!-- Previous Button -->
+                                        <button @click.stop="prev()" class="absolute left-4 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none">
+                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                            </svg>
+                                        </button>
+
+                                        <img :src="currentImage" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl select-none" alt="Vista ampliada">
+                                        
+                                        <!-- Next Button -->
+                                        <button @click.stop="next()" class="absolute right-4 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none">
+                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                            </svg>
+                                        </button>
+
+                                        <!-- Close Button -->
+                                        <button @click="open = false" class="absolute top-4 right-4 z-20 text-white/70 hover:text-white transition-colors">
+                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                        
+                                        <!-- Counter -->
+                                        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white/80 font-medium bg-black/50 px-3 py-1 rounded-full text-sm">
+                                            <span x-text="currentIndex + 1"></span> / <span x-text="images.length"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                                <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <p class="text-gray-500 text-sm">No hay imágenes disponibles para esta cancha.</p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
                 @endif
 

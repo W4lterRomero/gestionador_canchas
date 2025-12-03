@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Cancha;
+use App\Models\CanchaImagen;
 use App\Models\Reserva;
 use Livewire\Component;
+use Illuminate\Support\Facades\Storage;
 
 class EstadioDetalles extends Component
 {

@@ -547,6 +547,36 @@
                                     <p class="text-xs text-red-300 mt-1">{{ $errors->editarCancha->first('imagen') }}</p>
                                 @endif
                             </div>
+
+                            <div class="md:col-span-2 border-t border-slate-800 pt-4 mt-2">
+                                <h3 class="text-sm font-semibold mb-3 text-blue-300 uppercase tracking-widest">Galería de Imágenes</h3>
+                                
+                                @if($cancha->imagenes->count() > 0)
+                                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                                        @foreach($cancha->imagenes as $img)
+                                            <div class="relative group">
+                                                <img src="{{ asset($img->imagen_url) }}" class="w-full h-24 object-cover rounded-lg border border-slate-700">
+                                                <button type="button" 
+                                                        onclick="if(confirm('¿Eliminar imagen?')) document.getElementById('delete-img-{{ $img->id }}').submit()"
+                                                        class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <p class="text-xs text-slate-500 mb-4 italic">No hay imágenes adicionales en la galería.</p>
+                                @endif
+
+                                <div>
+                                    <label class="block text-xs uppercase tracking-widest text-slate-400 mb-1">Agregar más fotos</label>
+                                    <input type="file" name="imagenes_galeria[]" multiple accept="image/*"
+                                        class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm file:bg-slate-800 file:text-slate-200 file:border-0 file:px-4 file:py-2 focus:outline-none focus:ring focus:ring-blue-500">
+                                    <p class="text-xs text-slate-500 mt-1">Puedes seleccionar varias imágenes a la vez (Ctrl + Click).</p>
+                                </div>
+                            </div>
                             <div class="flex items-center gap-3">
                                 <input type="hidden" name="activa" value="0">
                                 <input type="checkbox" id="modal_activa_{{ $cancha->id }}" name="activa" value="1"
@@ -569,6 +599,13 @@
                                 </button>
                             </div>
                         </form>
+
+                        @foreach($cancha->imagenes as $img)
+                            <form id="delete-img-{{ $img->id }}" action="{{ route('admin.canchas.imagenes.destroy', $img->id) }}" method="POST" style="display: none;">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        @endforeach
                     </div>
                 </div>
             </div>

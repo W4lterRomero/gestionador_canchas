@@ -60,6 +60,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/canchas', [CanchaController::class, 'store'])->name('canchas.store');
         Route::put('/canchas/{cancha}', [CanchaController::class, 'update'])->name('canchas.update');
         Route::delete('/canchas/{cancha}', [CanchaController::class, 'destroy'])->name('canchas.destroy');
+        Route::delete('/canchas/imagenes/{imagen}', [CanchaController::class, 'destroyImagen'])->name('canchas.imagenes.destroy');
         
         Route::post('/bloqueos', [BloqueoHorarioController::class, 'store'])->name('bloqueos.store');
         Route::put('/bloqueos/{bloqueo}', [BloqueoHorarioController::class, 'update'])->name('bloqueos.update');

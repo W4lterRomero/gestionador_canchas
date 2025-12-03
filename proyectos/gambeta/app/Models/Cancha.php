@@ -58,4 +58,12 @@ class Cancha extends Model
     {
         return $this->hasMany(BloqueoHorario::class);
     }
+
+    /**
+     * Imágenes adicionales de la cancha.
+     */
+    public function imagenes(): HasMany
+    {
+        return $this->hasMany(CanchaImagen::class);
+    }
 }
