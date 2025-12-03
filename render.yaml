@@ -20,7 +20,7 @@ services:
       - key: APP_URL
         value: https://gambeta-app.onrender.com  # Cambiar por tu URL
       - key: APP_KEY
-        generateValue: true  # Render genera una key automáticamente
+        sync: false  # Se generará automáticamente en el primer deploy
  
       # Base de datos
       - key: DB_CONNECTION
