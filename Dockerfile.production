@@ -24,6 +24,10 @@ RUN printf "<Directory /var/www/html/public>\nOptions Indexes FollowSymLinks\nAl
 # Cambiar DocumentRoot a /var/www/html/public
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
+# Configurar Apache para usar puerto dinámico (Railway usa $PORT)
+RUN sed -i 's/Listen 80/Listen ${PORT:-80}/g' /etc/apache2/ports.conf \
+    && sed -i 's/:80/:${PORT:-80}/g' /etc/apache2/sites-available/000-default.conf
+
 # Copiar código de la aplicación
 COPY --chown=www-data:www-data ./proyectos/gambeta /var/www/html
 
@@ -38,14 +42,11 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage \
     && chmod -R 775 /var/www/html/bootstrap/cache
 
-# Optimizar Laravel para producción
-RUN php artisan config:cache || true \
-    && php artisan route:cache || true \
-    && php artisan view:cache || true
+# Copiar script de inicio
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80
 
-# Ejecutar como www-data
-USER www-data
+CMD ["/usr/local/bin/docker-entrypoint.sh"]
 
-CMD ["apache2-foreground"]
