@@ -50,6 +50,19 @@ php artisan config:cache > /dev/null 2>&1 || true
 php artisan route:cache > /dev/null 2>&1 || true
 php artisan view:cache > /dev/null 2>&1 || true
 
+# Configurar Storage (Imágenes)
+echo "==> Configurando Storage..."
+php artisan storage:link || true
+
+# Asegurar que existe una imagen por defecto para los seeders
+mkdir -p storage/app/public/canchas
+if [ ! -f storage/app/public/canchas/cancha.png ]; then
+    echo "==> Creando imagen dummy para canchas..."
+    # Crear un PNG vacío simple de 1x1 si no tenemos imagen real, o copiar de assets si existieran
+    # Aquí usaremos base64 para crear un png válido mínimo (red dot)
+    echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" | base64 -d > storage/app/public/canchas/cancha.png
+fi
+
 # Asegurar que solo mpm_prefork está habilitado (Fix para AH00534)
 echo "==> Verificando módulos MPM..."
 rm -f /etc/apache2/mods-enabled/mpm_event.load
