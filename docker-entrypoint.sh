@@ -22,6 +22,27 @@ done
 echo "==> Ejecutando migraciones..."
 php artisan migrate --force || echo "    Migraciones fallaron o ya estaban aplicadas"
 
+# Ejecutar seeders solo si es necesario (evitar duplicados)
+echo "==> Verificando necesidad de seeders..."
+# Intentar contar usuarios. Si falla (ej: tabla no existe), asumimos que algo malio sal, pero el seed no deberia correr si migrate fallo
+if php artisan migrate:status > /dev/null 2>&1; then
+    USER_COUNT=$(php artisan tinker --execute="echo \App\Models\User::count();" 2>/dev/null | grep -E '^[0-9]+$' | tail -n1)
+    # Si grep falla o user_count es vacio, defaultear a algo seguro (no seed)
+    USER_COUNT=${USER_COUNT:-1} 
+    
+    # Hacemos una verificación más robusta intentando leer la salida limpia
+    # Pero para simplificar en bash, si la tabla está vacía count es 0.
+    # Usaremos una forma más directa con tinker para evitar basura en stdout
+    USER_COUNT=$(php artisan tinker --execute="echo (int)\App\Models\User::exists();" 2>/dev/null | tail -n1)
+    
+    if [ "$USER_COUNT" == "0" ]; then
+        echo "==> Base de datos parece vacía. Ejecutando seeders..."
+        php artisan db:seed --force
+    else
+        echo "==> Datos detectados. Saltando seeders."
+    fi
+fi
+
 # Optimizar Laravel
 echo "==> Optimizando Laravel..."
 php artisan config:clear > /dev/null 2>&1
