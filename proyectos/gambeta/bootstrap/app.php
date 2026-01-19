@@ -11,6 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
+        
         // Middleware personalizado para verificar roles
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
