@@ -29,6 +29,21 @@ php artisan config:cache > /dev/null 2>&1 || true
 php artisan route:cache > /dev/null 2>&1 || true
 php artisan view:cache > /dev/null 2>&1 || true
 
+# Asegurar que solo mpm_prefork está habilitado (Fix para AH00534)
+echo "==> Verificando módulos MPM..."
+rm -f /etc/apache2/mods-enabled/mpm_event.load
+rm -f /etc/apache2/mods-enabled/mpm_event.conf
+rm -f /etc/apache2/mods-enabled/mpm_worker.load
+rm -f /etc/apache2/mods-enabled/mpm_worker.conf
+# Asegurar prefork
+if [ ! -f /etc/apache2/mods-enabled/mpm_prefork.load ]; then
+    ln -s /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load
+    ln -s /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf
+fi
+
+echo "==> Módulos MPM habilitados:"
+ls -1 /etc/apache2/mods-enabled/mpm_*.load || true
+
 # Iniciar Apache
 echo "==> Iniciando Apache en puerto $PORT..."
 exec apache2-foreground
